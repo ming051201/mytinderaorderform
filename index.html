@@ -152,7 +152,6 @@
             box-shadow: 0 0 0 3px rgba(0, 80, 160, 0.1);
         }
 
-
         /* Order Page Specific Styles */
         .order-page-header {
             width: 100%;
@@ -241,27 +240,30 @@
         }
         .input-group input, .input-group textarea {
             width: 100%;
-            font-size: 0.95rem; /* Slightly smaller font size */
+            font-size: 0.9rem; /* Slightly smaller font size for general inputs */
             box-sizing: border-box;
             color: #333; /* Default text color for inputs */
         }
         /* Styling for product name to make it more prominent - now black */
         .product-card .input-group input[id^="productName"] {
-            font-size: 1rem; /* Slightly smaller for product name */
+            font-size: 0.95rem; /* Smaller font size for product name */
             font-weight: 600; /* Bold */
             color: #333; /* Make it black/dark gray */
-            min-height: 40px; /* Increased min-height to accommodate two lines of text */
-            padding: 8px 0; /* Increased padding to give more vertical space */
+            min-height: 38px; /* Increased min-height to accommodate two lines of text better */
+            padding: 6px 0; /* Increased padding to give more vertical space */
+            white-space: normal; /* Allow text to wrap */
+            overflow: visible; /* Ensure text is visible even if it wraps */
+            text-overflow: clip; /* Prevent ellipsis */
         }
         /* Styling for product price - now black */
         .product-card .input-group input[id^="productPrice"] {
             font-weight: 600; /* Make price bold */
             color: #333; /* Make it black/dark gray */
-            font-size: 1rem; /* Slightly smaller for price */
+            font-size: 0.95rem; /* Smaller font for price */
         }
         /* Styling for product size - now black */
         .product-card .input-group input[id^="productSize"] {
-            font-size: 0.95rem; /* Smaller for size */
+            font-size: 0.9rem; /* Smaller for size */
         }
         /* Styling for product quantity - now black */
         .product-card .input-group input[id^="productQuantity"] {
@@ -278,14 +280,11 @@
             cursor: default;
             color: #666;
             border: none; /* No border for readonly */
-            /* Removed white-space, overflow, text-overflow to allow text wrapping */
         }
         .input-group input[readonly]:focus {
             box-shadow: none;
             border-color: transparent; /* No border on focus for readonly */
         }
-
-        /* Removed .image-drop-area styling as photos are removed */
 
         /* Unit selection buttons styling */
         .unit-buttons {
@@ -325,8 +324,6 @@
         .unit-button.active:hover {
             background-color: #003a7a;
         }
-
-        /* Removed loader styling as photos are removed */
 
         /* Finalize Order Button */
         .finalize-order-button {
@@ -432,7 +429,6 @@
             transform: translateY(0);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-
 
         /* Modals and their content */
         .order-summary-modal, .receipt-modal {
@@ -693,7 +689,7 @@
             padding: 4px 0; /* Align padding with other inputs */
         }
         .pcs-per-case-display-container span {
-             font-size: 0.95rem; /* Match other input font sizes */
+             font-size: 0.9rem; /* Match other input font sizes, slightly smaller for compactness */
         }
 
 
@@ -785,10 +781,6 @@
                 min-height: 40px;
                 flex-grow: 1; /* Allow buttons to grow to fill space */
             }
-            .order-title {
-                font-size: 1.8rem;
-                margin-bottom: 20px;
-            }
             .product-grid {
                 /* For smaller screens, ensure single column layout as 380px minwidth is wide enough */
                 grid-template-columns: 1fr;
@@ -862,10 +854,10 @@
             .input-group input[id^="productName"],
             .input-group input[id^="productPrice"],
             .input-group input[id^="productQuantity"] {
-                font-size: 0.95rem; /* Slightly smaller text for very small screens */
+                font-size: 0.9rem; /* Slightly smaller text for very small screens */
             }
             .pcs-per-case-display-container span {
-                font-size: 0.95rem; /* Match other input font sizes */
+                font-size: 0.9rem; /* Match other input font sizes */
             }
         }
     </style>
@@ -1520,7 +1512,7 @@
                     const pcsPerCaseValueSpan = productCard.querySelector(`#pcsPerCaseValue${i}`);
                     if (pcsPerCaseValueSpan) {
                         if (currentUnit === 'CASE' && product.CASE.pcsPerCase !== undefined) {
-                            pcsPerCaseValueSpan.textContent = `'${product.CASE.pcsPerCase}'`;
+                            pcsPerCaseValueSpan.textContent = product.CASE.pcsPerCase; // Removed quotes around value
                         } else {
                             pcsPerCaseValueSpan.textContent = '';
                         }
@@ -1631,14 +1623,14 @@
             }, 700); // Allow some time for other pages to fade out
         }
 
-        // Removed handleImageUpload function
-
         window.selectUnit = function(selectedButton, newUnit, productIdTrigger) {
+            console.log(`Switching unit for product ${productIdTrigger} to ${newUnit}`);
             // Save the quantity of the product whose unit button was explicitly clicked
             const productTrigger = productData[productIdTrigger];
             const quantityInputTrigger = document.getElementById(`productQuantity${productIdTrigger}`);
-            if (productTrigger && productTrigger.currentUnit && productTrigger[product.currentUnit]) {
-                productTrigger[product.currentUnit].quantity = parseInt(quantityInputTrigger.value) || 0;
+            if (productTrigger && productTrigger.currentUnit && productTrigger[productTrigger.currentUnit]) {
+                productTrigger[productTrigger.currentUnit].quantity = parseInt(quantityInputTrigger.value) || 0;
+                console.log(`Saved quantity ${productTrigger[productTrigger.currentUnit].quantity} for product ${productIdTrigger} in old unit ${productTrigger.currentUnit}`);
             }
 
             // Now, iterate through ALL products to set their unit
@@ -1670,7 +1662,7 @@
                     // Update pcsPerCase display based on the new unit for THIS product
                     if (pcsPerCaseValueSpan) {
                         if (newUnit === 'CASE' && product.CASE.pcsPerCase !== undefined) {
-                            pcsPerCaseValueSpan.textContent = `'${product.CASE.pcsPerCase}'`;
+                            pcsPerCaseValueSpan.textContent = product.CASE.pcsPerCase;
                         } else {
                             pcsPerCaseValueSpan.textContent = '';
                         }
@@ -1701,7 +1693,7 @@
         // New function to validate remove quantity input
         window.validateRemoveQuantity = function(inputElement, maxQty) {
             let value = parseInt(inputElement.value);
-            if (isNaN(value) || value < 0) { // Changed from < 1 to < 0 to allow 0
+            if (isNaN(value) || value < 0) {
                 inputElement.value = 0;
             } else if (value > maxQty) {
                 inputElement.value = maxQty;
@@ -1734,7 +1726,7 @@
                         orderItemDiv.innerHTML = `
                             <div class="order-item-details">
                                 <strong>${product.productName}</strong><br>
-                                <span>Code: ${product.productCode} | Size: ${product.size} ${unit === 'CASE' && product.CASE.pcsPerCase !== undefined ? `| Pcs/Case: '${product.CASE.pcsPerCase}'` : ''} | Qty: ${quantity} ${unit}</span>
+                                <span>Code: ${product.productCode} | Size: ${product.size} ${unit === 'CASE' && product.CASE.pcsPerCase !== undefined ? `| Pcs/Case: ${product.CASE.pcsPerCase}` : ''} | Qty: ${quantity} ${unit}</span>
                             </div>
                             <div class="order-item-price">PHP ${itemTotalPrice.toFixed(2)}
                                 <input type="number" id="removeQtyInput_${productId}_${unit}" class="remove-quantity-input" value="0" min="0" max="${quantity}" oninput="validateRemoveQuantity(this, ${quantity})">
@@ -1890,7 +1882,7 @@
                 receiptItemDiv.innerHTML = `
                     <div class="receipt-item-details">
                         <strong>${item.productName}</strong><br>
-                        <span>Code: ${item.productCode} | Size: ${item.size} ${item.pcsPerCase !== undefined ? `| Pcs/Case: '${item.pcsPerCase}'` : ''} | Qty: ${item.quantity} ${item.unit}</span>
+                        <span>Code: ${item.productCode} | Size: ${item.size} ${item.pcsPerCase !== undefined ? `| Pcs/Case: ${item.pcsPerCase}` : ''} | Qty: ${item.quantity} ${item.unit}</span>
                     </div>
                     <div class="receipt-item-price">PHP ${item.totalPrice}</div>
                 `;
@@ -2013,9 +2005,6 @@
             // Always clear client info on initial load/refresh
             clearClientInfoAndInputs();
             loadProductData(); // Load product data from localStorage on startup
-
-            // Removed all image-related event listeners and logic
-            // as photos are removed from the system.
 
             for (let i = 1; i <= 10; i++) {
                 const quantityInput = document.getElementById(`productQuantity${i}`);
