@@ -162,7 +162,8 @@
         }
         .product-grid {
             /* Ensures responsive grid layout: auto-fit creates columns, minmax handles sizing */
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Increased minwidth for wider cards */
+            /* Increased minwidth for wider cards to accommodate product names better */
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
             display: grid;
             gap: 20px; /* Slightly decreased gap */
             justify-content: center;
@@ -229,40 +230,18 @@
             cursor: default;
             color: #666;
             border: none; /* No border for readonly */
+            /* Add overflow ellipsis for long names, if they don't fit */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .input-group input[readonly]:focus {
             box-shadow: none;
             border-color: transparent; /* No border on focus for readonly */
         }
 
-        .image-drop-area {
-            position: relative;
-            width: 100%;
-            height: 100px; /* Decreased height */
-            border: none;
-            border-radius: 0; /* Removed border radius */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: transparent; /* Make text color transparent if any residual text appears */
-            font-weight: 500;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            text-align: center;
-            padding: 0;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            margin-bottom: 5px; /* Decreased margin */
-            background-color: transparent; /* Ensure default is transparent */
-        }
-        .image-drop-area:hover {
-            background-color: transparent; /* Ensure hover is also transparent */
-        }
-        .image-drop-area.has-image {
-            color: transparent;
-        }
+        /* Removed .image-drop-area styling as photos are removed */
+
         .back-button { /* General style for back button, used in top-left-buttons */
             background: none;
             border: none;
@@ -326,27 +305,7 @@
             background-color: #003a7a;
         }
 
-        /* Loader specific styling */
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #0050A0;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 2s linear infinite;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: none;
-        }
-        .image-drop-area.loading .loader {
-            display: block;
-        }
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
+        /* Removed loader styling as photos are removed */
 
         /* Button Positioning on Order Page */
         .top-left-buttons {
@@ -569,7 +528,7 @@
             display: block; /* Make details stack vertically */
             font-size: 0.85rem; /* Smaller for details */
             color: #5C6F78;
-            margin-top: 5px; /* Space between name and details */
+            margin-top: 5px;
         }
         .order-item-price {
             font-weight: 700;
@@ -802,12 +761,13 @@
             .product-card {
                 padding: 20px;
             }
+            /* Adjusted for small screens: ensure buttons stack vertically */
             .top-left-buttons {
                 top: 10px;
                 left: 10px;
-                flex-direction: column; /* Stack buttons vertically on small screens */
+                flex-direction: column; /* Stack buttons vertically */
                 gap: 5px;
-                align-items: flex-start;
+                align-items: flex-start; /* Align stacked items to the left */
             }
             .back-button {
                 padding: 8px;
@@ -819,20 +779,23 @@
                 height: 20px;
             }
             .finalize-order-button {
-                padding: 8px 12px;
-                font-size: 0.8rem;
-                width: auto;
+                padding: 8px 12px; /* Restore slightly larger padding for vertical stacking */
+                font-size: 0.8rem; /* Restore slightly larger font size */
+                width: auto; /* Allow width to be content-based */
                 min-height: 40px; /* Ensure consistent size */
+                align-self: flex-start; /* Align button to the left when stacked */
             }
             .order-buttons-container {
                 top: 10px;
                 right: 10px;
-                flex-direction: column; /* Stack buttons vertically on small screens */
+                flex-direction: column; /* Stack buttons vertically */
                 gap: 5px;
+                flex-wrap: nowrap; /* Prevent wrapping to next line if they can fit stacked */
+                justify-content: flex-end; /* Align to the right */
             }
             .order-list-button, .clear-order-button {
-                padding: 8px 12px;
-                font-size: 0.8rem;
+                padding: 8px 12px; /* Restore slightly larger padding for vertical stacking */
+                font-size: 0.8rem; /* Restore slightly larger font size */
                 width: 100%; /* Make full width when stacked */
                 min-height: 40px; /* Ensure consistent size */
             }
@@ -968,9 +931,7 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 1)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 1)">PER CASE</button>
                 </div>
-                <div class="image-drop-area" id="dropArea1">
-                    <div class="loader"></div>
-                </div>
+                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName1" placeholder="Product Name" readonly>
                 </div>
@@ -996,9 +957,7 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 2)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 2)">PER CASE</button>
                 </div>
-                <div class="image-drop-area" id="dropArea2">
-                    <div class="loader"></div>
-                </div>
+                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName2" placeholder="Product Name" readonly>
                 </div>
@@ -1024,9 +983,7 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 3)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 3)">PER CASE</button>
                 </div>
-                <div class="image-drop-area" id="dropArea3">
-                    <div class="loader"></div>
-                </div>
+                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName3" placeholder="Product Name" readonly>
                 </div>
@@ -1052,9 +1009,7 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 4)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 4)">PER CASE</button>
                 </div>
-                <div class="image-drop-area" id="dropArea4">
-                    <div class="loader"></div>
-                </div>
+                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName4" placeholder="Product Name" readonly>
                 </div>
@@ -1080,9 +1035,7 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 5)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 5)">PER CASE</button>
                 </div>
-                <div class="image-drop-area" id="dropArea5">
-                    <div class="loader"></div>
-                </div>
+                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName5" placeholder="Product Name" readonly>
                 </div>
@@ -1108,9 +1061,7 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 6)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 6)">PER CASE</button>
                 </div>
-                <div class="image-drop-area" id="dropArea6">
-                    <div class="loader"></div>
-                </div>
+                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName6" placeholder="Product Name" readonly>
                 </div>
@@ -1136,9 +1087,7 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 7)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 7)">PER CASE</button>
                 </div>
-                <div class="image-drop-area" id="dropArea7">
-                    <div class="loader"></div>
-                </div>
+                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName7" placeholder="Product Name" readonly>
                 </div>
@@ -1164,9 +1113,7 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 8)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 8)">PER CASE</button>
                 </div>
-                <div class="image-drop-area" id="dropArea8">
-                    <div class="loader"></div>
-                </div>
+                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName8" placeholder="Product Name" readonly>
                 </div>
@@ -1192,9 +1139,7 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 9)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 9)">PER CASE</button>
                 </div>
-                <div class="image-drop-area" id="dropArea9">
-                    <div class="loader"></div>
-                </div>
+                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName9" placeholder="Product Name" readonly>
                 </div>
@@ -1220,9 +1165,7 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 10)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 10)">PER CASE</button>
                 </div>
-                <div class="image-drop-area" id="dropArea10">
-                    <div class="loader"></div>
-                </div>
+                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName10" placeholder="Product Name" readonly>
                 </div>
@@ -1290,13 +1233,7 @@
     </button>
 
     <script>
-        // Base64 image data for ORDER PLATFORM TRIAL.jpg
-        // This is a placeholder for the actual base64 image data.
-        // In a real scenario, you'd convert your image file (ORDER PLATFORM TRIAL.jpg) to a base64 string
-        // and paste it here, starting with 'data:image/jpeg;base64,'.
-        const image10001Base64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCABAAEADASIAAhEBAQEDEQA/AJVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//Z";
-
-        // Data structure to store product information including unit-specific prices/sizes and image
+        // Data structure to store product information including unit-specific prices/sizes
         const productData = {
             1: { // Product 1
                 productCode: '10001',
@@ -1304,7 +1241,6 @@
                 size: '155 g',
                 'PC': { price: '24.35', quantity: 0 },
                 'CASE': { price: '2414.77', quantity: 0, pcsPerCase: 100 },
-                imageData: image10001Base64, // Added image data
                 currentUnit: 'PC' // Initialize currentUnit
             },
             2: { // Product 2
@@ -1313,7 +1249,6 @@
                 size: '155 g',
                 'PC': { price: '24.31', quantity: 0 },
                 'CASE': { price: '2412.20', quantity: 0, pcsPerCase: 100 },
-                imageData: '',
                 currentUnit: 'PC' // Initialize currentUnit
             },
             3: { // Product 3
@@ -1322,7 +1257,6 @@
                 size: '155 g',
                 'PC': { price: '29.15', quantity: 0 },
                 'CASE': { price: '1446.07', quantity: 0, pcsPerCase: 50 },
-                imageData: '',
                 currentUnit: 'PC'
             },
             4: { // Product 4
@@ -1331,7 +1265,6 @@
                 size: '155 g',
                 'PC': { price: '28.51', quantity: 0 },
                 'CASE': { price: '1413.61', quantity: 0, pcsPerCase: 50 },
-                imageData: '',
                 currentUnit: 'PC'
             },
             5: { // Product 5
@@ -1340,7 +1273,6 @@
                 size: '155 g',
                 'PC': { price: '28.51', quantity: 0 },
                 'CASE': { price: '1413.56', quantity: 0, pcsPerCase: 50 },
-                imageData: '',
                 currentUnit: 'PC'
             },
             6: { // Product 6
@@ -1349,7 +1281,6 @@
                 size: '155 g',
                 'PC': { price: '31.65', quantity: 0 },
                 'CASE': { price: '1569.26', quantity: 0, pcsPerCase: 50 },
-                imageData: '',
                 currentUnit: 'PC'
             },
             7: { // Product 7
@@ -1358,7 +1289,6 @@
                 size: '155 g',
                 'PC': { price: '28.51', quantity: 0 },
                 'CASE': { price: '1413.56', quantity: 0, pcsPerCase: 50 },
-                imageData: '',
                 currentUnit: 'PC'
             },
             8: { // Product 8
@@ -1367,7 +1297,6 @@
                 size: '1 l',
                 'PC': { price: '23.23', quantity: 0 },
                 'CASE': { price: '277.62', quantity: 0, pcsPerCase: 12 },
-                imageData: '',
                 currentUnit: 'PC'
             },
             9: { // Product 9
@@ -1376,7 +1305,6 @@
                 size: '350 ml',
                 'PC': { price: '10.62', quantity: 0 },
                 'CASE': { price: '370.08', quantity: 0, pcsPerCase: 35 },
-                imageData: '',
                 currentUnit: 'PC'
             },
             10: { // Product 10
@@ -1385,7 +1313,6 @@
                 size: '500 ml',
                 'PC': { price: '14.82', quantity: 0 },
                 'CASE': { price: '352.29', quantity: 0, pcsPerCase: 24 },
-                imageData: '',
                 currentUnit: 'PC'
             }
         };
@@ -1529,10 +1456,9 @@
                         }
                     });
 
-                    // Merge other top-level properties like productName, size, imageData, currentUnit
+                    // Merge other top-level properties like productName, size, currentUnit
                     productData[productId].productName = parsedData[productId].productName || defaultProduct.productName;
                     productData[productId].size = parsedData[productId].size || defaultProduct.size;
-                    productData[productId].imageData = parsedData[productId].imageData || defaultProduct.imageData;
                     productData[productId].currentUnit = parsedData[productId].currentUnit || defaultProduct.currentUnit;
                 }
 
@@ -1563,7 +1489,10 @@
                     const product = productData[i];
 
                     // Set initial UI values from productData (which might have been loaded from localStorage)
-                    productCard.querySelector(`#productName${i}`).value = product.productName;
+                    const productNameInput = productCard.querySelector(`#productName${i}`);
+                    productNameInput.value = product.productName;
+                    productNameInput.title = product.productName; // Add title for tooltip
+
                     const productCodeDisplay = productCard.querySelector(`#productCode${i}Display`);
                     if (productCodeDisplay) {
                         productCodeDisplay.textContent = product.productCode;
@@ -1596,16 +1525,6 @@
                         } else {
                             pcsPerCaseValueSpan.textContent = '';
                         }
-                    }
-
-                    // Display image if available
-                    const dropArea = productCard.querySelector(`#dropArea${i}`);
-                    if (product.imageData) {
-                        dropArea.style.backgroundImage = `url(${product.imageData})`;
-                        dropArea.classList.add('has-image');
-                    } else {
-                        dropArea.style.backgroundImage = '';
-                        dropArea.classList.remove('has-image');
                     }
                 }
             }
@@ -1713,33 +1632,7 @@
             }, 700); // Allow some time for other pages to fade out
         }
 
-        function handleImageUpload(dropArea, file) {
-            const productId = parseInt(dropArea.id.replace('dropArea', ''));
-            const loader = dropArea.querySelector('.loader');
-
-            if (file && file.type.startsWith('image/')) {
-                dropArea.classList.add('loading');
-                if (loader) loader.style.display = 'block';
-
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const base64Image = event.target.result;
-                    dropArea.style.backgroundImage = `url(${base64Image})`;
-                    dropArea.classList.add('has-image');
-
-                    productData[productId].imageData = base64Image;
-                    saveProductData(productId); // Save to localStorage
-
-                    dropArea.classList.remove('loading');
-                    if (loader) loader.style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-            } else {
-                console.warn('Selected file is not an image.');
-                dropArea.classList.remove('loading');
-                if (loader) loader.style.display = 'none';
-            }
-        }
+        // Removed handleImageUpload function
 
         window.selectUnit = function(selectedButton, newUnit, productIdTrigger) {
             // Save the quantity of the product whose unit button was explicitly clicked
@@ -2122,51 +2015,8 @@
             clearClientInfoAndInputs();
             loadProductData(); // Load product data from localStorage on startup
 
-            const dropAreas = document.querySelectorAll('.image-drop-area');
-
-            dropAreas.forEach(dropArea => {
-                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                    dropArea.addEventListener(eventName, preventDefaults, false);
-                });
-
-                function preventDefaults(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-
-                dropArea.addEventListener('mouseenter', () => {
-                    dropArea.style.backgroundColor = 'transparent';
-                });
-                dropArea.addEventListener('mouseleave', () => {
-                    dropArea.style.backgroundColor = 'transparent';
-                });
-
-                dropArea.addEventListener('drop', (e) => {
-                    const dt = e.dataTransfer;
-                    const files = dt.files;
-                    if (files.length > 0) {
-                        handleImageUpload(dropArea, files[0]);
-                    }
-                    dropArea.style.backgroundColor = 'transparent';
-                }, false);
-
-                dropArea.addEventListener('click', () => {
-                    const fileInput = document.createElement('input');
-                    fileInput.type = 'file';
-                    fileInput.accept = 'image/*';
-                    fileInput.style.display = 'none';
-                    document.body.appendChild(fileInput);
-
-                    fileInput.click();
-                    fileInput.onchange = (e) => {
-                        const files = e.target.files;
-                        if (files.length > 0) {
-                            handleImageUpload(dropArea, files[0]);
-                        }
-                        document.body.removeChild(fileInput);
-                    };
-                });
-            });
+            // Removed all image-related event listeners and logic
+            // as photos are removed from the system.
 
             for (let i = 1; i <= 10; i++) {
                 const quantityInput = document.getElementById(`productQuantity${i}`);
