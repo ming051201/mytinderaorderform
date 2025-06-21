@@ -1,0 +1,2189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyTindahan Offline Order</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Import Passion One font from Google Fonts for the logo -->
+    <link href="https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Tailwind-like base styles and utilities, embedded for offline use */
+        html {
+            line-height: 1.5;
+            -webkit-text-size-adjust: 100%;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+        }
+        *, ::before, ::after {
+            box-sizing: inherit;
+        }
+        body {
+            margin: 0;
+            font-family: inherit;
+            line-height: inherit;
+            background-color: #ffffff; /* All white background */
+            display: flex; /* Use flexbox to center content */
+            justify-content: center;
+            align-items: flex-start; /* Changed from 'center' to 'flex-start' to align content to the top */
+            min-height: 100vh;
+            padding: 20px; /* Ensures content has padding on all sides, important for mobile */
+            overflow-y: auto; /* Allow scrolling if content exceeds viewport height */
+            /* Prevent horizontal scrolling on smaller screens */
+            overflow-x: hidden;
+        }
+
+        .landing-container, .order-page-container, .receipt-page-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 900px; /* Wider for product display */
+            width: 100%;
+            opacity: 0; /* Initially hidden */
+            transform: translateY(20px); /* Slight animation for appearing */
+            transition: opacity 0.7s ease, transform 0.7s ease;
+            position: relative; /* Allow child elements to be positioned */
+            display: none; /* Ensure it's fully hidden initially */
+            flex-direction: column; /* Ensure content stacks properly */
+            align-items: center; /* Center content horizontally */
+            justify-content: center; /* Center content vertically if space allows */
+        }
+        .landing-container {
+            background-color: #6495ED; /* Darker Blue background for landing page (CornflowerBlue) */
+        }
+        /* Updated: Set order-page-container background to match landing-container */
+        .order-page-container {
+            background-color: #6495ED;
+        }
+        .landing-container.visible, .order-page-container.visible, .receipt-page-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+            display: flex; /* Show as flex container */
+        }
+        .landing-container.hidden, .order-page-container.hidden, .receipt-page-container.hidden {
+            opacity: 0;
+            pointer-events: none; /* Disable interactions when hidden */
+        }
+
+        .logo {
+            font-family: 'Passion One', sans-serif; /* Changed font to Passion One */
+            font-size: 5.5rem; /* Increased font size for larger logo */
+            font-weight: 700;
+            margin-bottom: 20px; /* Adjusted margin to occupy more space */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            white-space: nowrap; /* Prevent "My" and "Tindera" from wrapping */
+            width: 100%; /* Make it occupy full width */
+        }
+        .logo-my {
+            color: #EE3524; /* Red color for 'My' */
+        }
+        .logo-tindera { /* Changed from logo-tindahan */
+            color: #FFD700; /* Gold/Yellow color for 'Tindera' */
+        }
+        .tagline {
+            font-size: 1.5rem;
+            color: #5C6F78;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+        .get-started-button, .order-again-button {
+            background: linear-gradient(145deg, #EE3524, #C02C1F);
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            /* Ensure good touch target size on mobile */
+            min-height: 48px;
+            min-width: 120px;
+        }
+        .get-started-button:hover, .order-again-button:hover {
+            background: linear-gradient(145deg, #C02C1F, #EE3524);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        .get-started-button:active, .order-again-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        .get-started-button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+            opacity: 0.7;
+        }
+
+        /* Input group on landing page */
+        .landing-input-group {
+            width: 100%;
+            max-width: 350px; /* Limit input width for better mobile display */
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .landing-input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+            color: #333;
+            font-weight: 500;
+        }
+        .landing-input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            min-height: 48px; /* Good touch target size */
+        }
+        .landing-input-group input:focus {
+            outline: none;
+            border-color: #0050A0;
+            box-shadow: 0 0 0 3px rgba(0, 80, 160, 0.1);
+        }
+
+
+        /* Order Page Specific Styles */
+        .order-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0050A0;
+            margin-bottom: 30px;
+        }
+        .product-grid {
+            /* Ensures responsive grid layout: auto-fit creates columns, minmax handles sizing */
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Increased minwidth for wider cards */
+            display: grid;
+            gap: 20px; /* Slightly decreased gap */
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .product-card {
+            background-color: #ffffff; /* White background for product card */
+            border-radius: 15px;
+            padding: 10px; /* Decreased padding */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 8px; /* Decreased gap */
+            align-items: center;
+        }
+        .product-code-display {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #5C6F78;
+            margin-bottom: 3px; /* Decreased margin */
+        }
+        .input-group {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 3px; /* Decreased margin */
+        }
+        .input-group:last-child {
+            margin-bottom: 0; /* No margin on the last input group */
+        }
+
+        .input-group input {
+            margin-bottom: 0; /* Removed margin on inputs within group for tighter control */
+            border: none; /* Removed all borders */
+            background-color: transparent; /* Transparent background */
+            border-radius: 0;
+            padding: 8px 0; /* Adjust padding if needed after removing borders, slightly less */
+            min-height: 40px; /* Ensure sufficient height for touch inputs, slightly less */
+        }
+        .input-group input, .input-group textarea {
+            width: 100%;
+            font-size: 1rem;
+            box-sizing: border-box;
+            color: #333; /* Default text color for inputs */
+        }
+        /* Styling for product name to make it more prominent - now black */
+        .product-card .input-group input[id^="productName"] {
+            font-size: 1.1rem; /* Slightly larger for product name */
+            font-weight: 600; /* Bold */
+            color: #333; /* Make it black/dark gray */
+        }
+        /* Styling for product price - now black */
+        .product-card .input-group input[id^="productPrice"] {
+            font-weight: 600; /* Make price bold */
+            color: #333; /* Make it black/dark gray */
+        }
+
+        .input-group input:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: transparent; /* Ensure focus also has no border */
+            box-shadow: none; /* No box shadow on focus for input[readonly] */
+        }
+        .input-group input[readonly] {
+            background-color: transparent; /* Make readonly inputs transparent */
+            cursor: default;
+            color: #666;
+            border: none; /* No border for readonly */
+        }
+        .input-group input[readonly]:focus {
+            box-shadow: none;
+            border-color: transparent; /* No border on focus for readonly */
+        }
+
+        .image-drop-area {
+            position: relative;
+            width: 100%;
+            height: 100px; /* Decreased height */
+            border: none;
+            border-radius: 0; /* Removed border radius */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: transparent; /* Make text color transparent if any residual text appears */
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            text-align: center;
+            padding: 0;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-bottom: 5px; /* Decreased margin */
+            background-color: transparent; /* Ensure default is transparent */
+        }
+        .image-drop-area:hover {
+            background-color: transparent; /* Ensure hover is also transparent */
+        }
+        .image-drop-area.has-image {
+            color: transparent;
+        }
+        .back-button { /* General style for back button, used in top-left-buttons */
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            min-width: 48px; /* Ensure minimum touch target size */
+            min-height: 48px;
+        }
+        .back-button:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            transform: translateX(-3px);
+        }
+        .back-button svg {
+            width: 24px;
+            height: 24px;
+            fill: #0050A0;
+        }
+
+        /* Unit selection buttons styling */
+        .unit-buttons {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 5px; /* Decreased margin */
+        }
+        .unit-button {
+            background-color: #f0f0f0;
+            color: #5C6F78;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
+            min-height: 40px; /* Ensure sufficient height for touch, slightly less */
+            flex-grow: 1; /* Allow buttons to expand to fill space */
+            margin: 0 4px; /* Slightly decreased margin between buttons */
+        }
+        .unit-button:first-child { margin-left: 0; }
+        .unit-button:last-child { margin-right: 0; }
+
+        .unit-button:hover {
+            background-color: #e6e6e6;
+            transform: translateY(-1px);
+        }
+        .unit-button.active {
+            background-color: #0050A0;
+            color: white;
+            border-color: #0050A0;
+            box-shadow: 0 2px 5px rgba(0, 80, 160, 0.2);
+            transform: translateY(-2px);
+        }
+        .unit-button.active:hover {
+            background-color: #003a7a;
+        }
+
+        /* Loader specific styling */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0050A0;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 2s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+        .image-drop-area.loading .loader {
+            display: block;
+        }
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Button Positioning on Order Page */
+        .top-left-buttons {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .order-buttons-container { /* Original right-aligned container */
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Finalize Order Button */
+        .finalize-order-button {
+            background: linear-gradient(145deg, #0056b3, #004085); /* Blue gradient */
+            color: white;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            min-height: 44px; /* Ensure sufficient touch target size */
+        }
+        /* Style for disabled button */
+        .finalize-order-button:disabled {
+            background: #cccccc; /* Greyed out */
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+            opacity: 0.7;
+        }
+        .finalize-order-button:hover:not(:disabled) { /* Apply hover only if not disabled */
+            background: linear-gradient(145deg, #004085, #0056b3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .finalize-order-button:active:not(:disabled) { /* Apply active only if not disabled */
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Order List Button */
+        .order-list-button {
+            background: linear-gradient(145deg, #28a745, #218838); /* Green gradient */
+            color: white;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            min-height: 44px; /* Ensure sufficient touch target size */
+        }
+        .order-list-button:hover {
+            background: linear-gradient(145deg, #218838, #28a745);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .order-list-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Clear Order Button */
+        .clear-order-button {
+            background: linear-gradient(145deg, #dc3545, #c82333); /* Red gradient */
+            color: white;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            min-height: 44px; /* Ensure sufficient touch target size */
+        }
+        .clear-order-button:hover {
+            background: linear-gradient(145deg, #c82333, #dc3545);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .clear-order-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Share Receipt Button */
+        .share-receipt-button {
+            background: linear-gradient(145deg, #FFD700, #DAA520); /* Gold/Yellow gradient */
+            color: #333; /* Dark text for contrast */
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            min-height: 48px;
+            margin-top: 20px; /* Space above the button */
+        }
+        .share-receipt-button:hover {
+            background: linear-gradient(145deg, #DAA520, #FFD700);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+        .share-receipt-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+
+        /* Modals and their content */
+        .order-summary-modal, .receipt-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .order-summary-modal.visible, .receipt-modal.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .order-summary-content, .receipt-modal .receipt-content { /* Specificity for receipt content within modal */
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 90%;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            position: relative;
+            display: flex; /* Changed to flex to allow vertical stacking and control */
+            flex-direction: column;
+            max-height: 90vh; /* Limit modal height, enable scrolling for content if needed */
+        }
+        .order-summary-modal.visible .order-summary-content, .receipt-modal.visible .receipt-content {
+            transform: translateY(0);
+        }
+        .order-summary-content h3, .receipt-page-container h3, .receipt-modal .receipt-content h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0050A0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        /* New style for scrollable content area within the modal */
+        .order-summary-scrollable-content {
+            max-height: calc(90vh - 180px); /* Adjust based on header/footer height */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding-right: 10px; /* Add some padding for scrollbar */
+            margin-bottom: 20px; /* Space between scrollable content and total */
+        }
+        /* New style for scrollable content area within the receipt page */
+        .receipt-scrollable-content {
+            max-height: calc(90vh - 250px); /* Adjusted for receipt page to account for message and share button */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding-right: 10px; /* Padding for scrollbar */
+            margin-bottom: 20px; /* Space below content before total */
+        }
+        .receipt-client-info {
+            text-align: left;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            color: #5C6F78;
+        }
+        .receipt-client-info strong {
+            color: #333;
+        }
+
+        /* Enhanced order item styling */
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px; /* Increased padding */
+            margin-bottom: 10px; /* Space between items */
+            background-color: #f9f9f9; /* Light background for separation */
+            border: 1px solid #eee;
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+            font-size: 0.95rem;
+            color: #333;
+            /* No border-bottom for new styling as it's a card */
+            border-bottom: none;
+        }
+        .order-item:last-child {
+            margin-bottom: 0; /* No margin after the last item */
+        }
+        .order-item-details strong {
+            font-size: 1.05rem; /* Slightly larger product name */
+            font-weight: 700;
+            color: #0050A0;
+            display: block; /* Ensures it takes full width for stacking */
+        }
+        .order-item-details span {
+            display: block; /* Make details stack vertically */
+            font-size: 0.85rem; /* Smaller for details */
+            color: #5C6F78;
+            margin-top: 5px; /* Space between name and details */
+        }
+        .order-item-price {
+            font-weight: 700;
+            color: #C02C1F;
+            display: flex;
+            flex-direction: column; /* Stack price and controls */
+            align-items: flex-end; /* Align price and controls to the right */
+            text-align: right; /* Ensure text aligns right */
+            margin-left: 15px; /* Add some space from details */
+        }
+        .order-item-price .remove-quantity-input {
+            margin-top: 10px; /* Space above input */
+            margin-bottom: 5px; /* Space below input */
+        }
+
+        /* Apply similar enhancement to receipt items */
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px; /* Increased padding */
+            margin-bottom: 10px; /* Space between items */
+            background-color: #f9f9f9; /* Light background for separation */
+            border: 1px solid #eee;
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+            font-size: 0.95rem;
+            color: #333;
+            border-bottom: none; /* No border-bottom for new styling */
+        }
+        .receipt-item:last-child {
+            margin-bottom: 0;
+        }
+        .receipt-item-details strong {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #0050A0;
+            display: block;
+        }
+        .receipt-item-details span {
+            display: block;
+            font-size: 0.85rem;
+            color: #5C6F78;
+            margin-top: 5px;
+        }
+        .receipt-item-price {
+            font-weight: 700;
+            color: #C02C1F;
+            margin-left: 15px; /* Add some space from details */
+        }
+
+        .order-total, .receipt-total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0050A0;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #eee;
+            text-align: right;
+        }
+        .close-modal-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #5C6F78;
+            transition: color 0.2s ease;
+            min-width: 44px; /* Ensure sufficient touch target size */
+            min-height: 44px;
+        }
+        .close-modal-button:hover {
+            color: #EE3524;
+        }
+
+        /* Remove Order button in modal */
+        .remove-order-button {
+            background-color: #f8d7da;
+            color: #dc3545;
+            border: 1px solid #dc3545;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: 0; /* Align with stacked price */
+            min-height: 38px; /* Slightly smaller touch target for within modal */
+        }
+        .remove-order-button:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+        .remove-order-button:active {
+            transform: translateY(1px);
+        }
+
+        .remove-quantity-input {
+            width: 70px; /* Slightly wider for better touch */
+            padding: 8px 6px; /* Increased padding */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            margin-right: 0; /* Align with stacked price */
+            font-size: 0.9rem;
+            min-height: 38px; /* Ensure sufficient height for touch */
+        }
+
+        .receipt-message {
+            font-size: 1rem;
+            color: #EE3524;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Search Bar Specific Styles */
+        .search-bar-container {
+            width: 100%;
+            margin-bottom: 20px; /* Space below the search bar */
+            max-width: 500px; /* Limit search bar width */
+        }
+        .search-bar-container input {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+            min-height: 48px; /* Ensure sufficient height for touch */
+        }
+        .search-bar-container input:focus {
+            outline: none;
+            border-color: #0050A0;
+            box-shadow: 0 0 0 3px rgba(0, 80, 160, 0.1);
+        }
+
+        /* No Available Stocks Message */
+        .no-stock-message {
+            color: #dc3545; /* Red color for warning */
+            font-weight: 600;
+            margin-top: 20px;
+            text-align: center;
+            display: none; /* Hidden by default */
+        }
+        /* Style for the new Pcs/Case value container to match input styling */
+        .pcs-per-case-display-container {
+            flex: 1;
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+            background-color: transparent; /* Make transparent */
+            border: none; /* Remove borders */
+            border-radius: 0;
+            height: 44px; /* Ensure consistent height with adjacent input */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            padding: 10px 0; /* Align padding with other inputs */
+        }
+
+        /* Return to Top button styles */
+        #returnToTopBtn {
+            display: none; /* Hidden by default */
+            position: fixed; /* Fixed position */
+            bottom: 30px; /* 30px from the bottom */
+            right: 30px; /* 30px from the right */
+            z-index: 99; /* High z-index to be on top of other elements */
+            background: linear-gradient(145deg, #0050A0, #003a7a); /* Blue gradient */
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            min-width: 48px; /* Ensure good touch target size */
+            min-height: 48px;
+            display: flex; /* Use flex to center icon/text */
+            align-items: center;
+            justify-content: center;
+        }
+
+        #returnToTopBtn:hover {
+            background: linear-gradient(145deg, #003a7a, #0050A0);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        #returnToTopBtn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        /* Style for SVG icon within the button */
+        #returnToTopBtn svg {
+            fill: white;
+            width: 20px;
+            height: 20px;
+            margin-left: 8px; /* Space between text and icon */
+        }
+        /* Hide text on smaller screens, only show arrow */
+        @media (max-width: 768px) {
+            #returnToTopBtn {
+                padding: 12px; /* Make it a square button */
+                font-size: 0; /* Hide text */
+                bottom: 20px;
+                right: 20px;
+            }
+            #returnToTopBtn svg {
+                margin-left: 0; /* Remove margin for centered icon */
+            }
+        }
+
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .landing-container, .order-page-container, .receipt-page-container {
+                padding: 20px; /* More compact padding on smaller devices */
+            }
+            .order-title {
+                font-size: 1.8rem;
+                margin-bottom: 20px;
+            }
+            .product-grid {
+                /* For smaller screens, ensure single column layout as 380px minwidth is wide enough */
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .product-card {
+                padding: 20px;
+            }
+            .top-left-buttons {
+                top: 10px;
+                left: 10px;
+                flex-direction: column; /* Stack buttons vertically on small screens */
+                gap: 5px;
+                align-items: flex-start;
+            }
+            .back-button {
+                padding: 8px;
+                min-width: 40px; /* Adjust min size for smaller button */
+                min-height: 40px;
+            }
+            .back-button svg {
+                width: 20px;
+                height: 20px;
+            }
+            .finalize-order-button {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                width: auto;
+                min-height: 40px; /* Ensure consistent size */
+            }
+            .order-buttons-container {
+                top: 10px;
+                right: 10px;
+                flex-direction: column; /* Stack buttons vertically on small screens */
+                gap: 5px;
+            }
+            .order-list-button, .clear-order-button {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                width: 100%; /* Make full width when stacked */
+                min-height: 40px; /* Ensure consistent size */
+            }
+            .order-summary-content h3, .receipt-page-container h3, .receipt-modal .receipt-content h3 {
+                font-size: 1.5rem;
+            }
+            .order-item, .receipt-item {
+                flex-direction: column; /* Stack details and price vertically in summary */
+                align-items: flex-start;
+            }
+            .order-item-details, .receipt-item-details {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+            .order-total, .receipt-total {
+                font-size: 1.1rem;
+            }
+            .remove-quantity-input {
+                width: 50px;
+                min-height: 36px;
+            }
+            .search-bar-container {
+                margin-top: 10px; /* Adjust spacing for smaller screens */
+            }
+            .order-summary-scrollable-content {
+                max-height: calc(90vh - 150px);
+            }
+            .receipt-scrollable-content {
+                max-height: calc(90vh - 200px); /* Adjusted for tighter space on smaller screens */
+            }
+            .share-receipt-button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            .receipt-client-info {
+                font-size: 0.85rem;
+            }
+        }
+        @media (max-width: 640px) {
+            .landing-container {
+                padding: 30px;
+                border-radius: 15px;
+            }
+            .logo {
+                font-size: 3.5rem; /* Adjusted for smaller screens */
+            }
+            .tagline {
+                font-size: 1.2rem;
+            }
+            .get-started-button {
+                font-size: 1rem;
+                padding: 12px 25px;
+            }
+            .unit-buttons {
+                flex-direction: column; /* Stack unit buttons vertically */
+                gap: 8px;
+            }
+            .unit-button {
+                width: 100%; /* Make unit buttons full width when stacked */
+            }
+            .product-card { /* Adjusted for very small screens */
+                padding: 15px;
+                gap: 10px;
+            }
+            .product-code-display,
+            .input-group input[id^="productName"],
+            .input-group input[id^="productPrice"],
+            .input-group input[id^="productQuantity"] {
+                font-size: 0.95rem; /* Slightly smaller text for very small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="landingPage" class="landing-container visible">
+        <h1 class="logo"><span class="logo-my">My</span><span class="logo-tindera">Tindera</span></h1>
+        <p class="tagline">Ready to take your order</p>
+
+        <div class="landing-input-group">
+            <label for="storeNameInput">Store Name:</label>
+            <input type="text" id="storeNameInput" placeholder="Enter store name" oninput="checkLandingInputs()">
+        </div>
+        <div class="landing-input-group">
+            <label for="fullNameInput">Full Name:</label>
+            <input type="text" id="fullNameInput" placeholder="Enter your full name" oninput="checkLandingInputs()">
+        </div>
+        <div class="landing-input-group">
+            <label for="addressInput">Full Address:</label>
+            <input type="text" id="addressInput" placeholder="Enter full address" oninput="checkLandingInputs()">
+        </div>
+        <div class="landing-input-group">
+            <label for="phoneNumberInput">Phone Number:</label>
+            <input type="tel" id="phoneNumberInput" placeholder="Enter phone number" oninput="checkLandingInputs()">
+        </div>
+
+        <button id="getStartedButton" class="get-started-button" onclick="showOrderPage()" disabled>Get started</button>
+    </div>
+
+    <div id="orderPage" class="order-page-container">
+        <!-- Top Left Buttons Container -->
+        <div class="top-left-buttons">
+            <button class="back-button" onclick="showLandingPage()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                </svg>
+            </button>
+            <button id="finalizeOrderButton" class="finalize-order-button" onclick="finalizeOrder()" disabled>Finalize Order</button>
+        </div>
+
+        <!-- Order Buttons Container (Top Right) -->
+        <div class="order-buttons-container">
+            <button class="order-list-button" onclick="showOrderSummary()">List of Orders</button>
+            <button class="clear-order-button" onclick="clearAllOrders()">Clear Order</button>
+        </div>
+
+        <h2 class="order-title">Your Orders</h2>
+
+        <!-- Search Bar -->
+        <div class="search-bar-container">
+            <input type="text" id="productSearch" placeholder="Search products..." oninput="filterProducts()">
+        </div>
+
+        <!-- No Available Stocks Message -->
+        <div id="noStockMessage" class="no-stock-message">
+            No Available Stocks
+        </div>
+
+        <div class="product-grid">
+            <!-- Product Card 1 -->
+            <div class="product-card" id="productCard1" data-current-unit="PC">
+                <div class="product-code-display" id="productCode1Display">10001</div>
+                <div class="unit-buttons">
+                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 1)">PER PC</button>
+                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 1)">PER CASE</button>
+                </div>
+                <div class="image-drop-area" id="dropArea1">
+                    <div class="loader"></div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productName1" placeholder="Product Name" readonly>
+                </div>
+                <div class="input-group" style="display: flex; gap: 10px;">
+                    <input type="text" id="productSize1" placeholder="Size" style="flex: 1;" readonly>
+                    <div id="pcsPerCaseDisplay1" class="pcs-per-case-display-container">
+                        <span class="text-sm text-gray-600">Pcs/Case:</span>
+                        <span id="pcsPerCaseValue1" class="font-semibold text-gray-800"></span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productPrice1" placeholder="Price per PC (PHP)" readonly> <!-- Changed type to text and will prefix with PHP in JS -->
+                </div>
+                <div class="input-group">
+                    <input type="number" id="productQuantity1" placeholder="Quantity" value="0" min="0">
+                </div>
+            </div>
+
+            <!-- Product Card 2 -->
+            <div class="product-card" id="productCard2" data-current-unit="PC">
+                <div class="product-code-display" id="productCode2Display">10002</div>
+                <div class="unit-buttons">
+                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 2)">PER PC</button>
+                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 2)">PER CASE</button>
+                </div>
+                <div class="image-drop-area" id="dropArea2">
+                    <div class="loader"></div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productName2" placeholder="Product Name" readonly>
+                </div>
+                <div class="input-group" style="display: flex; gap: 10px;">
+                    <input type="text" id="productSize2" placeholder="Size" style="flex: 1;" readonly>
+                    <div id="pcsPerCaseDisplay2" class="pcs-per-case-display-container">
+                        <span class="text-sm text-gray-600">Pcs/Case:</span>
+                        <span id="pcsPerCaseValue2" class="font-semibold text-gray-800"></span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productPrice2" placeholder="Price per PC (PHP)" readonly>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="productQuantity2" placeholder="Quantity" value="0" min="0">
+                </div>
+            </div>
+
+            <!-- Product Card 3 -->
+            <div class="product-card" id="productCard3" data-current-unit="PC">
+                <div class="product-code-display" id="productCode3Display">10003</div>
+                <div class="unit-buttons">
+                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 3)">PER PC</button>
+                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 3)">PER CASE</button>
+                </div>
+                <div class="image-drop-area" id="dropArea3">
+                    <div class="loader"></div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productName3" placeholder="Product Name" readonly>
+                </div>
+                <div class="input-group" style="display: flex; gap: 10px;">
+                    <input type="text" id="productSize3" placeholder="Size" style="flex: 1;" readonly>
+                    <div id="pcsPerCaseDisplay3" class="pcs-per-case-display-container">
+                        <span class="text-sm text-gray-600">Pcs/Case:</span>
+                        <span id="pcsPerCaseValue3" class="font-semibold text-gray-800"></span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productPrice3" placeholder="Price per PC (PHP)" readonly>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="productQuantity3" placeholder="Quantity" value="0" min="0">
+                </div>
+            </div>
+
+            <!-- Product Card 4 -->
+            <div class="product-card" id="productCard4" data-current-unit="PC">
+                <div class="product-code-display" id="productCode4Display">10004</div>
+                <div class="unit-buttons">
+                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 4)">PER PC</button>
+                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 4)">PER CASE</button>
+                </div>
+                <div class="image-drop-area" id="dropArea4">
+                    <div class="loader"></div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productName4" placeholder="Product Name" readonly>
+                </div>
+                <div class="input-group" style="display: flex; gap: 10px;">
+                    <input type="text" id="productSize4" placeholder="Size" style="flex: 1;" readonly>
+                    <div id="pcsPerCaseDisplay4" class="pcs-per-case-display-container">
+                        <span class="text-sm text-gray-600">Pcs/Case:</span>
+                        <span id="pcsPerCaseValue4" class="font-semibold text-gray-800"></span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productPrice4" placeholder="Price per PC (PHP)" readonly>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="productQuantity4" placeholder="Quantity" value="0" min="0">
+                </div>
+            </div>
+
+            <!-- Product Card 5 -->
+            <div class="product-card" id="productCard5" data-current-unit="PC">
+                <div class="product-code-display" id="productCode5Display">10005</div>
+                <div class="unit-buttons">
+                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 5)">PER PC</button>
+                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 5)">PER CASE</button>
+                </div>
+                <div class="image-drop-area" id="dropArea5">
+                    <div class="loader"></div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productName5" placeholder="Product Name" readonly>
+                </div>
+                <div class="input-group" style="display: flex; gap: 10px;">
+                    <input type="text" id="productSize5" placeholder="Size" style="flex: 1;" readonly>
+                    <div id="pcsPerCaseDisplay5" class="pcs-per-case-display-container">
+                        <span class="text-sm text-gray-600">Pcs/Case:</span>
+                        <span id="pcsPerCaseValue5" class="font-semibold text-gray-800"></span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productPrice5" placeholder="Price per PC (PHP)" readonly>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="productQuantity5" placeholder="Quantity" value="0" min="0">
+                </div>
+            </div>
+
+            <!-- Product Card 6 -->
+            <div class="product-card" id="productCard6" data-current-unit="PC">
+                <div class="product-code-display" id="productCode6Display">10006</div>
+                <div class="unit-buttons">
+                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 6)">PER PC</button>
+                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 6)">PER CASE</button>
+                </div>
+                <div class="image-drop-area" id="dropArea6">
+                    <div class="loader"></div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productName6" placeholder="Product Name" readonly>
+                </div>
+                <div class="input-group" style="display: flex; gap: 10px;">
+                    <input type="text" id="productSize6" placeholder="Size" style="flex: 1;" readonly>
+                    <div id="pcsPerCaseDisplay6" class="pcs-per-case-display-container">
+                        <span class="text-sm text-gray-600">Pcs/Case:</span>
+                        <span id="pcsPerCaseValue6" class="font-semibold text-gray-800"></span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productPrice6" placeholder="Price per PC (PHP)" readonly>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="productQuantity6" placeholder="Quantity" value="0" min="0">
+                </div>
+            </div>
+
+            <!-- Product Card 7 -->
+            <div class="product-card" id="productCard7" data-current-unit="PC">
+                <div class="product-code-display" id="productCode7Display">10007</div>
+                <div class="unit-buttons">
+                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 7)">PER PC</button>
+                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 7)">PER CASE</button>
+                </div>
+                <div class="image-drop-area" id="dropArea7">
+                    <div class="loader"></div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productName7" placeholder="Product Name" readonly>
+                </div>
+                <div class="input-group" style="display: flex; gap: 10px;">
+                    <input type="text" id="productSize7" placeholder="Size" style="flex: 1;" readonly>
+                    <div id="pcsPerCaseDisplay7" class="pcs-per-case-display-container">
+                        <span class="text-sm text-gray-600">Pcs/Case:</span>
+                        <span id="pcsPerCaseValue7" class="font-semibold text-gray-800"></span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productPrice7" placeholder="Price per PC (PHP)" readonly>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="productQuantity7" placeholder="Quantity" value="0" min="0">
+                </div>
+            </div>
+
+            <!-- Product Card 8 -->
+            <div class="product-card" id="productCard8" data-current-unit="PC">
+                <div class="product-code-display" id="productCode8Display">10008</div>
+                <div class="unit-buttons">
+                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 8)">PER PC</button>
+                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 8)">PER CASE</button>
+                </div>
+                <div class="image-drop-area" id="dropArea8">
+                    <div class="loader"></div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productName8" placeholder="Product Name" readonly>
+                </div>
+                <div class="input-group" style="display: flex; gap: 10px;">
+                    <input type="text" id="productSize8" placeholder="Size" style="flex: 1;" readonly>
+                    <div id="pcsPerCaseDisplay8" class="pcs-per-case-display-container">
+                        <span class="text-sm text-gray-600">Pcs/Case:</span>
+                        <span id="pcsPerCaseValue8" class="font-semibold text-gray-800"></span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productPrice8" placeholder="Price per PC (PHP)" readonly>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="productQuantity8" placeholder="Quantity" value="0" min="0">
+                </div>
+            </div>
+
+            <!-- Product Card 9 -->
+            <div class="product-card" id="productCard9" data-current-unit="PC">
+                <div class="product-code-display" id="productCode9Display">10009</div>
+                <div class="unit-buttons">
+                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 9)">PER PC</button>
+                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 9)">PER CASE</button>
+                </div>
+                <div class="image-drop-area" id="dropArea9">
+                    <div class="loader"></div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productName9" placeholder="Product Name" readonly>
+                </div>
+                <div class="input-group" style="display: flex; gap: 10px;">
+                    <input type="text" id="productSize9" placeholder="Size" style="flex: 1;" readonly>
+                    <div id="pcsPerCaseDisplay9" class="pcs-per-case-display-container">
+                        <span class="text-sm text-gray-600">Pcs/Case:</span>
+                        <span id="pcsPerCaseValue9" class="font-semibold text-gray-800"></span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productPrice9" placeholder="Price per PC (PHP)" readonly>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="productQuantity9" placeholder="Quantity" value="0" min="0">
+                </div>
+            </div>
+
+            <!-- Product Card 10 -->
+            <div class="product-card" id="productCard10" data-current-unit="PC">
+                <div class="product-code-display" id="productCode10Display">10010</div>
+                <div class="unit-buttons">
+                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 10)">PER PC</button>
+                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 10)">PER CASE</button>
+                </div>
+                <div class="image-drop-area" id="dropArea10">
+                    <div class="loader"></div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productName10" placeholder="Product Name" readonly>
+                </div>
+                <div class="input-group" style="display: flex; gap: 10px;">
+                    <input type="text" id="productSize10" placeholder="Size" style="flex: 1;" readonly>
+                    <div id="pcsPerCaseDisplay10" class="pcs-per-case-display-container">
+                        <span class="text-sm text-gray-600">Pcs/Case:</span>
+                        <span id="pcsPerCaseValue10" class="font-semibold text-gray-800"></span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="productPrice10" placeholder="Price per PC (PHP)" readonly>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="productQuantity10" placeholder="Quantity" value="0" min="0">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Summary Modal -->
+    <div id="orderSummaryModal" class="order-summary-modal">
+        <div class="order-summary-content">
+            <button class="close-modal-button" onclick="closeOrderSummary()">&times;</button>
+            <h3>Current Order Summary</h3>
+            <!-- New scrollable div for order items -->
+            <div class="order-summary-scrollable-content">
+                <div id="orderItemsContainer">
+                    <!-- Order items will be injected here -->
+                </div>
+            </div>
+            <div id="orderTotal" class="order-total">
+                Total Purchase: PHP 0.00
+            </div>
+        </div>
+    </div>
+
+    <!-- Receipt Page -->
+    <div id="receiptPage" class="receipt-page-container">
+        <!-- Client Information on Receipt -->
+        <div id="receiptClientInfo" class="receipt-client-info">
+            <!-- Client info will be injected here -->
+        </div>
+        <h3>Receipt</h3>
+        <!-- New scrollable div for receipt items -->
+        <div class="receipt-scrollable-content">
+            <div id="receiptItemsContainer">
+                <!-- Receipt items will be injected here -->
+            </div>
+        </div>
+        <div id="receiptTotal" class="receipt-total">
+            Total: PHP 0.00
+        </div>
+        <!-- Share Receipt Button -->
+        <button class="share-receipt-button" onclick="shareReceipt()">Share Receipt (as PDF)</button>
+        <button class="order-again-button mt-8" onclick="orderAgain()">Order Again</button>
+    </div>
+
+    <!-- Return to Top Button (Hidden by default) -->
+    <button onclick="scrollToTop()" id="returnToTopBtn" title="Return to Top">
+        Return to Top
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+            <path d="M12 8.414L18.707 15.121a1 1 0 01-1.414 1.414L12 11.243l-5.293 5.292a1 1 0 01-1.414-1.414L12 8.414z"/>
+        </svg>
+    </button>
+
+    <script>
+        // Base64 image data for ORDER PLATFORM TRIAL.jpg
+        // This is a placeholder for the actual base64 image data.
+        // In a real scenario, you'd convert your image file (ORDER PLATFORM TRIAL.jpg) to a base64 string
+        // and paste it here, starting with 'data:image/jpeg;base64,'.
+        const image10001Base64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCABAAEADASIAAhEBAQEDEQA/AJVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//Z";
+
+        // Data structure to store product information including unit-specific prices/sizes and image
+        const productData = {
+            1: { // Product 1
+                productCode: '10001',
+                productName: '555 SARDINES IN TOMATO SAUCE EOE',
+                size: '155 g',
+                'PC': { price: '24.35', quantity: 0 },
+                'CASE': { price: '2414.77', quantity: 0, pcsPerCase: 100 },
+                imageData: image10001Base64, // Added image data
+                currentUnit: 'PC' // Initialize currentUnit
+            },
+            2: { // Product 2
+                productCode: '10002',
+                productName: '555 SARDINES IN TOMATO SAUCE WITH CHILI',
+                size: '155 g',
+                'PC': { price: '24.31', quantity: 0 },
+                'CASE': { price: '2412.20', quantity: 0, pcsPerCase: 100 },
+                imageData: '',
+                currentUnit: 'PC' // Initialize currentUnit
+            },
+            3: { // Product 3
+                productCode: '10003',
+                productName: '555 TUNA FLAKES ADOBO EOE',
+                size: '155 g',
+                'PC': { price: '29.15', quantity: 0 },
+                'CASE': { price: '1446.07', quantity: 0, pcsPerCase: 50 },
+                imageData: '',
+                currentUnit: 'PC'
+            },
+            4: { // Product 4
+                productCode: '10004',
+                productName: '555 TUNA FLAKES AFRITADA EOE',
+                size: '155 g',
+                'PC': { price: '28.51', quantity: 0 },
+                'CASE': { price: '1413.61', quantity: 0, pcsPerCase: 50 },
+                imageData: '',
+                currentUnit: 'PC'
+            },
+            5: { // Product 5
+                productCode: '10005',
+                productName: '555 TUNA FLAKES CALDERETA EOE',
+                size: '155 g',
+                'PC': { price: '28.51', quantity: 0 },
+                'CASE': { price: '1413.56', quantity: 0, pcsPerCase: 50 },
+                imageData: '',
+                currentUnit: 'PC'
+            },
+            6: { // Product 6
+                productCode: '10006',
+                productName: '555 TUNA FLAKES IN OIL EOE',
+                size: '155 g',
+                'PC': { price: '31.65', quantity: 0 },
+                'CASE': { price: '1569.26', quantity: 0, pcsPerCase: 50 },
+                imageData: '',
+                currentUnit: 'PC'
+            },
+            7: { // Product 7
+                productCode: '10007',
+                productName: '555 TUNA FLAKES MECHADO EOE',
+                size: '155 g',
+                'PC': { price: '28.51', quantity: 0 },
+                'CASE': { price: '1413.56', quantity: 0, pcsPerCase: 50 },
+                imageData: '',
+                currentUnit: 'PC'
+            },
+            8: { // Product 8
+                productCode: '10008',
+                productName: 'ABSOLUTE DISTILLED WATER',
+                size: '1 l',
+                'PC': { price: '23.23', quantity: 0 },
+                'CASE': { price: '277.62', quantity: 0, pcsPerCase: 12 },
+                imageData: '',
+                currentUnit: 'PC'
+            },
+            9: { // Product 9
+                productCode: '10009',
+                productName: 'ABSOLUTE DISTILLED WATER',
+                size: '350 ml',
+                'PC': { price: '10.62', quantity: 0 },
+                'CASE': { price: '370.08', quantity: 0, pcsPerCase: 35 },
+                imageData: '',
+                currentUnit: 'PC'
+            },
+            10: { // Product 10
+                productCode: '10010',
+                productName: 'ABSOLUTE DISTILLED WATER',
+                size: '500 ml',
+                'PC': { price: '14.82', quantity: 0 },
+                'CASE': { price: '352.29', quantity: 0, pcsPerCase: 24 },
+                imageData: '',
+                currentUnit: 'PC'
+            }
+        };
+
+        // Object to store client information
+        let clientInfo = {
+            storeName: '',
+            fullName: '',
+            address: '',
+            phoneNumber: '' // Added phone number
+        };
+
+        // Debounce function to limit how often save operations are called
+        function debounce(func, delay) {
+            let timeout;
+            return function(...args) {
+                const context = this;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), delay);
+            };
+        }
+
+        /**
+         * Saves all product data to localStorage.
+         * @param {number} productId - The ID of the product to save (used for triggering this debounced function).
+         */
+        const saveProductData = debounce((productId) => {
+            const product = productData[productId];
+            const quantityInput = document.getElementById(`productQuantity${productId}`);
+            if (product && product.currentUnit && product[product.currentUnit]) {
+                product[product.currentUnit].quantity = parseInt(quantityInput.value) || 0;
+            }
+
+            try {
+                localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
+                console.log(`Product ${productId} data saved to localStorage.`);
+                checkOrderValidity(); // Re-check order validity after saving
+            } catch (e) {
+                console.error("Error saving product data to localStorage:", e);
+                // Optionally display a user-friendly message here if localStorage is full or not supported
+            }
+        }, 500); // Debounce by 500ms
+
+        /**
+         * Saves client information to localStorage.
+         */
+        function saveClientInfo() {
+            try {
+                localStorage.setItem('mytindahan_client_info', JSON.stringify(clientInfo));
+                console.log("Client info saved to localStorage.");
+            }
+            catch (e) {
+                console.error("Error saving client info to localStorage:", e);
+            }
+        }
+
+        /**
+         * Loads client information from localStorage.
+         */
+        function loadClientInfo() {
+            try {
+                const storedInfo = localStorage.getItem('mytindahan_client_info');
+                if (storedInfo) {
+                    clientInfo = JSON.parse(storedInfo);
+                    document.getElementById('storeNameInput').value = clientInfo.storeName;
+                    document.getElementById('fullNameInput').value = clientInfo.fullName;
+                    document.getElementById('addressInput').value = clientInfo.address;
+                    document.getElementById('phoneNumberInput').value = clientInfo.phoneNumber; // Load phone number
+                    console.log("Client info loaded from localStorage.");
+                } else {
+                    console.log("No existing client info found in localStorage.");
+                }
+            }
+            catch (e) {
+                console.error("Error loading client info from localStorage:", e);
+            }
+            checkLandingInputs(); // Check inputs after loading to set button state
+        }
+
+
+        /**
+         * Loads all product data from localStorage.
+         */
+        function loadProductData() {
+            try {
+                const storedData = localStorage.getItem('mytindahan_product_data');
+                let parsedData = {};
+                if (storedData) {
+                    parsedData = JSON.parse(storedData);
+                    console.log("Product data loaded from localStorage.");
+                } else {
+                    console.log("No existing product data found in localStorage. Initializing UI with defaults.");
+                }
+
+                // Iterate through the master productData template
+                for (const productId in productData) {
+                    const defaultProduct = productData[productId]; // Our predefined structure
+
+                    // Ensure the product entry itself exists in parsedData
+                    if (!parsedData[productId]) {
+                        parsedData[productId] = {}; // Initialize if missing in stored data
+                    }
+
+                    // Loop through both 'PC' and 'CASE' units for each product
+                    ['PC', 'CASE'].forEach(unit => {
+                        // Ensure the unit object exists in the stored data for this product
+                        if (!parsedData[productId][unit]) {
+                            parsedData[productId][unit] = {}; // Initialize if missing in stored data
+                        }
+
+                        // Now merge properties: prioritize stored data, fall back to default
+                        // Ensure quantity and price are numbers/strings, default to 0/'0' if undefined
+                        // Use default quantity if parsed is undefined or null, otherwise parse it
+                        productData[productId][unit].quantity = (parsedData[productId][unit] && parsedData[productId][unit].quantity !== undefined) ? parseInt(parsedData[productId][unit].quantity) : 0;
+                        productData[productId][unit].price = (parsedData[productId][unit] && parsedData[productId][unit].price !== undefined) ? parsedData[productId][unit].price : defaultProduct[unit].price; // Use default price if stored is missing
+
+                        // Also ensure pcsPerCase is correctly set for CASE unit
+                        if (unit === 'CASE' && defaultProduct.CASE.pcsPerCase !== undefined) {
+                            productData[productId][unit].pcsPerCase = (parsedData[productId][unit] && parsedData[productId][unit].pcsPerCase !== undefined) ? parsedData[productId][unit].pcsPerCase : defaultProduct.CASE.pcsPerCase;
+                        }
+                    });
+
+                    // Merge other top-level properties like productName, size, imageData, currentUnit
+                    productData[productId].productName = parsedData[productId].productName || defaultProduct.productName;
+                    productData[productId].size = parsedData[productId].size || defaultProduct.size;
+                    productData[productId].imageData = parsedData[productId].imageData || defaultProduct.imageData;
+                    productData[productId].currentUnit = parsedData[productId].currentUnit || defaultProduct.currentUnit;
+                }
+
+                initializeProductUI(); // Always initialize UI after attempting to load data
+                checkOrderValidity(); // Check order validity after loading all data
+                filterProducts(); // Apply filter to all products after loading/initialization
+            }
+            catch (e) {
+                console.error("Error loading or parsing product data from localStorage:", e);
+                // If parsing fails or any other error occurs during loading,
+                // re-initialize productData to its pristine state (quantities to 0).
+                // This means discarding any potentially corrupted local storage data for products.
+                for (const productId in productData) {
+                    // Reset quantities to 0 for both PC and CASE units, based on our hardcoded defaults
+                    productData[productId]['PC'].quantity = 0;
+                    productData[productId]['CASE'].quantity = 0;
+                }
+                initializeProductUI(); // Re-initialize UI with clean default data
+                checkOrderValidity();
+                filterProducts();
+            }
+        }
+
+        function initializeProductUI() {
+            for (let i = 1; i <= 10; i++) {
+                const productCard = document.getElementById(`productCard${i}`);
+                if (productCard) {
+                    const product = productData[i];
+
+                    // Set initial UI values from productData (which might have been loaded from localStorage)
+                    productCard.querySelector(`#productName${i}`).value = product.productName;
+                    const productCodeDisplay = productCard.querySelector(`#productCode${i}Display`);
+                    if (productCodeDisplay) {
+                        productCodeDisplay.textContent = product.productCode;
+                    }
+                    productCard.querySelector(`#productSize${i}`).value = product.size;
+
+                    // Set correct active unit button and display price/quantity based on currentUnit
+                    const currentUnit = product.currentUnit || 'PC'; // Default to PC if not set
+                    productCard.dataset.currentUnit = currentUnit;
+
+                    const unitButtons = productCard.querySelectorAll('.unit-button');
+                    unitButtons.forEach(button => {
+                        button.classList.remove('active');
+                        // Use button.textContent to check if it contains the unit name (e.g., "PER PC" contains "PC")
+                        if (button.textContent.includes(currentUnit)) {
+                            button.classList.add('active');
+                        }
+                    });
+
+                    // Update price input with "PHP" prefix
+                    productCard.querySelector(`#productPrice${i}`).placeholder = `Price per ${currentUnit}`; // Removed PHP from placeholder
+                    productCard.querySelector(`#productPrice${i}`).value = `PHP ${parseFloat(product[currentUnit].price).toFixed(2)}`; // Added PHP prefix and fixed to 2 decimal places
+                    productCard.querySelector(`#productQuantity${i}`).value = product[currentUnit].quantity;
+
+                    // Update pcsPerCase display
+                    const pcsPerCaseValueSpan = productCard.querySelector(`#pcsPerCaseValue${i}`);
+                    if (pcsPerCaseValueSpan) {
+                        if (currentUnit === 'CASE' && product.CASE.pcsPerCase !== undefined) {
+                            pcsPerCaseValueSpan.textContent = `'${product.CASE.pcsPerCase}'`;
+                        } else {
+                            pcsPerCaseValueSpan.textContent = '';
+                        }
+                    }
+
+                    // Display image if available
+                    const dropArea = productCard.querySelector(`#dropArea${i}`);
+                    if (product.imageData) {
+                        dropArea.style.backgroundImage = `url(${product.imageData})`;
+                        dropArea.classList.add('has-image');
+                    } else {
+                        dropArea.style.backgroundImage = '';
+                        dropArea.classList.remove('has-image');
+                    }
+                }
+            }
+        }
+
+        /**
+         * Checks if there's at least one item with a quantity > 0 in the current order
+         * and enables/disables the finalize order button accordingly.
+         */
+        function checkOrderValidity() {
+            let hasItems = false;
+            for (const productId in productData) {
+                const product = productData[productId];
+                // Check both PC and CASE quantities
+                if ((product['PC'] && parseInt(product['PC'].quantity) > 0) ||
+                    (product['CASE'] && parseInt(product['CASE'].quantity) > 0)) {
+                    hasItems = true;
+                    break;
+                }
+            }
+            const finalizeButton = document.getElementById('finalizeOrderButton');
+            if (finalizeButton) {
+                finalizeButton.disabled = !hasItems;
+            }
+        }
+
+        /**
+         * Checks if all landing page input fields are filled and enables/disables the Get Started button.
+         */
+        window.checkLandingInputs = function() {
+            const storeName = document.getElementById('storeNameInput').value.trim();
+            const fullName = document.getElementById('fullNameInput').value.trim();
+            const address = document.getElementById('addressInput').value.trim();
+            const phoneNumber = document.getElementById('phoneNumberInput').value.trim(); // Get phone number
+
+            const getStartedButton = document.getElementById('getStartedButton');
+
+            if (storeName && fullName && address && phoneNumber) { // All four fields must be filled
+                getStartedButton.disabled = false;
+            } else {
+                getStartedButton.disabled = true;
+            }
+
+            // Update clientInfo object
+            clientInfo.storeName = storeName;
+            clientInfo.fullName = fullName;
+            clientInfo.address = address;
+            clientInfo.phoneNumber = phoneNumber; // Update phone number
+            saveClientInfo(); // Save client info on every input change
+        }
+
+        // Make functions globally accessible for HTML onclick attributes
+        window.showOrderPage = function() {
+            const landingPage = document.getElementById('landingPage');
+            const orderPage = document.getElementById('orderPage');
+            const receiptPage = document.getElementById('receiptPage');
+            const returnToTopBtn = document.getElementById('returnToTopBtn');
+
+
+            // Hide other pages immediately for smooth transition
+            landingPage.classList.add('hidden');
+            receiptPage.classList.add('hidden');
+            returnToTopBtn.style.display = 'none'; // Hide button when showing order page initially
+
+
+            // Set order page display to flex so it can transition
+            orderPage.style.display = 'flex';
+
+            setTimeout(() => {
+                landingPage.style.display = 'none';
+                receiptPage.style.display = 'none';
+                orderPage.classList.remove('hidden'); // Remove hidden to allow opacity/transform transition
+                orderPage.classList.add('visible'); // Add visible class
+                loadProductData(); // Load product data when order page is shown
+                window.scrollTo(0, 0); // Scroll to the top of the page when order page is shown
+            }, 500); // Allow some time for landing page to fade out
+        }
+
+        window.showLandingPage = function() {
+            const landingPage = document.getElementById('landingPage');
+            const orderPage = document.getElementById('orderPage');
+            const receiptPage = document.getElementById('receiptPage');
+            const returnToTopBtn = document.getElementById('returnToTopBtn');
+
+
+            // Hide other pages with transition
+            orderPage.classList.remove('visible');
+            receiptPage.classList.remove('visible');
+            orderPage.classList.add('hidden');
+            receiptPage.classList.add('hidden');
+            returnToTopBtn.style.display = 'none'; // Hide button when going back to landing page
+
+
+            // Set landing page display to flex so it can transition
+            landingPage.style.display = 'flex';
+
+            setTimeout(() => {
+                orderPage.style.display = 'none';
+                receiptPage.style.display = 'none';
+                landingPage.classList.remove('hidden'); // Remove hidden to allow opacity/transform transition
+                landingPage.classList.add('visible'); // Add visible class
+                // Ensure inputs are re-populated and button state is correct when returning
+                loadClientInfo(); // Reload client info for the input fields
+            }, 700); // Allow some time for other pages to fade out
+        }
+
+        function handleImageUpload(dropArea, file) {
+            const productId = parseInt(dropArea.id.replace('dropArea', ''));
+            const loader = dropArea.querySelector('.loader');
+
+            if (file && file.type.startsWith('image/')) {
+                dropArea.classList.add('loading');
+                if (loader) loader.style.display = 'block';
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const base64Image = event.target.result;
+                    dropArea.style.backgroundImage = `url(${base64Image})`;
+                    dropArea.classList.add('has-image');
+
+                    productData[productId].imageData = base64Image;
+                    saveProductData(productId); // Save to localStorage
+
+                    dropArea.classList.remove('loading');
+                    if (loader) loader.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                console.warn('Selected file is not an image.');
+                dropArea.classList.remove('loading');
+                if (loader) loader.style.display = 'none';
+            }
+        }
+
+        window.selectUnit = function(selectedButton, newUnit, productIdTrigger) {
+            // Save the quantity of the product whose unit button was explicitly clicked
+            const productTrigger = productData[productIdTrigger];
+            const quantityInputTrigger = document.getElementById(`productQuantity${productIdTrigger}`);
+            if (productTrigger && productTrigger.currentUnit && productTrigger[productTrigger.currentUnit]) {
+                productTrigger[productTrigger.currentUnit].quantity = parseInt(quantityInputTrigger.value) || 0;
+            }
+
+            // Now, iterate through ALL products to set their unit
+            for (let i = 1; i <= 10; i++) { // Loop through all product IDs
+                const product = productData[i];
+                if (product) {
+                    const productCard = document.getElementById(`productCard${i}`);
+                    const unitButtons = productCard.querySelectorAll('.unit-button');
+                    const priceInput = productCard.querySelector(`#productPrice${i}`);
+                    const quantityInput = productCard.querySelector(`#productQuantity${i}`);
+                    const pcsPerCaseValueSpan = productCard.querySelector(`#pcsPerCaseValue${i}`);
+
+                    // Update productData.currentUnit and dataset.currentUnit for THIS product
+                    product.currentUnit = newUnit;
+                    productCard.dataset.currentUnit = newUnit;
+
+                    // Ensure quantity is initialized if undefined for the new unit
+                    if (typeof product[newUnit].quantity === 'undefined') {
+                        product[newUnit].quantity = 0;
+                    }
+
+                    // Update price input placeholder and value based on the new unit
+                    priceInput.placeholder = `Price per ${newUnit}`;
+                    priceInput.value = `PHP ${parseFloat(product[newUnit].price).toFixed(2)}`;
+
+                    // Load the quantity for the new unit for THIS product
+                    quantityInput.value = product[newUnit].quantity;
+
+                    // Update pcsPerCase display based on the new unit for THIS product
+                    if (pcsPerCaseValueSpan) {
+                        if (newUnit === 'CASE' && product.CASE.pcsPerCase !== undefined) {
+                            pcsPerCaseValueSpan.textContent = `'${product.CASE.pcsPerCase}'`;
+                        } else {
+                            pcsPerCaseValueSpan.textContent = '';
+                        }
+                    }
+
+                    // Update active button styling for THIS product's unit buttons
+                    unitButtons.forEach(button => {
+                        button.classList.remove('active');
+                        // Corrected logic: check button's text content for the unit name
+                        if (button.textContent.includes(newUnit)) {
+                            button.classList.add('active');
+                        }
+                    });
+                }
+            }
+            // After looping through all products and updating their in-memory data, save the entire productData object once.
+            try {
+                localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
+                console.log("All product data updated and saved to localStorage after global unit switch.");
+            }
+            catch (e) {
+                console.error("Error saving all product data to localStorage after global unit switch:", e);
+            }
+
+            checkOrderValidity(); // Re-check order validity after global unit selection
+        }
+
+        // New function to validate remove quantity input
+        window.validateRemoveQuantity = function(inputElement, maxQty) {
+            let value = parseInt(inputElement.value);
+            if (isNaN(value) || value < 0) { // Changed from < 1 to < 0 to allow 0
+                inputElement.value = 0;
+            } else if (value > maxQty) {
+                inputElement.value = maxQty;
+            }
+        }
+
+        window.showOrderSummary = function() {
+            const orderSummaryModal = document.getElementById('orderSummaryModal');
+            const orderItemsContainer = document.getElementById('orderItemsContainer');
+            const orderTotalElement = document.getElementById('orderTotal');
+
+            orderItemsContainer.innerHTML = ''; // Clear previous items
+            let totalPurchasePrice = 0;
+
+            for (const productId in productData) {
+                const product = productData[productId];
+
+                // Iterate through all possible units for each product
+                ['PC', 'CASE'].forEach(unit => {
+                    const unitDetails = product[unit];
+                    const quantity = parseInt(unitDetails?.quantity || 0);
+                    const unitPrice = parseFloat(unitDetails?.price || '0');
+
+                    if (quantity > 0 && !isNaN(unitPrice)) {
+                        const itemTotalPrice = unitPrice * quantity;
+                        totalPurchasePrice += itemTotalPrice;
+
+                        const orderItemDiv = document.createElement('div');
+                        orderItemDiv.classList.add('order-item');
+                        orderItemDiv.innerHTML = `
+                            <div class="order-item-details">
+                                <strong>${product.productName}</strong><br>
+                                <span>Code: ${product.productCode} | Size: ${product.size} ${unit === 'CASE' && product.CASE.pcsPerCase !== undefined ? `| Pcs/Case: '${product.CASE.pcsPerCase}'` : ''} | Qty: ${quantity} ${unit}</span>
+                            </div>
+                            <div class="order-item-price">PHP ${itemTotalPrice.toFixed(2)}
+                                <input type="number" id="removeQtyInput_${productId}_${unit}" class="remove-quantity-input" value="0" min="0" max="${quantity}" oninput="validateRemoveQuantity(this, ${quantity})">
+                                <button class="remove-order-button" onclick="removeItemFromOrder(${productId}, '${unit}')">Remove Order</button>
+                            </div>
+                        `;
+                        orderItemsContainer.appendChild(orderItemDiv);
+                    }
+                });
+            }
+
+            if (orderItemsContainer.children.length === 0) {
+                orderItemsContainer.innerHTML = '<p class="text-center text-gray-500">No items in your order yet.</p>';
+            }
+
+            orderTotalElement.textContent = `Total Purchase: PHP ${totalPurchasePrice.toFixed(2)}`;
+            orderSummaryModal.classList.add('visible');
+        }
+
+        window.closeOrderSummary = function() {
+            const orderSummaryModal = document.getElementById('orderSummaryModal');
+            orderSummaryModal.classList.remove('visible');
+        }
+
+        window.clearAllOrders = function() {
+            for (const productId in productData) {
+                const product = productData[productId];
+                ['PC', 'CASE'].forEach(unit => {
+                    if (product[unit]) {
+                        product[unit].quantity = 0;
+                        // Update the quantity input on the main page if this product is currently displayed
+                        const quantityInput = document.getElementById(`productQuantity${productId}`);
+                        const productCard = document.getElementById(`productCard${productId}`);
+                        if (quantityInput && productCard.dataset.currentUnit === unit) {
+                            quantityInput.value = 0;
+                        }
+                    }
+                });
+            }
+            // Save the cleared state to localStorage
+            try {
+                localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
+                console.log("All orders cleared from localStorage.");
+            }
+            catch (e) {
+                console.error("Error clearing orders from localStorage:", e);
+            }
+            console.log("All orders cleared.");
+            showOrderSummary();
+            checkOrderValidity(); // Check order validity after clearing all orders
+        }
+
+        window.removeItemFromOrder = function(productId, unit) {
+            console.log(`Attempting to remove order for Product ID: ${productId}, Unit: ${unit}`);
+            const product = productData[productId];
+            if (product && product[unit]) {
+                const removeQtyInput = document.getElementById(`removeQtyInput_${productId}_${unit}`);
+                let quantityToRemove = 0;
+                if (removeQtyInput) {
+                    quantityToRemove = parseInt(removeQtyInput.value) || 0;
+                    console.log(`Quantity to remove read from input: ${quantityToRemove}`);
+                } else {
+                    console.error(`Remove quantity input element not found for Product ${productId}, Unit ${unit}. Defaulting removal to 1.`);
+                    quantityToRemove = 1; // Default to 1 if input not found, though should not happen with correct IDs
+                }
+
+                const currentStoredQuantity = product[unit].quantity;
+                console.log(`Current stored quantity for ${unit}: ${currentStoredQuantity}`);
+
+                if (quantityToRemove > 0) {
+                    product[unit].quantity = Math.max(0, currentStoredQuantity - quantityToRemove);
+                    console.log(`New quantity for ${unit} after deduction: ${product[unit].quantity}`);
+
+                    const quantityInputOnMainPage = document.getElementById(`productQuantity${productId}`);
+                    const productCardOnMainPage = document.getElementById(`productCard${productId}`);
+                    if (quantityInputOnMainPage && productCardOnMainPage && productCardOnMainPage.dataset.currentUnit === unit) {
+                        quantityInputOnMainPage.value = product[unit].quantity;
+                        console.log(`Updated main page quantity input for product ${productId}, unit ${unit} to: ${product[productId].quantity}`);
+                    }
+
+                    try {
+                        localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
+                        console.log(`localStorage updated for Product ${productId}.`);
+                    }
+                    catch (e) {
+                        console.error("Error saving product data during removal to localStorage:", e);
+                    }
+                } else {
+                    console.warn(`No quantity specified for removal or invalid quantity (0 or less) for Product ${productId}, Unit ${unit}.`);
+                }
+
+                showOrderSummary(); // Re-render the summary to reflect changes
+                checkOrderValidity();
+            } else {
+                console.error(`Product data not found or unit not valid for Product ID: ${productId}, Unit: ${unit}.`);
+            }
+        }
+
+        window.finalizeOrder = function() {
+            console.log("Finalize Order button clicked.");
+            const orderPage = document.getElementById('orderPage');
+            const receiptPage = document.getElementById('receiptPage');
+            const receiptItemsContainer = document.getElementById('receiptItemsContainer');
+            const receiptTotalElement = document.getElementById('receiptTotal');
+            const receiptClientInfoElement = document.getElementById('receiptClientInfo');
+            const returnToTopBtn = document.getElementById('returnToTopBtn');
+
+
+            receiptItemsContainer.innerHTML = '';
+            let totalReceiptPrice = 0;
+            const currentOrderItems = [];
+
+            // Display client info on receipt
+            receiptClientInfoElement.innerHTML = `
+                <p><strong>Store Name:</strong> ${clientInfo.storeName}</p>
+                <p><strong>Full Name:</strong> ${clientInfo.fullName}</p>
+                <p><strong>Full Address:</strong> ${clientInfo.address}</p>
+                <p><strong>Phone Number:</strong> ${clientInfo.phoneNumber}</p>
+            `;
+
+            for (const productId in productData) {
+                const product = productData[productId];
+                ['PC', 'CASE'].forEach(unit => {
+                    const unitDetails = product[unit];
+                    const quantity = parseInt(unitDetails?.quantity || 0);
+                    const unitPrice = parseFloat(unitDetails?.price || '0');
+
+                    if (quantity > 0 && !isNaN(unitPrice)) {
+                        const itemTotalPrice = unitPrice * quantity;
+                        totalReceiptPrice += itemTotalPrice;
+
+                        currentOrderItems.push({
+                            productName: product.productName,
+                            productCode: product.productCode,
+                            size: product.size,
+                            pcsPerCase: unit === 'CASE' && product.CASE.pcsPerCase !== undefined ? product.CASE.pcsPerCase : undefined,
+                            quantity: quantity,
+                            unit: unit,
+                            totalPrice: itemTotalPrice.toFixed(2)
+                        });
+                    }
+                });
+            }
+
+            if (currentOrderItems.length === 0) {
+                console.warn("Cannot finalize empty order. The button should have been disabled.");
+                return;
+            }
+
+            currentOrderItems.forEach(item => {
+                const receiptItemDiv = document.createElement('div');
+                receiptItemDiv.classList.add('receipt-item');
+                receiptItemDiv.innerHTML = `
+                    <div class="receipt-item-details">
+                        <strong>${item.productName}</strong><br>
+                        <span>Code: ${item.productCode} | Size: ${item.size} ${item.pcsPerCase !== undefined ? `| Pcs/Case: '${item.pcsPerCase}'` : ''} | Qty: ${item.quantity} ${item.unit}</span>
+                    </div>
+                    <div class="receipt-item-price">PHP ${item.totalPrice}</div>
+                `;
+                receiptItemsContainer.appendChild(receiptItemDiv);
+            });
+
+            receiptTotalElement.textContent = `Total: PHP ${totalReceiptPrice.toFixed(2)}`;
+
+            orderPage.classList.remove('visible');
+            orderPage.classList.add('hidden');
+            orderPage.style.display = 'none';
+            returnToTopBtn.style.display = 'none'; // Hide button on receipt page
+
+
+            receiptPage.style.display = 'flex';
+            setTimeout(() => {
+                receiptPage.classList.remove('hidden');
+                receiptPage.classList.add('visible');
+                console.log("Receipt page should now be visible.");
+
+                // After showing receipt, clear all current orders and save to localStorage
+                for (const productId in productData) {
+                    const product = productData[productId];
+                    ['PC', 'CASE'].forEach(unit => {
+                        if (product[unit]) { // Ensure the unit object exists before trying to set quantity
+                            product[unit].quantity = 0;
+                            // Reset main page quantity inputs too if they are active
+                            const quantityInput = document.getElementById(`productQuantity${productId}`);
+                            const productCard = document.getElementById(`productCard${productId}`);
+                            if (quantityInput && productCard.dataset.currentUnit === unit) {
+                                quantityInput.value = 0;
+                            }
+                        }
+                    });
+                }
+                try {
+                    localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
+                    console.log("Order finalized and quantities reset in localStorage for new order session.");
+                }
+                catch (e) {
+                    console.error("Error resetting orders in localStorage after finalization:", e);
+                }
+                checkOrderValidity(); // Re-check order validity after clearing all orders (will disable finalize button)
+            }, 50);
+        }
+
+        window.orderAgain = function() {
+            // Clear client information
+            clientInfo.storeName = '';
+            clientInfo.fullName = '';
+            clientInfo.address = '';
+            clientInfo.phoneNumber = ''; // Clear phone number
+            saveClientInfo(); // Save the cleared client info to localStorage
+
+            // Clear input fields on the landing page immediately
+            document.getElementById('storeNameInput').value = '';
+            document.getElementById('fullNameInput').value = '';
+            document.getElementById('addressInput').value = '';
+            document.getElementById('phoneNumberInput').value = ''; // Clear phone number input
+
+            // Disable the "Get started" button
+            document.getElementById('getStartedButton').disabled = true;
+
+            showLandingPage(); // Transition back to the landing page
+        }
+
+        // New function to trigger printing/sharing the receipt page
+        window.shareReceipt = function() {
+            // This will open the browser's print dialog, which typically includes
+            // options like "Save as PDF" or "Share" (to other apps).
+            window.print();
+        }
+
+        window.filterProducts = function() {
+            const searchInput = document.getElementById('productSearch').value.toLowerCase().trim();
+            const searchTerms = searchInput.split(/\s+/).filter(term => term.length > 0);
+
+            const productCards = document.querySelectorAll('.product-grid .product-card');
+            const noStockMessage = document.getElementById('noStockMessage');
+            let anyProductVisible = false;
+
+            productCards.forEach(productCard => {
+                const productId = parseInt(productCard.id.replace('productCard', ''));
+                const product = productData[productId];
+
+                if (product) {
+                    const productName = product.productName.toLowerCase();
+                    const productCode = product.productCode.toLowerCase();
+                    const productSize = product.size.toLowerCase();
+                    const pcsPerCase = product.CASE.pcsPerCase ? product.CASE.pcsPerCase.toString().toLowerCase() : '';
+
+                    const searchableText = `${productName} ${productCode} ${productSize} ${pcsPerCase}`;
+
+                    let matchesAllTerms = true;
+                    if (searchTerms.length > 0) {
+                        for (const term of searchTerms) {
+                            if (!searchableText.includes(term)) {
+                                matchesAllTerms = false;
+                                break;
+                            }
+                        }
+                    } else {
+                        matchesAllTerms = true;
+                    }
+
+                    if (matchesAllTerms) {
+                        productCard.style.display = 'flex';
+                        anyProductVisible = true;
+                    } else {
+                        productCard.style.display = 'none';
+                    }
+                } else {
+                    productCard.style.display = 'none';
+                }
+            });
+
+            if (anyProductVisible) {
+                noStockMessage.style.display = 'none';
+            } else {
+                noStockMessage.style.display = 'block';
+            }
+        }
+
+        // Function to scroll to the top of the page smoothly
+        window.scrollToTop = function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProductData(); // Load product data from localStorage on startup
+            loadClientInfo(); // Load client info from localStorage on startup
+
+            const dropAreas = document.querySelectorAll('.image-drop-area');
+
+            dropAreas.forEach(dropArea => {
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, preventDefaults, false);
+                });
+
+                function preventDefaults(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                dropArea.addEventListener('mouseenter', () => {
+                    dropArea.style.backgroundColor = 'transparent';
+                });
+                dropArea.addEventListener('mouseleave', () => {
+                    dropArea.style.backgroundColor = 'transparent';
+                });
+
+                dropArea.addEventListener('drop', (e) => {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    if (files.length > 0) {
+                        handleImageUpload(dropArea, files[0]);
+                    }
+                    dropArea.style.backgroundColor = 'transparent';
+                }, false);
+
+                dropArea.addEventListener('click', () => {
+                    const fileInput = document.createElement('input');
+                    fileInput.type = 'file';
+                    fileInput.accept = 'image/*';
+                    fileInput.style.display = 'none';
+                    document.body.appendChild(fileInput);
+
+                    fileInput.click();
+                    fileInput.onchange = (e) => {
+                        const files = e.target.files;
+                        if (files.length > 0) {
+                            handleImageUpload(dropArea, files[0]);
+                        }
+                        document.body.removeChild(fileInput);
+                    };
+                });
+            });
+
+            for (let i = 1; i <= 10; i++) {
+                const quantityInput = document.getElementById(`productQuantity${i}`);
+                quantityInput.addEventListener('input', () => {
+                    const product = productData[i];
+                    if (product && product.currentUnit && product[product.currentUnit]) {
+                        product[product.currentUnit].quantity = parseInt(quantityInput.value) || 0;
+                    }
+                    saveProductData(i); // Debounced save to localStorage
+                    checkOrderValidity(); // Check order validity immediately
+                });
+            }
+
+            // Scroll event listener for the "Return to Top" button
+            window.onscroll = function() {
+                const returnToTopBtn = document.getElementById('returnToTopBtn');
+                const orderPage = document.getElementById('orderPage');
+                const receiptPage = document.getElementById('receiptPage');
+
+                // Only show the button if on the order page
+                if (orderPage.classList.contains('visible') && window.scrollY > 200) { // Show after scrolling 200px
+                    returnToTopBtn.style.display = 'flex'; // Use flex to match its display style
+                } else {
+                    returnToTopBtn.style.display = 'none';
+                }
+            };
+        });
+    </script>
+</body>
+</html>
