@@ -154,12 +154,49 @@
 
 
         /* Order Page Specific Styles */
-        .order-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #0050A0;
-            margin-bottom: 30px;
+        .order-page-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px; /* Space between header and search bar */
+            padding: 0 10px; /* Some padding for the header content */
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+            gap: 10px; /* Space between flex items */
         }
+
+        .header-left-group, .header-right-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap; /* Allow buttons to wrap within their groups */
+        }
+
+        .back-button { /* General style for back button, used in top-left-buttons */
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            min-width: 48px; /* Ensure minimum touch target size */
+            min-height: 48px;
+            margin-right: 5px; /* Add some space between back button and finalize */
+        }
+        .back-button:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            transform: translateX(-3px);
+        }
+        .back-button svg {
+            width: 24px;
+            height: 24px;
+            fill: #0050A0;
+        }
+
         .product-grid {
             /* Ensures responsive grid layout: auto-fit creates columns, minmax handles sizing */
             /* Increased minwidth for wider cards to accommodate product names better */
@@ -188,7 +225,7 @@
         .input-group {
             width: 100%;
             text-align: left;
-            margin-bottom: 3px; /* Decreased margin */
+            margin-bottom: 0px; /* Made more compact */
         }
         .input-group:last-child {
             margin-bottom: 0; /* No margin on the last input group */
@@ -199,25 +236,36 @@
             border: none; /* Removed all borders */
             background-color: transparent; /* Transparent background */
             border-radius: 0;
-            padding: 8px 0; /* Adjust padding if needed after removing borders, slightly less */
-            min-height: 40px; /* Ensure sufficient height for touch inputs, slightly less */
+            padding: 4px 0; /* Reduced padding for compactness */
+            min-height: 32px; /* Reduced min-height for compactness */
         }
         .input-group input, .input-group textarea {
             width: 100%;
-            font-size: 1rem;
+            font-size: 0.95rem; /* Slightly smaller font size */
             box-sizing: border-box;
             color: #333; /* Default text color for inputs */
         }
         /* Styling for product name to make it more prominent - now black */
         .product-card .input-group input[id^="productName"] {
-            font-size: 1.1rem; /* Slightly larger for product name */
+            font-size: 1rem; /* Slightly smaller for product name */
             font-weight: 600; /* Bold */
             color: #333; /* Make it black/dark gray */
+            min-height: 40px; /* Increased min-height to accommodate two lines of text */
+            padding: 8px 0; /* Increased padding to give more vertical space */
         }
         /* Styling for product price - now black */
         .product-card .input-group input[id^="productPrice"] {
             font-weight: 600; /* Make price bold */
             color: #333; /* Make it black/dark gray */
+            font-size: 1rem; /* Slightly smaller for price */
+        }
+        /* Styling for product size - now black */
+        .product-card .input-group input[id^="productSize"] {
+            font-size: 0.95rem; /* Smaller for size */
+        }
+        /* Styling for product quantity - now black */
+        .product-card .input-group input[id^="productQuantity"] {
+            font-size: 0.95rem; /* Smaller for quantity */
         }
 
         .input-group input:focus, .input-group textarea:focus {
@@ -230,10 +278,7 @@
             cursor: default;
             color: #666;
             border: none; /* No border for readonly */
-            /* Add overflow ellipsis for long names, if they don't fit */
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            /* Removed white-space, overflow, text-overflow to allow text wrapping */
         }
         .input-group input[readonly]:focus {
             box-shadow: none;
@@ -241,30 +286,6 @@
         }
 
         /* Removed .image-drop-area styling as photos are removed */
-
-        .back-button { /* General style for back button, used in top-left-buttons */
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 50%;
-            transition: background-color 0.2s ease, transform 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            min-width: 48px; /* Ensure minimum touch target size */
-            min-height: 48px;
-        }
-        .back-button:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-            transform: translateX(-3px);
-        }
-        .back-button svg {
-            width: 24px;
-            height: 24px;
-            fill: #0050A0;
-        }
 
         /* Unit selection buttons styling */
         .unit-buttons {
@@ -306,24 +327,6 @@
         }
 
         /* Removed loader styling as photos are removed */
-
-        /* Button Positioning on Order Page */
-        .top-left-buttons {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .order-buttons-container { /* Original right-aligned container */
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-        }
 
         /* Finalize Order Button */
         .finalize-order-button {
@@ -685,10 +688,14 @@
             background-color: transparent; /* Make transparent */
             border: none; /* Remove borders */
             border-radius: 0;
-            height: 44px; /* Ensure consistent height with adjacent input */
+            height: 32px; /* Adjusted height to match new compact inputs */
             box-sizing: border-box; /* Include padding and border in the element's total width and height */
-            padding: 10px 0; /* Align padding with other inputs */
+            padding: 4px 0; /* Align padding with other inputs */
         }
+        .pcs-per-case-display-container span {
+             font-size: 0.95rem; /* Match other input font sizes */
+        }
+
 
         /* Return to Top button styles */
         #returnToTopBtn {
@@ -749,6 +756,35 @@
             .landing-container, .order-page-container, .receipt-page-container {
                 padding: 20px; /* More compact padding on smaller devices */
             }
+            .order-page-header {
+                flex-direction: column; /* Stack header items vertically */
+                align-items: flex-start; /* Align stacked items to the left */
+                gap: 15px; /* More space between stacked groups */
+            }
+            .header-left-group, .header-right-group {
+                width: 100%; /* Make groups take full width */
+                justify-content: space-between; /* Distribute buttons within the group */
+                flex-wrap: wrap; /* Allow buttons to wrap */
+            }
+            .header-right-group {
+                justify-content: flex-end; /* Align right group to the right */
+            }
+            .back-button {
+                padding: 8px;
+                min-width: 40px; /* Adjust min size for smaller button */
+                min-height: 40px;
+                margin-right: 0; /* Remove right margin when stacked */
+            }
+            .back-button svg {
+                width: 20px;
+                height: 20px;
+            }
+            .finalize-order-button, .order-list-button, .clear-order-button {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                min-height: 40px;
+                flex-grow: 1; /* Allow buttons to grow to fill space */
+            }
             .order-title {
                 font-size: 1.8rem;
                 margin-bottom: 20px;
@@ -760,44 +796,6 @@
             }
             .product-card {
                 padding: 20px;
-            }
-            /* Adjusted for small screens: ensure buttons stack vertically */
-            .top-left-buttons {
-                top: 10px;
-                left: 10px;
-                flex-direction: column; /* Stack buttons vertically */
-                gap: 5px;
-                align-items: flex-start; /* Align stacked items to the left */
-            }
-            .back-button {
-                padding: 8px;
-                min-width: 40px; /* Adjust min size for smaller button */
-                min-height: 40px;
-            }
-            .back-button svg {
-                width: 20px;
-                height: 20px;
-            }
-            .finalize-order-button {
-                padding: 8px 12px; /* Restore slightly larger padding for vertical stacking */
-                font-size: 0.8rem; /* Restore slightly larger font size */
-                width: auto; /* Allow width to be content-based */
-                min-height: 40px; /* Ensure consistent size */
-                align-self: flex-start; /* Align button to the left when stacked */
-            }
-            .order-buttons-container {
-                top: 10px;
-                right: 10px;
-                flex-direction: column; /* Stack buttons vertically */
-                gap: 5px;
-                flex-wrap: nowrap; /* Prevent wrapping to next line if they can fit stacked */
-                justify-content: flex-end; /* Align to the right */
-            }
-            .order-list-button, .clear-order-button {
-                padding: 8px 12px; /* Restore slightly larger padding for vertical stacking */
-                font-size: 0.8rem; /* Restore slightly larger font size */
-                width: 100%; /* Make full width when stacked */
-                min-height: 40px; /* Ensure consistent size */
             }
             .order-summary-content h3, .receipt-page-container h3, .receipt-modal .receipt-content h3 {
                 font-size: 1.5rem;
@@ -866,6 +864,9 @@
             .input-group input[id^="productQuantity"] {
                 font-size: 0.95rem; /* Slightly smaller text for very small screens */
             }
+            .pcs-per-case-display-container span {
+                font-size: 0.95rem; /* Match other input font sizes */
+            }
         }
     </style>
 </head>
@@ -895,23 +896,21 @@
     </div>
 
     <div id="orderPage" class="order-page-container">
-        <!-- Top Left Buttons Container -->
-        <div class="top-left-buttons">
-            <button class="back-button" onclick="showLandingPage()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-                </svg>
-            </button>
-            <button id="finalizeOrderButton" class="finalize-order-button" onclick="finalizeOrder()" disabled>Finalize Order</button>
+        <!-- New: Order Page Header -->
+        <div class="order-page-header">
+            <div class="header-left-group">
+                <button class="back-button" onclick="showLandingPage()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                    </svg>
+                </button>
+                <button id="finalizeOrderButton" class="finalize-order-button" onclick="finalizeOrder()" disabled>Finalize Order</button>
+            </div>
+            <div class="header-right-group">
+                <button class="order-list-button" onclick="showOrderSummary()">List of Orders</button>
+                <button class="clear-order-button" onclick="clearAllOrders()">Clear Order</button>
+            </div>
         </div>
-
-        <!-- Order Buttons Container (Top Right) -->
-        <div class="order-buttons-container">
-            <button class="order-list-button" onclick="showOrderSummary()">List of Orders</button>
-            <button class="clear-order-button" onclick="clearAllOrders()">Clear Order</button>
-        </div>
-
-        <h2 class="order-title">Your Orders</h2>
 
         <!-- Search Bar -->
         <div class="search-bar-container">
@@ -1638,8 +1637,8 @@
             // Save the quantity of the product whose unit button was explicitly clicked
             const productTrigger = productData[productIdTrigger];
             const quantityInputTrigger = document.getElementById(`productQuantity${productIdTrigger}`);
-            if (productTrigger && productTrigger.currentUnit && productTrigger[productTrigger.currentUnit]) {
-                productTrigger[productTrigger.currentUnit].quantity = parseInt(quantityInputTrigger.value) || 0;
+            if (productTrigger && productTrigger.currentUnit && productTrigger[product.currentUnit]) {
+                productTrigger[product.currentUnit].quantity = parseInt(quantityInputTrigger.value) || 0;
             }
 
             // Now, iterate through ALL products to set their unit
