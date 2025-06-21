@@ -1443,7 +1443,28 @@
         }
 
         /**
+         * Clears client information from `localStorage` and resets input fields.
+         */
+        function clearClientInfoAndInputs() {
+            clientInfo = {
+                storeName: '',
+                fullName: '',
+                address: '',
+                phoneNumber: ''
+            };
+            localStorage.removeItem('mytindahan_client_info');
+            document.getElementById('storeNameInput').value = '';
+            document.getElementById('fullNameInput').value = '';
+            document.getElementById('addressInput').value = '';
+            document.getElementById('phoneNumberInput').value = '';
+            document.getElementById('getStartedButton').disabled = true; // Disable button after clearing
+            console.log("Client info cleared and inputs reset.");
+        }
+
+        /**
          * Loads client information from localStorage.
+         * This is now primarily for debugging or if specific navigation needs it.
+         * For fresh loads, clearClientInfoAndInputs will be called first.
          */
         function loadClientInfo() {
             try {
@@ -1453,7 +1474,7 @@
                     document.getElementById('storeNameInput').value = clientInfo.storeName;
                     document.getElementById('fullNameInput').value = clientInfo.fullName;
                     document.getElementById('addressInput').value = clientInfo.address;
-                    document.getElementById('phoneNumberInput').value = clientInfo.phoneNumber; // Load phone number
+                    document.getElementById('phoneNumberInput').value = clientInfo.phoneNumber;
                     console.log("Client info loaded from localStorage.");
                 } else {
                     console.log("No existing client info found in localStorage.");
@@ -1686,8 +1707,9 @@
                 receiptPage.style.display = 'none';
                 landingPage.classList.remove('hidden'); // Remove hidden to allow opacity/transform transition
                 landingPage.classList.add('visible'); // Add visible class
-                // Ensure inputs are re-populated and button state is correct when returning
-                loadClientInfo(); // Reload client info for the input fields
+                // When returning to landing page via back button, don't clear client info immediately
+                // The clear is handled on initial page load or "Order Again" click.
+                loadClientInfo(); // Reload client info in case user modified inputs and then went back
             }, 700); // Allow some time for other pages to fade out
         }
 
@@ -2024,23 +2046,10 @@
         }
 
         window.orderAgain = function() {
-            // Clear client information
-            clientInfo.storeName = '';
-            clientInfo.fullName = '';
-            clientInfo.address = '';
-            clientInfo.phoneNumber = ''; // Clear phone number
-            saveClientInfo(); // Save the cleared client info to localStorage
-
-            // Clear input fields on the landing page immediately
-            document.getElementById('storeNameInput').value = '';
-            document.getElementById('fullNameInput').value = '';
-            document.getElementById('addressInput').value = '';
-            document.getElementById('phoneNumberInput').value = ''; // Clear phone number input
-
-            // Disable the "Get started" button
-            document.getElementById('getStartedButton').disabled = true;
-
-            showLandingPage(); // Transition back to the landing page
+            // Clear client information and input fields
+            clearClientInfoAndInputs();
+            // Transition back to the landing page
+            showLandingPage();
         }
 
         // New function to trigger printing/sharing the receipt page
@@ -2109,8 +2118,9 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Always clear client info on initial load/refresh
+            clearClientInfoAndInputs();
             loadProductData(); // Load product data from localStorage on startup
-            loadClientInfo(); // Load client info from localStorage on startup
 
             const dropAreas = document.querySelectorAll('.image-drop-area');
 
