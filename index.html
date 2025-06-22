@@ -41,16 +41,17 @@
             width: 100%; /* Occupy whole screen width */
             background-color: #003a7a; /* Dark blue background */
             z-index: 100; /* Ensure it's above other content */
-            padding: 10px 40px; /* Adjusted padding for horizontal layout */
-            min-height: 84px; /* Ensure a minimum height for logo */
+            padding: 15px 20px; /* Mobile padding applied globally */
+            min-height: auto; /* Allow height to adjust for stacked content */
             display: flex; /* Use flexbox for layout */
-            flex-direction: row; /* Default to row for desktop */
-            justify-content: space-between; /* Space out groups: left, middle, right */
-            align-items: center; /* Vertically center items in the row */
-            flex-wrap: nowrap; /* Prevent wrapping on desktop unless necessary */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Subtle shadow */
-            box-sizing: border-box; /* Include padding in total width/height */
-            display: none; /* Hidden by default, shown by JS on order page */
+            flex-direction: column; /* Always stack header items vertically */
+            justify-content: space-between;
+            align-items: flex-start; /* Align stacked items to the left */
+            flex-wrap: nowrap;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-sizing: border-box;
+            display: none;
+            gap: 15px; /* Mobile gap between stacked groups */
         }
 
         /* Styles for header buttons to fit dark background */
@@ -81,31 +82,32 @@
         .main-fixed-header .finalize-order-button,
         .main-fixed-header .order-list-button,
         .main-fixed-header .clear-order-button {
-            background: none; /* No background fill */
-            color: white; /* White text */
-            padding: 10px 15px;
-            font-size: 0.9rem;
+            background: none;
+            color: white;
+            padding: 8px 10px; /* Mobile padding applied globally */
+            font-size: 0.8rem; /* Mobile font size applied globally */
             font-weight: 600;
             border-radius: 8px;
-            border: none; /* REMOVED BORDER */
+            border: none;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: none; /* No individual shadow, header has one */
-            min-height: 44px;
-            white-space: nowrap; /* Prevents text wrap, keeping button length dependent on words */
+            box-shadow: none;
+            min-height: 38px; /* Mobile min-height applied globally */
+            white-space: nowrap;
+            width: auto; /* Mobile width applied globally */
         }
         .main-fixed-header .finalize-order-button:disabled {
-            background: rgba(255, 255, 255, 0.1); /* Lighter grey for disabled */
-            color: rgba(255, 255, 255, 0.5); /* Faded text for disabled */
-            border-color: rgba(255, 255, 255, 0.3); /* Faded border for disabled */
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            border-color: rgba(255, 255, 255, 0.3);
             cursor: not-allowed;
             opacity: 0.7;
         }
         .main-fixed-header .finalize-order-button:hover:not(:disabled),
         .main-fixed-header .order-list-button:hover,
         .main-fixed-header .clear-order-button:hover {
-            background-color: rgba(255, 255, 255, 0.2); /* Subtle white overlay on hover */
-            transform: none; /* No translateY for fixed header buttons */
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: none;
             box-shadow: none;
         }
         .main-fixed-header .finalize-order-button:active:not(:disabled),
@@ -115,33 +117,35 @@
             box-shadow: none;
         }
 
-        /* Header Groups for Desktop Flex Order */
+        /* Header Groups - now adapted for mobile layout globally */
         .main-fixed-header .header-left-group {
-            order: 1; /* Desktop order: first (only back button) */
-            width: auto; /* Allow content to dictate width */
+            order: 1;
+            width: 100%; /* Mobile width applied globally */
             display: flex;
-            justify-content: flex-start;
+            justify-content: space-between; /* Mobile justify applied globally */
             align-items: center;
         }
 
-        /* Group for Clear Order, List of Orders, Finalize Order */
         .main-fixed-header .header-action-buttons {
-            order: 3; /* Desktop order: last (to the right of search bar) */
+            order: 3;
             display: flex;
             align-items: center;
-            gap: 10px; /* Spacing between these buttons */
-            margin-left: 15px; /* Space from the search bar */
-            width: auto; /* Let content dictate width */
+            gap: 5px; /* Mobile horizontal spacing applied globally */
+            margin: 0; /* Mobile margin reset applied globally */
+            width: 100%; /* Mobile width applied globally */
+            flex-direction: row; /* Always horizontal for these buttons */
+            justify-content: center; /* Center buttons horizontally */
+            flex-wrap: wrap; /* Allow wrapping if screen is too narrow */
         }
 
         .landing-container, .order-page-container, .receipt-page-container {
             background-color: #ffffff;
-            padding: 40px; /* Base padding for the card container */
+            padding: 20px; /* Mobile padding applied globally */
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             text-align: center;
-            max-width: 900px; /* Max width for the content card */
-            width: 100%; /* Ensure it takes full width up to max-width */
+            max-width: 900px;
+            width: 100%;
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.7s ease, transform 0.7s ease;
@@ -150,15 +154,14 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            flex-grow: 1; /* Allow containers to grow to fill space */
-            box-sizing: border-box; /* Include padding in height */
-            margin-top: 20px; /* Default margin-top for separation from other content/header */
-            margin-bottom: 20px; /* Default margin-bottom */
+            flex-grow: 1;
+            box-sizing: border-box;
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
         /* Specific margin for order page to clear fixed header */
         .order-page-container.visible {
-            /* Adjusted margin-top to clear new single-row header layout */
-            margin-top: 100px;
+            margin-top: 200px; /* Mobile margin-top applied globally */
         }
 
         .landing-container {
@@ -179,7 +182,7 @@
 
         .logo {
             font-family: 'Passion One', sans-serif;
-            font-size: 5.5rem;
+            font-size: 3.5rem; /* Mobile font size applied globally */
             font-weight: 700;
             margin-bottom: 20px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
@@ -193,7 +196,7 @@
             color: #FFD700;
         }
         .tagline {
-            font-size: 1.5rem;
+            font-size: 1.2rem; /* Mobile font size applied globally */
             color: #5C6F78;
             margin-bottom: 30px;
             font-weight: 400;
@@ -201,8 +204,8 @@
         .get-started-button, .order-again-button {
             background: linear-gradient(145deg, #EE3524, #C02C1F);
             color: white;
-            padding: 15px 30px;
-            font-size: 1.25rem;
+            padding: 12px 25px; /* Mobile padding applied globally */
+            font-size: 1rem; /* Mobile font size applied globally */
             font-weight: 600;
             border-radius: 12px;
             text-decoration: none;
@@ -263,11 +266,11 @@
 
         /* Search Bar Specific Styles (now inside fixed header) */
         .search-bar-container {
-            width: 100%; /* Take full width within its flex-grow area */
-            max-width: 400px; /* Limit max width for desktop */
-            margin: 0 15px; /* Space to the left and right */
-            flex-grow: 1; /* Allow it to take available space in the middle */
-            order: 2; /* Desktop order: second */
+            width: 100%; /* Mobile width applied globally */
+            max-width: none; /* Mobile max-width applied globally */
+            margin: 0; /* Mobile margin applied globally */
+            flex-grow: 1;
+            order: 2;
         }
         .search-bar-container input {
             width: 100%;
@@ -286,24 +289,24 @@
         }
 
         .product-grid {
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            grid-template-columns: 1fr; /* Mobile grid applied globally */
             display: grid;
             gap: 20px;
             justify-content: center;
-            margin-top: 0; /* No margin-top needed here, handled by container */
+            margin-top: 0;
         }
         .product-card {
             background-color: #ffffff;
             border-radius: 15px;
-            padding: 10px;
+            padding: 15px; /* Mobile padding applied globally */
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px; /* Mobile gap applied globally */
             align-items: center;
         }
         .product-code-display {
-            font-size: 1.1rem;
+            font-size: 0.9rem; /* Mobile font size applied globally */
             font-weight: 600;
             color: #5C6F78;
             margin-bottom: 3px;
@@ -332,34 +335,63 @@
             color: #333;
         }
          /* Styling for product name (readonly textarea) */
-        .product-card .input-group textarea[id^="productName"] { /* Changed 'input' to 'textarea' */
-            font-size: 1rem;
-            font-weight: 700; /* As per your previous request for bolding */
+        .product-card .input-group textarea[id^="productName"] {
+            font-size: 0.9rem; /* Mobile font size applied globally */
+            font-weight: 700;
             color: #333;
-            min-height: 58px; /* Increased height to allow for multiple lines */
+            min-height: 58px;
             padding: 6px 0;
-            white-space: normal; /* Ensures text wraps */
-            overflow: hidden; /* Important: Hides scrollbars and clips content if it exceeds min-height */
-            resize: none; /* This is what removes the resizing handle */
-            background-color: transparent; /* Keep it transparent */
-            border: none; /* Ensures no visible border */
+            white-space: normal;
+            overflow: hidden;
+            resize: none;
+            background-color: transparent;
+            border: none;
             border-radius: 0;
             box-shadow: none;
-            text-align: center; /* Centers the text horizontally */
+            text-align: center;
         }
-        /* Styling for product price - now black */
-        .product-card .input-group input[id^="productPrice"] {
-            font-weight: 600;
+
+        /* Container for price only, ensuring it's centered */
+        .product-price-container {
+            display: flex; /* Use flexbox to center content */
+            justify-content: center; /* Center horizontally */
+            width: 100%; /* Take full width to allow centering */
+            margin-top: 2px; /* Very little spacing below product name */
+            margin-bottom: 2px; /* Very little spacing above quantity */
+        }
+
+        /* Styling for product price input */
+        .product-card .product-price-container input[id^="productPrice"] {
+            font-weight: 700;
             color: #333;
-            font-size: 0.95rem;
+            font-size: 0.9rem; /* Same as product name */
+            border: none;
+            background-color: transparent;
+            padding: 0;
+            text-align: center; /* Center the text inside the input */
+            width: auto; /* Occupy only necessary width */
+            flex-grow: 0;
+            flex-shrink: 0;
+            min-width: unset; /* Ensure it can shrink based on content */
+            max-width: 100%; /* Prevent overflow */
         }
-        /* Styling for product size - now black */
-        .product-card .input-group input[id^="productSize"] {
-            font-size: 0.9rem;
+        /* Add specific styles for readonly inputs to prevent user interaction */
+        .product-card .product-price-container input[id^="productPrice"][readonly] {
+            cursor: default;
+            color: #666; /* Slightly faded color for readonly */
         }
-        /* Styling for product quantity - now black */
+
+        /* Styling for product quantity */
         .product-card .input-group input[id^="productQuantity"] {
-            font-size: 0.95rem;
+            font-size: 0.9rem; /* Mobile font size applied globally */
+            width: 50%; /* Decreased width */
+            margin: 5px auto 0 auto; /* Center horizontally, add very small top margin, no bottom margin */
+            text-align: center; /* Center text inside */
+            padding: 8px; /* Adjust padding for smaller width */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+            display: block; /* Ensure it takes full width for margin auto to work */
         }
 
         .input-group input:focus, .input-group textarea:focus {
@@ -384,23 +416,27 @@
             display: flex;
             justify-content: center;
             width: 100%;
-            margin-bottom: 5px;
+            margin-bottom: 5px; /* Keep consistent with other compact elements */
+            flex-direction: row; /* Always horizontal */
+            gap: 5px; /* Reduced gap for horizontal layout */
+            flex-wrap: wrap;
         }
         .unit-button {
             background-color: #f0f0f0;
             color: #5C6F78;
-            padding: 8px 12px;
+            padding: 6px 8px; /* Reduced padding globally */
             border-radius: 8px;
-            font-size: 0.85rem;
+            font-size: 0.75rem; /* Smaller font size globally */
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
             border: 1px solid #e0e0e0;
-            min-height: 40px;
-            margin: 0 4px;
-            width: 100px; /* Fixed width for desktop */
+            min-height: 40px; /* Still provide a decent tap target */
+            margin: 0; /* Reset margins, use gap on parent */
+            width: 48%; /* Adjust width to fit two buttons horizontally with a small gap */
+            min-width: unset; /* Allow shrinking */
         }
-        .unit-button:first-child { margin-left: 0; }
+        .unit-button:first-child { margin-right: 2%; } /* Add some margin between buttons for small screens */
         .unit-button:last-child { margin-right: 0; }
 
         .unit-button:hover {
@@ -420,10 +456,10 @@
 
         /* New button for Print PDF - now the only button in that section */
         .print-receipt-button {
-            background: linear-gradient(145deg, #0050A0, #003a7a); /* Blue gradient */
+            background: linear-gradient(145deg, #0050A0, #003a7a);
             color: white;
-            padding: 12px 25px;
-            font-size: 1rem;
+            padding: 10px 20px; /* Mobile padding applied globally */
+            font-size: 0.9rem; /* Mobile font size applied globally */
             font-weight: 600;
             border-radius: 10px;
             border: none;
@@ -432,7 +468,6 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
             min-height: 48px;
             margin-top: 20px;
-            /* No margin-right needed as it's the only button */
         }
         .print-receipt-button:hover {
             background: linear-gradient(145deg, #003a7a, #0050A0);
@@ -465,7 +500,7 @@
             opacity: 1;
             visibility: visible;
         }
-        .order-summary-content, .receipt-modal .receipt-content { /* Specificity for receipt content within modal */
+        .order-summary-content, .receipt-modal .receipt-content {
             background-color: #ffffff;
             padding: 30px;
             border-radius: 15px;
@@ -483,7 +518,7 @@
             transform: translateY(0);
         }
         .order-summary-content h3, .receipt-page-container h3, .receipt-modal .receipt-content h3 {
-            font-size: 1.8rem;
+            font-size: 1.5rem; /* Mobile font size applied globally */
             font-weight: 700;
             color: #0050A0;
             margin-bottom: 20px;
@@ -491,18 +526,18 @@
         }
         /* New style for scrollable content area within the modal */
         .order-summary-scrollable-content {
-            max-height: calc(90vh - 180px);
+            max-height: calc(90vh - 150px); /* Mobile max-height applied globally */
             overflow-y: auto;
             padding-right: 10px;
             margin-bottom: 20px;
         }
         /* Style for the new receipt table */
         .receipt-table-container {
-            max-height: calc(90vh - 300px); /* Adjust height for client info, header, total, and buttons */
+            max-height: calc(90vh - 250px); /* Mobile max-height applied globally */
             overflow-y: auto;
             margin-bottom: 20px;
             width: 100%;
-            border-collapse: collapse; /* Ensure table borders collapse */
+            border-collapse: collapse;
             text-align: left;
         }
 
@@ -522,7 +557,7 @@
             background-color: #f2f2f2;
             font-weight: 600;
             color: #5C6F78;
-            position: sticky; /* Make header sticky when scrolling */
+            position: sticky;
             top: 0;
             z-index: 1;
         }
@@ -536,18 +571,12 @@
         }
         .receipt-table-container td:last-child,
         .receipt-table-container th:last-child {
-            text-align: right; /* Align total price to the right */
+            text-align: right;
         }
-        /* .receipt-scrollable-content {
-            max-height: calc(90vh - 250px);
-            overflow-y: auto;
-            padding-right: 10px;
-            margin-bottom: 20px;
-        } */
         .receipt-client-info {
             text-align: left;
             margin-bottom: 20px;
-            font-size: 0.95rem;
+            font-size: 0.85rem; /* Mobile font size applied globally */
             color: #5C6F78;
         }
         .receipt-client-info strong {
@@ -557,8 +586,9 @@
         /* Enhanced order item styling */
         .order-item {
             display: flex;
+            flex-direction: column; /* Mobile flex-direction applied globally */
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start; /* Mobile align-items applied globally */
             padding: 15px;
             margin-bottom: 10px;
             background-color: #f9f9f9;
@@ -599,12 +629,11 @@
         }
 
         /* Apply similar enhancement to receipt items */
-        /* These styles are mostly replaced by .receipt-table-container table, th, td */
-        /* Keeping them here for any accidental fallback or slight overlap if not fully removed */
         .receipt-item {
             display: flex;
+            flex-direction: column; /* Mobile flex-direction applied globally */
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start; /* Mobile align-items applied globally */
             padding: 15px;
             margin-bottom: 10px;
             background-color: #f9f9f9;
@@ -637,7 +666,7 @@
         }
 
         .order-total, .receipt-total {
-            font-size: 1.3rem;
+            font-size: 1.1rem; /* Mobile font size applied globally */
             font-weight: 700;
             color: #0050A0;
             margin-top: 20px;
@@ -684,14 +713,14 @@
         }
 
         .remove-quantity-input {
-            width: 70px;
+            width: 50px; /* Mobile width applied globally */
             padding: 8px 6px;
             border: 1px solid #ccc;
             border-radius: 5px;
             text-align: center;
             margin-right: 0;
             font-size: 0.9rem;
-            min-height: 38px;
+            min-height: 36px; /* Mobile min-height applied globally */
         }
 
         .receipt-message {
@@ -711,36 +740,25 @@
             display: none;
         }
         /* Style for the new Pcs/Case value container to match input styling */
+        /* This is no longer used due to combinedSpec, but kept for context if needed */
         .pcs-per-case-display-container {
-            flex: 1;
-            display: flex;
-            align-items: baseline;
-            gap: 5px;
-            background-color: transparent;
-            border: none;
-            border-radius: 0;
-            height: 32px;
-            box-sizing: border-box;
-            padding: 4px 0;
-        }
-        .pcs-per-case-display-container span {
-             font-size: 0.9rem;
+            display: none; /* Hide this as it's replaced by combinedSpec */
         }
 
         /* Return to Top button styles */
         #returnToTopBtn {
             display: none;
             position: fixed;
-            bottom: 30px;
-            right: 30px;
+            bottom: 20px; /* Mobile bottom applied globally */
+            right: 20px; /* Mobile right applied globally */
             z-index: 99;
             background: linear-gradient(145deg, #0050A0, #003a7a);
             color: white;
-            padding: 12px 18px;
+            padding: 12px; /* Mobile padding applied globally */
             border-radius: 10px;
             border: none;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0; /* Mobile font size (hide text) applied globally */
             font-weight: 600;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             transition: opacity 0.3s ease, transform 0.3s ease;
@@ -765,200 +783,47 @@
             fill: white;
             width: 20px;
             height: 20px;
-            margin-left: 8px;
-        }
-        /* Hide text on smaller screens, only show arrow */
-        @media (max-width: 768px) {
-            #returnToTopBtn {
-                padding: 12px;
-                font-size: 0;
-                bottom: 20px;
-                right: 20px;
-            }
-            #returnToTopBtn svg {
-                margin-left: 0;
-            }
+            margin-left: 0; /* Mobile margin-left applied globally */
         }
 
-        /* Responsive adjustments for smaller screens */
-        @media (max-width: 768px) {
-            .landing-container, .order-page-container, .receipt-page-container {
-                padding: 20px;
+        /* Responsive adjustments - removed mobile-specific media queries as styles are now global */
+        @media (min-width: 769px) {
+            /* This media query can be used for any desktop-specific overrides if needed in the future,
+               but the current design is a mobile-first approach applied globally. */
+            /* For example, if you wanted the product grid to be 2 columns on larger screens:
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
+            */
+            /* Or if the header should revert to row layout on desktop:
             .main-fixed-header {
-                flex-direction: column; /* Stack header items vertically on mobile */
-                align-items: flex-start; /* Align stacked items to the left */
-                gap: 15px; /* More space between stacked groups */
-                padding: 15px 20px; /* Adjust padding for smaller screens */
-                min-height: auto; /* Allow height to adjust */
+                flex-direction: row;
+                padding: 10px 40px;
             }
-            /* Mobile order for header groups and items */
             .main-fixed-header .header-left-group {
-                order: 1; /* First on mobile */
-                width: 100%; /* Full width */
-                justify-content: space-between; /* Keep internal button spacing */
+                width: auto;
             }
             .main-fixed-header .search-bar-container {
-                order: 2; /* Second on mobile */
-                width: 100%; /* Full width */
-                max-width: none; /* Remove desktop max-width constraint */
-                margin: 0; /* Reset all margins for mobile (handled by gap) */
+                max-width: 400px;
+                margin: 0 15px;
             }
             .main-fixed-header .header-action-buttons {
-                order: 3; /* Third on mobile */
-                width: 100%; /* Full width */
-                flex-direction: row; /* !!! CHANGED: Now horizontal on mobile !!! */
-                gap: 5px; /* Smaller horizontal spacing between buttons */
-                margin: 0; /* Reset all margins for mobile (handled by gap) */
-                justify-content: center; /* Center the buttons horizontally */
-                flex-wrap: wrap; /* Allow buttons to wrap if screen is too narrow */
+                flex-direction: row;
+                gap: 10px;
+                margin-left: 15px;
+                width: auto;
             }
             .main-fixed-header .finalize-order-button,
             .main-fixed-header .order-list-button,
             .main-fixed-header .clear-order-button {
-                width: auto; /* !!! CHANGED: Allow width to shrink to content !!! */
-                font-size: 0.8rem; /* !!! CHANGED: Made font size smaller !!! */
-                padding: 8px 10px; /* !!! CHANGED: Reduced padding for smaller size !!! */
-                min-height: 38px; /* Slightly reduce min-height for very small buttons, but keep tappable */
+                padding: 10px 15px;
+                font-size: 0.9rem;
+                min-height: 44px;
             }
-
-
-            /* Adjust order-page-container.visible margin-top for new mobile header height */
-            /* This value needs to clear the stacked header. Estimate based on content: */
-            /* (Padding top/bottom: 15px*2) + (3 rows of buttons/search: ~48px each * 3) + (2 gaps: 15px*2) = 30 + 144 + 30 = 204px */
-            /* Let's use a slightly generous value like 200px to ensure clearance */
             .order-page-container.visible {
-                margin-top: 200px; /* Adjusted to clear the stacked header on mobile */
+                margin-top: 100px;
             }
-            .product-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            .product-card {
-                padding: 20px;
-            }
-            .order-summary-content h3, .receipt-page-container h3, .receipt-modal .receipt-content h3 {
-                font-size: 1.5rem;
-            }
-            .order-item, .receipt-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .order-item-details, .receipt-item-details {
-                margin-right: 0;
-                margin-bottom: 5px;
-            }
-            .order-total, .receipt-total {
-                font-size: 1.1rem;
-            }
-            .remove-quantity-input {
-                width: 50px;
-                min-height: 36px;
-            }
-            .order-summary-scrollable-content {
-                max-height: calc(90vh - 150px);
-            }
-            /* Adjusted for receipt table now */
-            .receipt-table-container {
-                max-height: calc(90vh - 250px); /* Smaller height for table on mobile */
-            }
-            .print-receipt-button { /* Only one button now */
-                padding: 10px 20px;
-                font-size: 0.9rem;
-            }
-            .receipt-client-info {
-                font-size: 0.85rem;
-            }
-        }
-        @media (max-width: 640px) {
-            .unit-buttons {
-                flex-direction: row; /* Changed to row for horizontal layout */
-                gap: 5px; /* Adjusted horizontal gap */
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-            .unit-button {
-                width: 48%; /* Adjusted width to fit two buttons horizontally with a small gap */
-                min-width: unset; /* Remove fixed min-width to allow shrinking */
-                padding: 6px 8px; /* Further reduced padding */
-                font-size: 0.75rem; /* Smaller font size */
-                margin: 0; /* Remove individual margins as gap is handled by parent */
-            }
-            .unit-button:first-child { margin-right: 2%; } /* Add some margin between buttons for small screens */
-            .landing-container {
-                padding: 30px;
-                border-radius: 15px;
-            }
-            .logo {
-                font-size: 3.5rem;
-            }
-            .tagline {
-                font-size: 1.2rem;
-            }
-            .get-started-button {
-                font-size: 1rem;
-                padding: 12px 25px;
-            }
-            /* Original unit-buttons/unit-button rules from previous iteration for mobile where they were stacked,
-               now overridden by the more specific 640px media query to make them horizontal.
-               Keeping these in mind for context, but the above rules are now dominant for 640px breakpoint. */
-            /* .unit-buttons {
-                flex-direction: column;
-                gap: 8px;
-            }
-            .unit-button {
-                width: 100%;
-            } */
-            .product-card {
-                padding: 15px;
-                gap: 10px;
-            }
-            .product-code-display,
-            .input-group input[id^="productName"],
-            .input-group input[id^="productPrice"],
-            .input-group input[id^="productQuantity"] {
-                font-size: 0.9rem;
-            }
-            .pcs-per-case-display-container span {
-                font-size: 0.9rem;
-            }
-        }
-
-        /* Specific print styles */
-        @media print {
-            body {
-                background-color: #fff; /* Ensure white background for print */
-            }
-            .main-fixed-header, #returnToTopBtn,
-            .print-receipt-button, .order-again-button { /* Only one button now */
-                display: none !important; /* Hide header and buttons when printing */
-            }
-            .receipt-page-container {
-                box-shadow: none !important; /* Remove shadow for print */
-                padding: 0 !important;
-                margin: 0 !important;
-                max-width: 100% !important;
-                width: 100% !important;
-                height: auto !important;
-                overflow: visible !important;
-                transform: none !important;
-                opacity: 1 !important;
-            }
-            .receipt-client-info,
-            .receipt-page-container h3,
-            .receipt-total {
-                padding: 10px 20px; /* Add some padding back for these elements in print */
-            }
-            .receipt-table-container {
-                max-height: none !important;
-                overflow: visible !important;
-            }
-            .receipt-table-container table {
-                border: 1px solid #ccc;
-            }
-            .receipt-table-container th, .receipt-table-container td {
-                border: 1px solid #ccc;
-            }
+            */
         }
 
     </style>
@@ -1028,18 +893,12 @@
                 <div class="input-group">
                     <textarea id="productName1" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
-                <div class="input-group" style="display: flex; gap: 10px;">
-                    <input type="text" id="productSize1" placeholder="Size" style="flex: 1;" readonly>
-                    <div id="pcsPerCaseDisplay1" class="pcs-per-case-display-container">
-                        <span class="text-sm text-gray-600">Pcs/Case:</span>
-                        <span id="pcsPerCaseValue1" class="font-semibold text-gray-800"></span>
-                    </div>
+                <!-- Price Container -->
+                <div class="product-price-container">
+                    <input type="text" id="productPrice1" placeholder="Price" readonly>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="productPrice1" placeholder="Price per PC (PHP)" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity1" placeholder="Quantity" value="0" min="0">
+                    <input type="number" id="productQuantity1" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
                 </div>
             </div>
 
@@ -1055,18 +914,12 @@
                 <div class="input-group">
                     <textarea id="productName2" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
-                <div class="input-group" style="display: flex; gap: 10px;">
-                    <input type="text" id="productSize2" placeholder="Size" style="flex: 1;" readonly>
-                    <div id="pcsPerCaseDisplay2" class="pcs-per-case-display-container">
-                        <span class="text-sm text-gray-600">Pcs/Case:</span>
-                        <span id="pcsPerCaseValue2" class="font-semibold text-gray-800"></span>
-                    </div>
+                <!-- Price Container -->
+                <div class="product-price-container">
+                    <input type="text" id="productPrice2" placeholder="Price" readonly>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="productPrice2" placeholder="Price per PC (PHP)" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity2" placeholder="Quantity" value="0" min="0">
+                    <input type="number" id="productQuantity2" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
                 </div>
             </div>
 
@@ -1082,18 +935,12 @@
                 <div class="input-group">
                     <textarea id="productName3" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
-                <div class="input-group" style="display: flex; gap: 10px;">
-                    <input type="text" id="productSize3" placeholder="Size" style="flex: 1;" readonly>
-                    <div id="pcsPerCaseDisplay3" class="pcs-per-case-display-container">
-                        <span class="text-sm text-gray-600">Pcs/Case:</span>
-                        <span id="pcsPerCaseValue3" class="font-semibold text-gray-800"></span>
-                    </div>
+                <!-- Price Container -->
+                <div class="product-price-container">
+                    <input type="text" id="productPrice3" placeholder="Price" readonly>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="productPrice3" placeholder="Price per PC (PHP)" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity3" placeholder="Quantity" value="0" min="0">
+                    <input type="number" id="productQuantity3" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
                 </div>
             </div>
 
@@ -1109,18 +956,12 @@
                 <div class="input-group">
                     <textarea id="productName4" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
-                <div class="input-group" style="display: flex; gap: 10px;">
-                    <input type="text" id="productSize4" placeholder="Size" style="flex: 1;" readonly>
-                    <div id="pcsPerCaseDisplay4" class="pcs-per-case-display-container">
-                        <span class="text-sm text-gray-600">Pcs/Case:</span>
-                        <span id="pcsPerCaseValue4" class="font-semibold text-gray-800"></span>
-                    </div>
+                <!-- Price Container -->
+                <div class="product-price-container">
+                    <input type="text" id="productPrice4" placeholder="Price" readonly>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="productPrice4" placeholder="Price per PC (PHP)" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity4" placeholder="Quantity" value="0" min="0">
+                    <input type="number" id="productQuantity4" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
                 </div>
             </div>
 
@@ -1136,18 +977,12 @@
                 <div class="input-group">
                     <textarea id="productName5" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
-                <div class="input-group" style="display: flex; gap: 10px;">
-                    <input type="text" id="productSize5" placeholder="Size" style="flex: 1;" readonly>
-                    <div id="pcsPerCaseDisplay5" class="pcs-per-case-display-container">
-                        <span class="text-sm text-gray-600">Pcs/Case:</span>
-                        <span id="pcsPerCaseValue5" class="font-semibold text-gray-800"></span>
-                    </div>
+                <!-- Price Container -->
+                <div class="product-price-container">
+                    <input type="text" id="productPrice5" placeholder="Price" readonly>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="productPrice5" placeholder="Price per PC (PHP)" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity5" placeholder="Quantity" value="0" min="0">
+                    <input type="number" id="productQuantity5" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
                 </div>
             </div>
 
@@ -1163,18 +998,12 @@
                 <div class="input-group">
                     <textarea id="productName6" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
-                <div class="input-group" style="display: flex; gap: 10px;">
-                    <input type="text" id="productSize6" placeholder="Size" style="flex: 1;" readonly>
-                    <div id="pcsPerCaseDisplay6" class="pcs-per-case-display-container">
-                        <span class="text-sm text-gray-600">Pcs/Case:</span>
-                        <span id="pcsPerCaseValue6" class="font-semibold text-gray-800"></span>
-                    </div>
+                <!-- Price Container -->
+                <div class="product-price-container">
+                    <input type="text" id="productPrice6" placeholder="Price" readonly>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="productPrice6" placeholder="Price per PC (PHP)" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity6" placeholder="Quantity" value="0" min="0">
+                    <input type="number" id="productQuantity6" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
                 </div>
             </div>
 
@@ -1190,18 +1019,12 @@
                 <div class="input-group">
                     <textarea id="productName7" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
-                <div class="input-group" style="display: flex; gap: 10px;">
-                    <input type="text" id="productSize7" placeholder="Size" style="flex: 1;" readonly>
-                    <div id="pcsPerCaseDisplay7" class="pcs-per-case-display-container">
-                        <span class="text-sm text-gray-600">Pcs/Case:</span>
-                        <span id="pcsPerCaseValue7" class="font-semibold text-gray-800"></span>
-                    </div>
+                <!-- Price Container -->
+                <div class="product-price-container">
+                    <input type="text" id="productPrice7" placeholder="Price" readonly>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="productPrice7" placeholder="Price per PC (PHP)" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity7" placeholder="Quantity" value="0" min="0">
+                    <input type="number" id="productQuantity7" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
                 </div>
             </div>
 
@@ -1217,18 +1040,12 @@
                 <div class="input-group">
                     <textarea id="productName8" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
-                <div class="input-group" style="display: flex; gap: 10px;">
-                    <input type="text" id="productSize8" placeholder="Size" style="flex: 1;" readonly>
-                    <div id="pcsPerCaseDisplay8" class="pcs-per-case-display-container">
-                        <span class="text-sm text-gray-600">Pcs/Case:</span>
-                        <span id="pcsPerCaseValue8" class="font-semibold text-gray-800"></span>
-                    </div>
+                <!-- Price Container -->
+                <div class="product-price-container">
+                    <input type="text" id="productPrice8" placeholder="Price" readonly>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="productPrice8" placeholder="Price per PC (PHP)" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity8" placeholder="Quantity" value="0" min="0">
+                    <input type="number" id="productQuantity8" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
                 </div>
             </div>
 
@@ -1244,18 +1061,12 @@
                 <div class="input-group">
                     <textarea id="productName9" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
-                <div class="input-group" style="display: flex; gap: 10px;">
-                    <input type="text" id="productSize9" placeholder="Size" style="flex: 1;" readonly>
-                    <div id="pcsPerCaseDisplay9" class="pcs-per-case-display-container">
-                        <span class="text-sm text-gray-600">Pcs/Case:</span>
-                        <span id="pcsPerCaseValue9" class="font-semibold text-gray-800"></span>
-                    </div>
+                <!-- Price Container -->
+                <div class="product-price-container">
+                    <input type="text" id="productPrice9" placeholder="Price" readonly>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="productPrice9" placeholder="Price per PC (PHP)" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity9" placeholder="Quantity" value="0" min="0">
+                    <input type="number" id="productQuantity9" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
                 </div>
             </div>
 
@@ -1271,18 +1082,12 @@
                 <div class="input-group">
                     <textarea id="productName10" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
-                <div class="input-group" style="display: flex; gap: 10px;">
-                    <input type="text" id="productSize10" placeholder="Size" style="flex: 1;" readonly>
-                    <div id="pcsPerCaseDisplay10" class="pcs-per-case-display-container">
-                        <span class="text-sm text-gray-600">Pcs/Case:</span>
-                        <span id="pcsPerCaseValue10" class="font-semibold text-gray-800"></span>
-                    </div>
+                <!-- Price Container -->
+                <div class="product-price-container">
+                    <input type="text" id="productPrice10" placeholder="Price" readonly>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="productPrice10" placeholder="Price per PC (PHP)" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity10" placeholder="Quantity" value="0" min="0">
+                    <input type="number" id="productQuantity10" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
                 </div>
             </div>
         </div>
@@ -1319,9 +1124,7 @@
                     <tr>
                         <th>Code</th>
                         <th>Product Name</th>
-                        <th>Size</th>
                         <th>Unit</th>
-                        <th>Pcs/Case</th>
                         <th>Quantity</th>
                         <th>Price/Unit</th>
                         <th>Total Price</th>
@@ -1355,82 +1158,72 @@
         const productData = {
             1: { // Product 1
                 productCode: '10001',
-                productName: '555 SARDINES IN TOMATO SAUCE EOE',
-                size: '155 g',
+                productName: '555 SARDINES IN TOMATO SAUCE EOE 100/155g', // Combined
                 'PC': { price: '24.35', quantity: 0 },
-                'CASE': { price: '2414.77', quantity: 0, pcsPerCase: 100 },
+                'CASE': { price: '2414.77', quantity: 0 },
                 currentUnit: 'PC' // Initialize currentUnit
             },
             2: { // Product 2
                 productCode: '10002',
-                productName: '555 SARDINES IN TOMATO SAUCE WITH CHILI',
-                size: '155 g',
+                productName: '555 SARDINES IN TOMATO SAUCE WITH CHILI 100/155g', // Combined
                 'PC': { price: '24.31', quantity: 0 },
-                'CASE': { price: '2412.20', quantity: 0, pcsPerCase: 100 },
+                'CASE': { price: '2412.20', quantity: 0 },
                 currentUnit: 'PC' // Initialize currentUnit
             },
             3: { // Product 3
                 productCode: '10003',
-                productName: '555 TUNA FLAKES ADOBO EOE',
-                size: '155 g',
+                productName: '555 TUNA FLAKES ADOBO EOE 50/155g', // Combined
                 'PC': { price: '29.15', quantity: 0 },
-                'CASE': { price: '1446.07', quantity: 0, pcsPerCase: 50 },
+                'CASE': { price: '1446.07', quantity: 0 },
                 currentUnit: 'PC'
             },
             4: { // Product 4
                 productCode: '10004',
-                productName: '555 TUNA FLAKES AFRITADA EOE',
-                size: '155 g',
+                productName: '555 TUNA FLAKES AFRITADA EOE 50/155g', // Combined
                 'PC': { price: '28.51', quantity: 0 },
-                'CASE': { price: '1413.61', quantity: 0, pcsPerCase: 50 },
+                'CASE': { price: '1413.61', quantity: 0 },
                 currentUnit: 'PC'
             },
             5: { // Product 5
                 productCode: '10005',
-                productName: '555 TUNA FLAKES CALDERETA EOE',
-                size: '155 g',
+                productName: '555 TUNA FLAKES CALDERETA EOE 50/155g', // Combined
                 'PC': { price: '28.51', quantity: 0 },
-                'CASE': { price: '1413.56', quantity: 0, pcsPerCase: 50 },
+                'CASE': { price: '1413.56', quantity: 0 },
                 currentUnit: 'PC'
             },
             6: { // Product 6
                 productCode: '10006',
-                productName: '555 TUNA FLAKES IN OIL EOE',
-                size: '155 g',
+                productName: '555 TUNA FLAKES IN OIL EOE 50/155g', // Combined
                 'PC': { price: '31.65', quantity: 0 },
-                'CASE': { price: '1569.26', quantity: 0, pcsPerCase: 50 },
+                'CASE': { price: '1569.26', quantity: 0 },
                 currentUnit: 'PC'
             },
             7: { // Product 7
                 productCode: '10007',
-                productName: '555 TUNA FLAKES MECHADO EOE',
-                size: '155 g',
+                productName: '555 TUNA FLAKES MECHADO EOE 50/155g', // Combined
                 'PC': { price: '28.51', quantity: 0 },
-                'CASE': { price: '1413.56', quantity: 0, pcsPerCase: 50 },
+                'CASE': { price: '1413.56', quantity: 0 },
                 currentUnit: 'PC'
             },
             8: { // Product 8
                 productCode: '10008',
-                productName: 'ABSOLUTE DISTILLED WATER',
-                size: '1 l',
+                productName: 'ABSOLUTE DISTILLED WATER 12/1L', // Combined
                 'PC': { price: '23.23', quantity: 0 },
-                'CASE': { price: '277.62', quantity: 0, pcsPerCase: 12 },
+                'CASE': { price: '277.62', quantity: 0 },
                 currentUnit: 'PC'
             },
             9: { // Product 9
                 productCode: '10009',
-                productName: 'ABSOLUTE DISTILLED WATER',
-                size: '350 ml',
+                productName: 'ABSOLUTE DISTILLED WATER 35/350ml', // Combined
                 'PC': { price: '10.62', quantity: 0 },
-                'CASE': { price: '370.08', quantity: 0, pcsPerCase: 35 },
+                'CASE': { price: '370.08', quantity: 0 },
                 currentUnit: 'PC'
             },
             10: { // Product 10
                 productCode: '10010',
-                productName: 'ABSOLUTE DISTILLED WATER',
-                size: '500 ml',
+                productName: 'ABSOLUTE DISTILLED WATER 24/500ml', // Combined
                 'PC': { price: '14.82', quantity: 0 },
-                'CASE': { price: '352.29', quantity: 0, pcsPerCase: 24 },
+                'CASE': { price: '352.29', quantity: 0 },
                 currentUnit: 'PC'
             }
         };
@@ -1556,14 +1349,9 @@
 
                         productData[productId][unit].quantity = (parsedData[productId][unit] && parsedData[productId][unit].quantity !== undefined) ? parseInt(parsedData[productId][unit].quantity) : 0;
                         productData[productId][unit].price = (parsedData[productId][unit] && parsedData[productId][unit].price !== undefined) ? parsedData[productId][unit].price : defaultProduct[unit].price;
-
-                        if (unit === 'CASE' && defaultProduct.CASE.pcsPerCase !== undefined) {
-                            productData[productId][unit].pcsPerCase = (parsedData[productId][unit] && parsedData[productId][unit].pcsPerCase !== undefined) ? parsedData[productId][unit].pcsPerCase : defaultProduct.CASE.pcsPerCase;
-                        }
                     });
 
                     productData[productId].productName = parsedData[productId].productName || defaultProduct.productName;
-                    productData[productId].size = parsedData[productId].size || defaultProduct.size;
                     productData[productId].currentUnit = parsedData[productId].currentUnit || defaultProduct.currentUnit;
                 }
 
@@ -1597,7 +1385,12 @@
                     if (productCodeDisplay) {
                         productCodeDisplay.textContent = product.productCode;
                     }
-                    productCard.querySelector(`#productSize${i}`).value = product.size;
+
+                    // Combined info is now part of productName, so this is removed.
+                    // const combinedInfoDisplay = productCard.querySelector(`#productCombinedInfo${i}`);
+                    // if (combinedInfoDisplay) {
+                    //     combinedInfoDisplay.textContent = product.combinedSpec;
+                    // }
 
                     const currentUnit = product.currentUnit || 'PC';
                     productCard.dataset.currentUnit = currentUnit;
@@ -1612,16 +1405,7 @@
 
                     productCard.querySelector(`#productPrice${i}`).placeholder = `Price per ${currentUnit}`;
                     productCard.querySelector(`#productPrice${i}`).value = `PHP ${parseFloat(product[currentUnit].price).toFixed(2)}`;
-                    productCard.querySelector(`#productQuantity${i}`).value = product[currentUnit].quantity;
-
-                    const pcsPerCaseValueSpan = productCard.querySelector(`#pcsPerCaseValue${i}`);
-                    if (pcsPerCaseValueSpan) {
-                        if (currentUnit === 'CASE' && product.CASE.pcsPerCase !== undefined) {
-                            pcsPerCaseValueSpan.textContent = product.CASE.pcsPerCase;
-                        } else {
-                            pcsPerCaseValueSpan.textContent = '';
-                        }
-                    }
+                    productCard.querySelector(`#productQuantity${i}`).value = product[currentUnit].quantity > 0 ? product[currentUnit].quantity : ''; // Keep quantity if > 0, else empty for placeholder
                 }
             }
         }
@@ -1739,7 +1523,6 @@
                     const unitButtons = productCard.querySelectorAll('.unit-button');
                     const priceInput = productCard.querySelector(`#productPrice${i}`);
                     const quantityInput = productCard.querySelector(`#productQuantity${i}`);
-                    const pcsPerCaseValueSpan = productCard.querySelector(`#pcsPerCaseValue${i}`);
 
                     // Update the product's current unit in the data model
                     product.currentUnit = newUnit;
@@ -1748,16 +1531,8 @@
                     // Update price and quantity inputs based on the NEW unit's stored data
                     priceInput.placeholder = `Price per ${newUnit}`;
                     priceInput.value = `PHP ${parseFloat(product[newUnit].price).toFixed(2)}`;
-                    quantityInput.value = product[newUnit].quantity; // Load the stored quantity for the new unit
+                    quantityInput.value = product[newUnit].quantity > 0 ? product[newUnit].quantity : ''; // Load the stored quantity for the new unit, or empty for placeholder
 
-                    // Update Pcs/Case display
-                    if (pcsPerCaseValueSpan) {
-                        if (newUnit === 'CASE' && product.CASE.pcsPerCase !== undefined) {
-                            pcsPerCaseValueSpan.textContent = product.CASE.pcsPerCase;
-                        } else {
-                            pcsPerCaseValueSpan.textContent = '';
-                        }
-                    }
 
                     // Update active state of unit buttons for the current product card
                     unitButtons.forEach(button => {
@@ -1821,7 +1596,7 @@
                         orderItemDiv.innerHTML = `
                             <div class="order-item-details">
                                 <strong>${product.productName}</strong><br>
-                                <span>Code: ${product.productCode} | Size: ${product.size} ${unit === 'CASE' && product.CASE.pcsPerCase !== undefined ? `| Pcs/Case: ${product.CASE.pcsPerCase}` : ''} | Qty: ${quantity} ${unit}</span>
+                                <span>Code: ${product.productCode} | Qty: ${quantity} ${unit}</span>
                             </div>
                             <div class="order-item-price">PHP ${itemTotalPrice.toFixed(2)}
                                 <input type="number" id="removeQtyInput_${productId}_${unit}" class="remove-quantity-input" value="0" min="0" max="${quantity}" oninput="validateRemoveQuantity(this, ${quantity})">
@@ -1863,7 +1638,7 @@
                         const quantityInput = document.getElementById(`productQuantity${productId}`);
                         const productCard = document.getElementById(`productCard${productId}`);
                         if (quantityInput && productCard.dataset.currentUnit === unit) {
-                            quantityInput.value = 0;
+                            quantityInput.value = ''; // Set to empty string to show placeholder
                         }
                     }
                 });
@@ -1904,7 +1679,7 @@
                     const quantityInputOnMainPage = document.getElementById(`productQuantity${productId}`);
                     const productCardOnMainPage = document.getElementById(`productCard${productId}`);
                     if (quantityInputOnMainPage && productCardOnMainPage && productCardOnMainPage.dataset.currentUnit === unit) {
-                        quantityInputOnMainPage.value = product[unit].quantity;
+                        quantityInputOnMainPage.value = product[unit].quantity > 0 ? product[unit].quantity : ''; // Update and show placeholder if 0
                         console.log(`Updated main page quantity input for product ${productId}, unit ${unit} to: ${product[productId].quantity}`);
                     }
 
@@ -1966,10 +1741,8 @@
                         totalReceiptPrice += itemTotalPrice;
 
                         currentOrderItems.push({
-                            productName: product.productName,
+                            productName: product.productName, // Now includes combined spec
                             productCode: product.productCode,
-                            size: product.size,
-                            pcsPerCase: unit === 'CASE' && product.CASE.pcsPerCase !== undefined ? product.CASE.pcsPerCase : '', // Ensure empty string for non-case
                             quantity: quantity,
                             unit: unit,
                             pricePerUnit: unitPrice.toFixed(2), // Price per unit
@@ -1981,7 +1754,8 @@
 
             if (currentOrderItems.length === 0) {
                 console.warn("Cannot finalize empty order. The button should have been disabled.");
-                receiptItemsBody.innerHTML = '<tr><td colspan="8" class="text-center text-gray-500">No items in your order.</td></tr>';
+                // Update colspan to match the new number of columns (6)
+                receiptItemsBody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-500">No items in your order.</td></tr>';
                 receiptTotalElement.textContent = `Total: PHP 0.00`;
                 return;
             }
@@ -1990,10 +1764,8 @@
                 const row = receiptItemsBody.insertRow();
                 row.innerHTML = `
                     <td>${item.productCode}</td>
-                    <td>${item.productName}</td>
-                    <td>${item.size}</td>
+                    <td>${item.productName}</td> <!-- Now includes combined spec -->
                     <td>${item.unit}</td>
-                    <td>${item.pcsPerCase}</td>
                     <td>${item.quantity}</td>
                     <td>PHP ${item.pricePerUnit}</td>
                     <td>PHP ${item.totalPrice}</td>
@@ -2025,7 +1797,7 @@
                             const productCard = document.getElementById(`productCard${productId}`);
                             // Ensure UI input is also reset if on the active unit
                             if (quantityInput && productCard.dataset.currentUnit === unit) {
-                                quantityInput.value = 0;
+                                quantityInput.value = ''; // Set to empty string to show placeholder
                             }
                         }
                     });
@@ -2162,10 +1934,8 @@
                 if (product) {
                     const productName = product.productName.toLowerCase();
                     const productCode = product.productCode.toLowerCase();
-                    const productSize = product.size.toLowerCase();
-                    const pcsPerCase = product.CASE.pcsPerCase ? product.CASE.pcsPerCase.toString().toLowerCase() : '';
 
-                    const searchableText = `${productName} ${productCode} ${productSize} ${pcsPerCase}`;
+                    const searchableText = `${productName} ${productCode}`; // Updated searchable text
 
                     let matchesAllTerms = true;
                     if (searchTerms.length > 0) {
@@ -2214,6 +1984,7 @@
                 quantityInput.addEventListener('input', () => {
                     const product = productData[i];
                     if (product && product.currentUnit && product[product.currentUnit]) {
+                        // Ensure quantity is an integer, or 0 if empty/invalid
                         product[product.currentUnit].quantity = parseInt(quantityInput.value) || 0;
                     }
                     saveProductData(i);
