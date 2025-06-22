@@ -7,80 +7,167 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Import Passion One font from Google Fonts for the logo -->
     <link href="https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
+    <style id="app-styles">
         /* Tailwind-like base styles and utilities, embedded for offline use */
         html {
             line-height: 1.5;
             -webkit-text-size-adjust: 100%;
             font-family: 'Inter', sans-serif;
             box-sizing: border-box;
+            height: 100%; /* Ensure html takes full viewport height */
+            overflow-y: auto; /* Allow the entire document to scroll */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
         *, ::before, ::after {
             box-sizing: inherit;
         }
         body {
             margin: 0;
+            padding: 0;
             font-family: inherit;
             line-height: inherit;
             background-color: #ffffff; /* All white background */
-            display: flex; /* Use flexbox to center content */
+            display: flex; /* Use flexbox for body to stack header and content */
+            flex-direction: column; /* Stack children vertically */
+            align-items: center; /* Center content horizontally */
+            min-height: 100vh; /* Ensure body takes at least full viewport height */
+        }
+
+        /* Main Fixed Header (new) */
+        .main-fixed-header {
+            position: fixed; /* Stick to the viewport */
+            top: 0;
+            left: 0;
+            width: 100%; /* Occupy whole screen width */
+            background-color: #003a7a; /* Dark blue background */
+            z-index: 100; /* Ensure it's above other content */
+            padding: 20px 40px; /* Increased padding for thickness */
+            min-height: 84px; /* Ensure a minimum height for logo */
+            display: flex; /* Use flexbox for button alignment */
+            justify-content: space-between; /* Space out button groups */
+            align-items: center; /* Vertically center buttons */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Subtle shadow */
+            box-sizing: border-box; /* Include padding in total width/height */
+            display: none; /* Hidden by default, shown by JS on order page */
+        }
+
+        /* Styles for header buttons to fit dark background */
+        .main-fixed-header .back-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
             justify-content: center;
-            align-items: flex-start; /* Changed from 'center' to 'flex-start' to align content to the top */
-            min-height: 100vh;
-            padding: 20px; /* Ensures content has padding on all sides, important for mobile */
-            overflow-y: auto; /* Allow scrolling if content exceeds viewport height */
-            /* Prevent horizontal scrolling on smaller screens */
-            overflow-x: hidden;
+            min-width: 48px;
+            min-height: 48px;
+            margin-right: 5px;
+        }
+        .main-fixed-header .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(-3px);
+        }
+        .main-fixed-header .back-button svg {
+            width: 24px;
+            height: 24px;
+            fill: white; /* White icon for dark background */
+        }
+
+        .main-fixed-header .finalize-order-button,
+        .main-fixed-header .order-list-button,
+        .main-fixed-header .clear-order-button {
+            background: none; /* No background fill */
+            color: white; /* White text */
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: 1px solid white; /* White border */
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: none; /* No individual shadow, header has one */
+            min-height: 44px;
+        }
+        .main-fixed-header .finalize-order-button:disabled {
+            background: rgba(255, 255, 255, 0.1); /* Lighter grey for disabled */
+            color: rgba(255, 255, 255, 0.5); /* Faded text for disabled */
+            border-color: rgba(255, 255, 255, 0.3); /* Faded border for disabled */
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .main-fixed-header .finalize-order-button:hover:not(:disabled),
+        .main-fixed-header .order-list-button:hover,
+        .main-fixed-header .clear-order-button:hover {
+            background-color: rgba(255, 255, 255, 0.2); /* Subtle white overlay on hover */
+            transform: none; /* No translateY for fixed header buttons */
+            box-shadow: none;
+        }
+        .main-fixed-header .finalize-order-button:active:not(:disabled),
+        .main-fixed-header .order-list-button:active,
+        .main-fixed-header .clear-order-button:active {
+            transform: none;
+            box-shadow: none;
         }
 
         .landing-container, .order-page-container, .receipt-page-container {
             background-color: #ffffff;
-            padding: 40px;
+            padding: 40px; /* Base padding for the card container */
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             text-align: center;
-            max-width: 900px; /* Wider for product display */
-            width: 100%;
-            opacity: 0; /* Initially hidden */
-            transform: translateY(20px); /* Slight animation for appearing */
+            max-width: 900px; /* Max width for the content card */
+            width: 100%; /* Ensure it takes full width up to max-width */
+            opacity: 0;
+            transform: translateY(20px);
             transition: opacity 0.7s ease, transform 0.7s ease;
-            position: relative; /* Allow child elements to be positioned */
-            display: none; /* Ensure it's fully hidden initially */
-            flex-direction: column; /* Ensure content stacks properly */
-            align-items: center; /* Center content horizontally */
-            justify-content: center; /* Center content vertically if space allows */
+            position: relative;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            flex-grow: 1; /* Allow containers to grow to fill space */
+            box-sizing: border-box; /* Include padding in height */
+            margin-top: 20px; /* Default margin-top for separation from other content/header */
+            margin-bottom: 20px; /* Default margin-bottom */
         }
+        /* Specific margin for order page to clear fixed header */
+        .order-page-container.visible {
+            margin-top: 104px; /* Height of fixed header (84px) + 20px extra space */
+        }
+
         .landing-container {
-            background-color: #6495ED; /* Darker Blue background for landing page (CornflowerBlue) */
+            background-color: #6495ED;
         }
-        /* Updated: Set order-page-container background to match landing-container */
         .order-page-container {
             background-color: #6495ED;
         }
         .landing-container.visible, .order-page-container.visible, .receipt-page-container.visible {
             opacity: 1;
             transform: translateY(0);
-            display: flex; /* Show as flex container */
+            display: flex;
         }
         .landing-container.hidden, .order-page-container.hidden, .receipt-page-container.hidden {
             opacity: 0;
-            pointer-events: none; /* Disable interactions when hidden */
+            pointer-events: none;
         }
 
         .logo {
-            font-family: 'Passion One', sans-serif; /* Changed font to Passion One */
-            font-size: 5.5rem; /* Increased font size for larger logo */
+            font-family: 'Passion One', sans-serif;
+            font-size: 5.5rem;
             font-weight: 700;
-            margin-bottom: 20px; /* Adjusted margin to occupy more space */
+            margin-bottom: 20px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            white-space: nowrap; /* Prevent "My" and "Tindera" from wrapping */
-            width: 100%; /* Make it occupy full width */
+            white-space: nowrap;
+            width: 100%;
         }
         .logo-my {
-            color: #EE3524; /* Red color for 'My' */
+            color: #EE3524;
         }
-        .logo-tindera { /* Changed from logo-tindahan */
-            color: #FFD700; /* Gold/Yellow color for 'Tindera' */
+        .logo-tindera {
+            color: #FFD700;
         }
         .tagline {
             font-size: 1.5rem;
@@ -101,7 +188,6 @@
             border: none;
             cursor: pointer;
             display: inline-block;
-            /* Ensure good touch target size on mobile */
             min-height: 48px;
             min-width: 120px;
         }
@@ -125,7 +211,7 @@
         /* Input group on landing page */
         .landing-input-group {
             width: 100%;
-            max-width: 350px; /* Limit input width for better mobile display */
+            max-width: 350px;
             margin-bottom: 15px;
             text-align: left;
         }
@@ -144,7 +230,7 @@
             border-radius: 10px;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
-            min-height: 48px; /* Good touch target size */
+            min-height: 48px;
         }
         .landing-input-group input:focus {
             outline: none;
@@ -152,138 +238,114 @@
             box-shadow: 0 0 0 3px rgba(0, 80, 160, 0.1);
         }
 
-        /* Order Page Specific Styles */
-        .order-page-header {
+        /* Search Bar Specific Styles (now below fixed header) */
+        .search-bar-container {
             width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px; /* Space between header and search bar */
-            padding: 0 10px; /* Some padding for the header content */
-            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
-            gap: 10px; /* Space between flex items */
+            margin-bottom: 20px;
+            max-width: 500px;
         }
-
-        .header-left-group, .header-right-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap; /* Allow buttons to wrap within their groups */
-        }
-
-        .back-button { /* General style for back button, used in top-left-buttons */
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 50%;
-            transition: background-color 0.2s ease, transform 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            min-width: 48px; /* Ensure minimum touch target size */
+        .search-bar-container input {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
             min-height: 48px;
-            margin-right: 5px; /* Add some space between back button and finalize */
         }
-        .back-button:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-            transform: translateX(-3px);
-        }
-        .back-button svg {
-            width: 24px;
-            height: 24px;
-            fill: #0050A0;
+        .search-bar-container input:focus {
+            outline: none;
+            border-color: #0050A0;
+            box-shadow: 0 0 0 3px rgba(0, 80, 160, 0.1);
         }
 
         .product-grid {
-            /* Ensures responsive grid layout: auto-fit creates columns, minmax handles sizing */
-            /* Increased minwidth for wider cards to accommodate product names better */
             grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
             display: grid;
-            gap: 20px; /* Slightly decreased gap */
+            gap: 20px;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 0; /* No margin-top needed here, handled by container */
         }
         .product-card {
-            background-color: #ffffff; /* White background for product card */
+            background-color: #ffffff;
             border-radius: 15px;
-            padding: 10px; /* Decreased padding */
+            padding: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
-            gap: 8px; /* Decreased gap */
+            gap: 8px;
             align-items: center;
         }
         .product-code-display {
             font-size: 1.1rem;
             font-weight: 600;
             color: #5C6F78;
-            margin-bottom: 3px; /* Decreased margin */
+            margin-bottom: 3px;
         }
         .input-group {
             width: 100%;
             text-align: left;
-            margin-bottom: 0px; /* Made more compact */
+            margin-bottom: 0px;
         }
         .input-group:last-child {
-            margin-bottom: 0; /* No margin on the last input group */
+            margin-bottom: 0;
         }
 
         .input-group input {
-            margin-bottom: 0; /* Removed margin on inputs within group for tighter control */
-            border: none; /* Removed all borders */
-            background-color: transparent; /* Transparent background */
+            margin-bottom: 0;
+            border: none;
+            background-color: transparent;
             border-radius: 0;
-            padding: 4px 0; /* Reduced padding for compactness */
-            min-height: 32px; /* Reduced min-height for compactness */
+            padding: 4px 0;
+            min-height: 32px;
         }
         .input-group input, .input-group textarea {
             width: 100%;
-            font-size: 0.9rem; /* Slightly smaller font size for general inputs */
+            font-size: 0.9rem;
             box-sizing: border-box;
-            color: #333; /* Default text color for inputs */
+            color: #333;
         }
         /* Styling for product name to make it more prominent - now black */
         .product-card .input-group input[id^="productName"] {
             font-size: 0.95rem; /* Smaller font size for product name */
-            font-weight: 600; /* Bold */
-            color: #333; /* Make it black/dark gray */
-            min-height: 38px; /* Increased min-height to accommodate two lines of text better */
-            padding: 6px 0; /* Increased padding to give more vertical space */
+            font-weight: 600;
+            color: #333;
+            min-height: 38px;
+            padding: 6px 0;
             white-space: normal; /* Allow text to wrap */
-            overflow: visible; /* Ensure text is visible even if it wraps */
-            text-overflow: clip; /* Prevent ellipsis */
+            overflow: visible;
+            text-overflow: clip;
         }
         /* Styling for product price - now black */
         .product-card .input-group input[id^="productPrice"] {
-            font-weight: 600; /* Make price bold */
-            color: #333; /* Make it black/dark gray */
-            font-size: 0.95rem; /* Smaller font for price */
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
         }
         /* Styling for product size - now black */
         .product-card .input-group input[id^="productSize"] {
-            font-size: 0.9rem; /* Smaller for size */
+            font-size: 0.9rem;
         }
         /* Styling for product quantity - now black */
         .product-card .input-group input[id^="productQuantity"] {
-            font-size: 0.95rem; /* Smaller for quantity */
+            font-size: 0.95rem;
         }
 
         .input-group input:focus, .input-group textarea:focus {
             outline: none;
-            border-color: transparent; /* Ensure focus also has no border */
-            box-shadow: none; /* No box shadow on focus for input[readonly] */
+            border-color: transparent;
+            box-shadow: none;
         }
         .input-group input[readonly] {
-            background-color: transparent; /* Make readonly inputs transparent */
+            background-color: transparent;
             cursor: default;
             color: #666;
-            border: none; /* No border for readonly */
+            border: none;
         }
         .input-group input[readonly]:focus {
             box-shadow: none;
-            border-color: transparent; /* No border on focus for readonly */
+            border-color: transparent;
         }
 
         /* Unit selection buttons styling */
@@ -291,7 +353,7 @@
             display: flex;
             justify-content: space-around;
             width: 100%;
-            margin-bottom: 5px; /* Decreased margin */
+            margin-bottom: 5px;
         }
         .unit-button {
             background-color: #f0f0f0;
@@ -303,9 +365,9 @@
             cursor: pointer;
             transition: all 0.2s ease;
             border: 1px solid #e0e0e0;
-            min-height: 40px; /* Ensure sufficient height for touch, slightly less */
-            flex-grow: 1; /* Allow buttons to expand to fill space */
-            margin: 0 4px; /* Slightly decreased margin between buttons */
+            min-height: 40px;
+            flex-grow: 1;
+            margin: 0 4px;
         }
         .unit-button:first-child { margin-left: 0; }
         .unit-button:last-child { margin-right: 0; }
@@ -325,90 +387,10 @@
             background-color: #003a7a;
         }
 
-        /* Finalize Order Button */
-        .finalize-order-button {
-            background: linear-gradient(145deg, #0056b3, #004085); /* Blue gradient */
+        /* New button for Print PDF - now the only button in that section */
+        .print-receipt-button {
+            background: linear-gradient(145deg, #0050A0, #003a7a); /* Blue gradient */
             color: white;
-            padding: 10px 15px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            min-height: 44px; /* Ensure sufficient touch target size */
-        }
-        /* Style for disabled button */
-        .finalize-order-button:disabled {
-            background: #cccccc; /* Greyed out */
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
-            opacity: 0.7;
-        }
-        .finalize-order-button:hover:not(:disabled) { /* Apply hover only if not disabled */
-            background: linear-gradient(145deg, #004085, #0056b3);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-        .finalize-order-button:active:not(:disabled) { /* Apply active only if not disabled */
-            transform: translateY(0);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Order List Button */
-        .order-list-button {
-            background: linear-gradient(145deg, #28a745, #218838); /* Green gradient */
-            color: white;
-            padding: 10px 15px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            min-height: 44px; /* Ensure sufficient touch target size */
-        }
-        .order-list-button:hover {
-            background: linear-gradient(145deg, #218838, #28a745);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-        .order-list-button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Clear Order Button */
-        .clear-order-button {
-            background: linear-gradient(145deg, #dc3545, #c82333); /* Red gradient */
-            color: white;
-            padding: 10px 15px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            min-height: 44px; /* Ensure sufficient touch target size */
-        }
-        .clear-order-button:hover {
-            background: linear-gradient(145deg, #c82333, #dc3545);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-        .clear-order-button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Share Receipt Button */
-        .share-receipt-button {
-            background: linear-gradient(145deg, #FFD700, #DAA520); /* Gold/Yellow gradient */
-            color: #333; /* Dark text for contrast */
             padding: 12px 25px;
             font-size: 1rem;
             font-weight: 600;
@@ -418,17 +400,19 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
             min-height: 48px;
-            margin-top: 20px; /* Space above the button */
+            margin-top: 20px;
+            /* No margin-right needed as it's the only button */
         }
-        .share-receipt-button:hover {
-            background: linear-gradient(145deg, #DAA520, #FFD700);
+        .print-receipt-button:hover {
+            background: linear-gradient(145deg, #003a7a, #0050A0);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
         }
-        .share-receipt-button:active {
+        .print-receipt-button:active {
             transform: translateY(0);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
+
 
         /* Modals and their content */
         .order-summary-modal, .receipt-modal {
@@ -460,9 +444,9 @@
             transform: translateY(-20px);
             transition: transform 0.3s ease;
             position: relative;
-            display: flex; /* Changed to flex to allow vertical stacking and control */
+            display: flex;
             flex-direction: column;
-            max-height: 90vh; /* Limit modal height, enable scrolling for content if needed */
+            max-height: 90vh;
         }
         .order-summary-modal.visible .order-summary-content, .receipt-modal.visible .receipt-content {
             transform: translateY(0);
@@ -476,18 +460,59 @@
         }
         /* New style for scrollable content area within the modal */
         .order-summary-scrollable-content {
-            max-height: calc(90vh - 180px); /* Adjust based on header/footer height */
-            overflow-y: auto; /* Enable vertical scrolling */
-            padding-right: 10px; /* Add some padding for scrollbar */
-            margin-bottom: 20px; /* Space between scrollable content and total */
+            max-height: calc(90vh - 180px);
+            overflow-y: auto;
+            padding-right: 10px;
+            margin-bottom: 20px;
         }
-        /* New style for scrollable content area within the receipt page */
-        .receipt-scrollable-content {
-            max-height: calc(90vh - 250px); /* Adjusted for receipt page to account for message and share button */
-            overflow-y: auto; /* Enable vertical scrolling */
-            padding-right: 10px; /* Padding for scrollbar */
-            margin-bottom: 20px; /* Space below content before total */
+        /* Style for the new receipt table */
+        .receipt-table-container {
+            max-height: calc(90vh - 300px); /* Adjust height for client info, header, total, and buttons */
+            overflow-y: auto;
+            margin-bottom: 20px;
+            width: 100%;
+            border-collapse: collapse; /* Ensure table borders collapse */
+            text-align: left;
         }
+
+        .receipt-table-container table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .receipt-table-container th, .receipt-table-container td {
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            font-size: 0.9rem;
+            vertical-align: top;
+        }
+
+        .receipt-table-container th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+            color: #5C6F78;
+            position: sticky; /* Make header sticky when scrolling */
+            top: 0;
+            z-index: 1;
+        }
+
+        .receipt-table-container tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .receipt-table-container td {
+            color: #333;
+        }
+        .receipt-table-container td:last-child,
+        .receipt-table-container th:last-child {
+            text-align: right; /* Align total price to the right */
+        }
+        /* .receipt-scrollable-content {
+            max-height: calc(90vh - 250px);
+            overflow-y: auto;
+            padding-right: 10px;
+            margin-bottom: 20px;
+        } */
         .receipt-client-info {
             text-align: left;
             margin-bottom: 20px;
@@ -503,29 +528,28 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px; /* Increased padding */
-            margin-bottom: 10px; /* Space between items */
-            background-color: #f9f9f9; /* Light background for separation */
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
             border: 1px solid #eee;
-            border-radius: 10px; /* Rounded corners */
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             font-size: 0.95rem;
             color: #333;
-            /* No border-bottom for new styling as it's a card */
             border-bottom: none;
         }
         .order-item:last-child {
-            margin-bottom: 0; /* No margin after the last item */
+            margin-bottom: 0;
         }
         .order-item-details strong {
-            font-size: 1.05rem; /* Slightly larger product name */
+            font-size: 1.05rem;
             font-weight: 700;
             color: #0050A0;
-            display: block; /* Ensures it takes full width for stacking */
+            display: block;
         }
         .order-item-details span {
-            display: block; /* Make details stack vertically */
-            font-size: 0.85rem; /* Smaller for details */
+            display: block;
+            font-size: 0.85rem;
             color: #5C6F78;
             margin-top: 5px;
         }
@@ -533,30 +557,32 @@
             font-weight: 700;
             color: #C02C1F;
             display: flex;
-            flex-direction: column; /* Stack price and controls */
-            align-items: flex-end; /* Align price and controls to the right */
-            text-align: right; /* Ensure text aligns right */
-            margin-left: 15px; /* Add some space from details */
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: right;
+            margin-left: 15px;
         }
         .order-item-price .remove-quantity-input {
-            margin-top: 10px; /* Space above input */
-            margin-bottom: 5px; /* Space below input */
+            margin-top: 10px;
+            margin-bottom: 5px;
         }
 
         /* Apply similar enhancement to receipt items */
+        /* These styles are mostly replaced by .receipt-table-container table, th, td */
+        /* Keeping them here for any accidental fallback or slight overlap if not fully removed */
         .receipt-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px; /* Increased padding */
-            margin-bottom: 10px; /* Space between items */
-            background-color: #f9f9f9; /* Light background for separation */
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
             border: 1px solid #eee;
-            border-radius: 10px; /* Rounded corners */
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             font-size: 0.95rem;
             color: #333;
-            border-bottom: none; /* No border-bottom for new styling */
+            border-bottom: none;
         }
         .receipt-item:last-child {
             margin-bottom: 0;
@@ -576,7 +602,7 @@
         .receipt-item-price {
             font-weight: 700;
             color: #C02C1F;
-            margin-left: 15px; /* Add some space from details */
+            margin-left: 15px;
         }
 
         .order-total, .receipt-total {
@@ -598,7 +624,7 @@
             cursor: pointer;
             color: #5C6F78;
             transition: color 0.2s ease;
-            min-width: 44px; /* Ensure sufficient touch target size */
+            min-width: 44px;
             min-height: 44px;
         }
         .close-modal-button:hover {
@@ -615,8 +641,8 @@
             font-size: 0.8rem;
             cursor: pointer;
             transition: all 0.2s ease;
-            margin-left: 0; /* Align with stacked price */
-            min-height: 38px; /* Slightly smaller touch target for within modal */
+            margin-left: 0;
+            min-height: 38px;
         }
         .remove-order-button:hover {
             background-color: #dc3545;
@@ -627,14 +653,14 @@
         }
 
         .remove-quantity-input {
-            width: 70px; /* Slightly wider for better touch */
-            padding: 8px 6px; /* Increased padding */
+            width: 70px;
+            padding: 8px 6px;
             border: 1px solid #ccc;
             border-radius: 5px;
             text-align: center;
-            margin-right: 0; /* Align with stacked price */
+            margin-right: 0;
             font-size: 0.9rem;
-            min-height: 38px; /* Ensure sufficient height for touch */
+            min-height: 38px;
         }
 
         .receipt-message {
@@ -645,35 +671,13 @@
             text-align: center;
         }
 
-        /* Search Bar Specific Styles */
-        .search-bar-container {
-            width: 100%;
-            margin-bottom: 20px; /* Space below the search bar */
-            max-width: 500px; /* Limit search bar width */
-        }
-        .search-bar-container input {
-            width: 100%;
-            padding: 12px 20px;
-            font-size: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 10px; /* Rounded corners */
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            transition: all 0.2s ease;
-            min-height: 48px; /* Ensure sufficient height for touch */
-        }
-        .search-bar-container input:focus {
-            outline: none;
-            border-color: #0050A0;
-            box-shadow: 0 0 0 3px rgba(0, 80, 160, 0.1);
-        }
-
         /* No Available Stocks Message */
         .no-stock-message {
-            color: #dc3545; /* Red color for warning */
+            color: #dc3545;
             font-weight: 600;
             margin-top: 20px;
             text-align: center;
-            display: none; /* Hidden by default */
+            display: none;
         }
         /* Style for the new Pcs/Case value container to match input styling */
         .pcs-per-case-display-container {
@@ -681,26 +685,25 @@
             display: flex;
             align-items: baseline;
             gap: 5px;
-            background-color: transparent; /* Make transparent */
-            border: none; /* Remove borders */
+            background-color: transparent;
+            border: none;
             border-radius: 0;
-            height: 32px; /* Adjusted height to match new compact inputs */
-            box-sizing: border-box; /* Include padding and border in the element's total width and height */
-            padding: 4px 0; /* Align padding with other inputs */
+            height: 32px;
+            box-sizing: border-box;
+            padding: 4px 0;
         }
         .pcs-per-case-display-container span {
-             font-size: 0.9rem; /* Match other input font sizes, slightly smaller for compactness */
+             font-size: 0.9rem;
         }
-
 
         /* Return to Top button styles */
         #returnToTopBtn {
-            display: none; /* Hidden by default */
-            position: fixed; /* Fixed position */
-            bottom: 30px; /* 30px from the bottom */
-            right: 30px; /* 30px from the right */
-            z-index: 99; /* High z-index to be on top of other elements */
-            background: linear-gradient(145deg, #0050A0, #003a7a); /* Blue gradient */
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99;
+            background: linear-gradient(145deg, #0050A0, #003a7a);
             color: white;
             padding: 12px 18px;
             border-radius: 10px;
@@ -710,9 +713,9 @@
             font-weight: 600;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             transition: opacity 0.3s ease, transform 0.3s ease;
-            min-width: 48px; /* Ensure good touch target size */
+            min-width: 48px;
             min-height: 48px;
-            display: flex; /* Use flex to center icon/text */
+            display: flex;
             align-items: center;
             justify-content: center;
         }
@@ -724,65 +727,74 @@
         }
         #returnToTopBtn:active {
             transform: translateY(0);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         /* Style for SVG icon within the button */
         #returnToTopBtn svg {
             fill: white;
             width: 20px;
             height: 20px;
-            margin-left: 8px; /* Space between text and icon */
+            margin-left: 8px;
         }
         /* Hide text on smaller screens, only show arrow */
         @media (max-width: 768px) {
             #returnToTopBtn {
-                padding: 12px; /* Make it a square button */
-                font-size: 0; /* Hide text */
+                padding: 12px;
+                font-size: 0;
                 bottom: 20px;
                 right: 20px;
             }
             #returnToTopBtn svg {
-                margin-left: 0; /* Remove margin for centered icon */
+                margin-left: 0;
             }
         }
-
 
         /* Responsive adjustments for smaller screens */
         @media (max-width: 768px) {
             .landing-container, .order-page-container, .receipt-page-container {
-                padding: 20px; /* More compact padding on smaller devices */
+                padding: 20px;
             }
-            .order-page-header {
+            .main-fixed-header {
                 flex-direction: column; /* Stack header items vertically */
                 align-items: flex-start; /* Align stacked items to the left */
                 gap: 15px; /* More space between stacked groups */
+                padding: 15px 20px; /* Adjust padding for smaller screens */
+                min-height: auto; /* Allow height to adjust */
             }
-            .header-left-group, .header-right-group {
-                width: 100%; /* Make groups take full width */
-                justify-content: space-between; /* Distribute buttons within the group */
-                flex-wrap: wrap; /* Allow buttons to wrap */
+            .main-fixed-header .header-left-group, .main-fixed-header .header-right-group {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
             }
-            .header-right-group {
-                justify-content: flex-end; /* Align right group to the right */
+            .main-fixed-header .header-right-group {
+                justify-content: flex-end;
             }
-            .back-button {
+            .main-fixed-header .back-button {
                 padding: 8px;
-                min-width: 40px; /* Adjust min size for smaller button */
+                min-width: 40px;
                 min-height: 40px;
-                margin-right: 0; /* Remove right margin when stacked */
+                margin-right: 0;
             }
-            .back-button svg {
+            .main-fixed-header .back-button svg {
                 width: 20px;
                 height: 20px;
             }
-            .finalize-order-button, .order-list-button, .clear-order-button {
+            .main-fixed-header .finalize-order-button,
+            .main-fixed-header .order-list-button,
+            .main-fixed-header .clear-order-button {
                 padding: 8px 12px;
                 font-size: 0.8rem;
                 min-height: 40px;
-                flex-grow: 1; /* Allow buttons to grow to fill space */
+                flex-grow: 1;
+            }
+            .order-page-container.visible {
+                margin-top: calc(84px + 20px); /* Adjust margin-top for mobile header height */
+                /* Re-calculate based on mobile header height: (15px*2 + button_height) */
+                /* If buttons are 44px, then (30 + 44 + 15) = 89px. So use 89 + 20 = 109px */
+                /* Or just use a fixed value that looks good: */
+                margin-top: 120px; /* A bit more generous for mobile */
             }
             .product-grid {
-                /* For smaller screens, ensure single column layout as 380px minwidth is wide enough */
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
@@ -793,7 +805,7 @@
                 font-size: 1.5rem;
             }
             .order-item, .receipt-item {
-                flex-direction: column; /* Stack details and price vertically in summary */
+                flex-direction: column;
                 align-items: flex-start;
             }
             .order-item-details, .receipt-item-details {
@@ -808,15 +820,16 @@
                 min-height: 36px;
             }
             .search-bar-container {
-                margin-top: 10px; /* Adjust spacing for smaller screens */
+                margin-top: 10px;
             }
             .order-summary-scrollable-content {
                 max-height: calc(90vh - 150px);
             }
-            .receipt-scrollable-content {
-                max-height: calc(90vh - 200px); /* Adjusted for tighter space on smaller screens */
+            /* Adjusted for receipt table now */
+            .receipt-table-container {
+                max-height: calc(90vh - 250px); /* Smaller height for table on mobile */
             }
-            .share-receipt-button {
+            .print-receipt-button { /* Only one button now */
                 padding: 10px 20px;
                 font-size: 0.9rem;
             }
@@ -830,7 +843,7 @@
                 border-radius: 15px;
             }
             .logo {
-                font-size: 3.5rem; /* Adjusted for smaller screens */
+                font-size: 3.5rem;
             }
             .tagline {
                 font-size: 1.2rem;
@@ -840,13 +853,13 @@
                 padding: 12px 25px;
             }
             .unit-buttons {
-                flex-direction: column; /* Stack unit buttons vertically */
+                flex-direction: column;
                 gap: 8px;
             }
             .unit-button {
-                width: 100%; /* Make unit buttons full width when stacked */
+                width: 100%;
             }
-            .product-card { /* Adjusted for very small screens */
+            .product-card {
                 padding: 15px;
                 gap: 10px;
             }
@@ -854,15 +867,70 @@
             .input-group input[id^="productName"],
             .input-group input[id^="productPrice"],
             .input-group input[id^="productQuantity"] {
-                font-size: 0.9rem; /* Slightly smaller text for very small screens */
+                font-size: 0.9rem;
             }
             .pcs-per-case-display-container span {
-                font-size: 0.9rem; /* Match other input font sizes */
+                font-size: 0.9rem;
             }
         }
+
+        /* Specific print styles */
+        @media print {
+            body {
+                background-color: #fff; /* Ensure white background for print */
+            }
+            .main-fixed-header, #returnToTopBtn,
+            .print-receipt-button, .order-again-button { /* Only one button now */
+                display: none !important; /* Hide header and buttons when printing */
+            }
+            .receipt-page-container {
+                box-shadow: none !important; /* Remove shadow for print */
+                padding: 0 !important;
+                margin: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
+                transform: none !important;
+                opacity: 1 !important;
+            }
+            .receipt-client-info,
+            .receipt-page-container h3,
+            .receipt-total {
+                padding: 10px 20px; /* Add some padding back for these elements in print */
+            }
+            .receipt-table-container {
+                max-height: none !important; /* Allow table to expand fully for print */
+                overflow: visible !important;
+            }
+            .receipt-table-container table {
+                border: 1px solid #ccc; /* Add overall border to table for print */
+            }
+            .receipt-table-container th, .receipt-table-container td {
+                border: 1px solid #ccc; /* Ensure all cells have borders in print */
+            }
+        }
+
     </style>
 </head>
 <body>
+    <!-- Main Fixed Header (Moved here, outside content containers) -->
+    <header id="mainHeader" class="main-fixed-header">
+        <div class="header-left-group">
+            <button class="back-button" onclick="showLandingPage()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                </svg>
+            </button>
+            <button id="finalizeOrderButton" class="finalize-order-button" onclick="finalizeOrder()" disabled>Finalize Order</button>
+        </div>
+        <div class="header-right-group">
+            <!-- Reordered buttons -->
+            <button class="order-list-button" onclick="showOrderSummary()">List of Orders</button>
+            <button class="clear-order-button" onclick="clearAllOrders()">Clear Order</button>
+        </div>
+    </header>
+
     <div id="landingPage" class="landing-container visible">
         <h1 class="logo"><span class="logo-my">My</span><span class="logo-tindera">Tindera</span></h1>
         <p class="tagline">Ready to take your order</p>
@@ -888,23 +956,7 @@
     </div>
 
     <div id="orderPage" class="order-page-container">
-        <!-- New: Order Page Header -->
-        <div class="order-page-header">
-            <div class="header-left-group">
-                <button class="back-button" onclick="showLandingPage()">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-                    </svg>
-                </button>
-                <button id="finalizeOrderButton" class="finalize-order-button" onclick="finalizeOrder()" disabled>Finalize Order</button>
-            </div>
-            <div class="header-right-group">
-                <button class="order-list-button" onclick="showOrderSummary()">List of Orders</button>
-                <button class="clear-order-button" onclick="clearAllOrders()">Clear Order</button>
-            </div>
-        </div>
-
-        <!-- Search Bar -->
+        <!-- Search Bar (now directly inside order-page-container, below where the fixed header would be) -->
         <div class="search-bar-container">
             <input type="text" id="productSearch" placeholder="Search products..." oninput="filterProducts()">
         </div>
@@ -922,7 +974,6 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 1)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 1)">PER CASE</button>
                 </div>
-                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName1" placeholder="Product Name" readonly>
                 </div>
@@ -934,7 +985,7 @@
                     </div>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="productPrice1" placeholder="Price per PC (PHP)" readonly> <!-- Changed type to text and will prefix with PHP in JS -->
+                    <input type="text" id="productPrice1" placeholder="Price per PC (PHP)" readonly>
                 </div>
                 <div class="input-group">
                     <input type="number" id="productQuantity1" placeholder="Quantity" value="0" min="0">
@@ -948,7 +999,6 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 2)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 2)">PER CASE</button>
                 </div>
-                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName2" placeholder="Product Name" readonly>
                 </div>
@@ -974,7 +1024,6 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 3)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 3)">PER CASE</button>
                 </div>
-                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName3" placeholder="Product Name" readonly>
                 </div>
@@ -1000,7 +1049,6 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 4)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 4)">PER CASE</button>
                 </div>
-                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName4" placeholder="Product Name" readonly>
                 </div>
@@ -1026,7 +1074,6 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 5)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 5)">PER CASE</button>
                 </div>
-                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName5" placeholder="Product Name" readonly>
                 </div>
@@ -1052,7 +1099,6 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 6)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 6)">PER CASE</button>
                 </div>
-                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName6" placeholder="Product Name" readonly>
                 </div>
@@ -1078,7 +1124,6 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 7)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 7)">PER CASE</button>
                 </div>
-                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName7" placeholder="Product Name" readonly>
                 </div>
@@ -1104,7 +1149,6 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 8)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 8)">PER CASE</button>
                 </div>
-                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName8" placeholder="Product Name" readonly>
                 </div>
@@ -1130,7 +1174,6 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 9)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 9)">PER CASE</button>
                 </div>
-                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName9" placeholder="Product Name" readonly>
                 </div>
@@ -1156,7 +1199,6 @@
                     <button class="unit-button active" onclick="selectUnit(this, 'PC', 10)">PER PC</button>
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 10)">PER CASE</button>
                 </div>
-                <!-- Removed image-drop-area -->
                 <div class="input-group">
                     <input type="text" id="productName10" placeholder="Product Name" readonly>
                 </div>
@@ -1202,16 +1244,32 @@
         </div>
         <h3>Receipt</h3>
         <!-- New scrollable div for receipt items -->
-        <div class="receipt-scrollable-content">
-            <div id="receiptItemsContainer">
-                <!-- Receipt items will be injected here -->
-            </div>
+        <div class="receipt-table-container">
+            <table id="receiptItemsTable">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Product Name</th>
+                        <th>Size</th>
+                        <th>Unit</th>
+                        <th>Pcs/Case</th>
+                        <th>Quantity</th>
+                        <th>Price/Unit</th>
+                        <th>Total Price</th>
+                    </tr>
+                </thead>
+                <tbody id="receiptItemsBody">
+                    <!-- Receipt items will be injected here -->
+                </tbody>
+            </table>
         </div>
         <div id="receiptTotal" class="receipt-total">
             Total: PHP 0.00
         </div>
-        <!-- Share Receipt Button -->
-        <button class="share-receipt-button" onclick="shareReceipt()">Share Receipt (as PDF)</button>
+        <div class="flex justify-center mt-8 space-x-4">
+            <!-- Updated button to "Save Receipt (as HTML)" -->
+            <button class="print-receipt-button" onclick="saveReceiptAsHtml()">Save Receipt (as HTML)</button>
+        </div>
         <button class="order-again-button mt-8" onclick="orderAgain()">Order Again</button>
     </div>
 
@@ -1313,7 +1371,7 @@
             storeName: '',
             fullName: '',
             address: '',
-            phoneNumber: '' // Added phone number
+            phoneNumber: ''
         };
 
         // Debounce function to limit how often save operations are called
@@ -1340,12 +1398,11 @@
             try {
                 localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
                 console.log(`Product ${productId} data saved to localStorage.`);
-                checkOrderValidity(); // Re-check order validity after saving
+                checkOrderValidity();
             } catch (e) {
                 console.error("Error saving product data to localStorage:", e);
-                // Optionally display a user-friendly message here if localStorage is full or not supported
             }
-        }, 500); // Debounce by 500ms
+        }, 500);
 
         /**
          * Saves client information to localStorage.
@@ -1375,14 +1432,12 @@
             document.getElementById('fullNameInput').value = '';
             document.getElementById('addressInput').value = '';
             document.getElementById('phoneNumberInput').value = '';
-            document.getElementById('getStartedButton').disabled = true; // Disable button after clearing
+            document.getElementById('getStartedButton').disabled = true;
             console.log("Client info cleared and inputs reset.");
         }
 
         /**
          * Loads client information from localStorage.
-         * This is now primarily for debugging or if specific navigation needs it.
-         * For fresh loads, clearClientInfoAndInputs will be called first.
          */
         function loadClientInfo() {
             try {
@@ -1401,9 +1456,8 @@
             catch (e) {
                 console.error("Error loading client info from localStorage:", e);
             }
-            checkLandingInputs(); // Check inputs after loading to set button state
+            checkLandingInputs();
         }
-
 
         /**
          * Loads all product data from localStorage.
@@ -1419,55 +1473,42 @@
                     console.log("No existing product data found in localStorage. Initializing UI with defaults.");
                 }
 
-                // Iterate through the master productData template
                 for (const productId in productData) {
-                    const defaultProduct = productData[productId]; // Our predefined structure
+                    const defaultProduct = productData[productId];
 
-                    // Ensure the product entry itself exists in parsedData
                     if (!parsedData[productId]) {
-                        parsedData[productId] = {}; // Initialize if missing in stored data
+                        parsedData[productId] = {};
                     }
 
-                    // Loop through both 'PC' and 'CASE' units for each product
                     ['PC', 'CASE'].forEach(unit => {
-                        // Ensure the unit object exists in the stored data for this product
                         if (!parsedData[productId][unit]) {
-                            parsedData[productId][unit] = {}; // Initialize if missing in stored data
+                            parsedData[productId][unit] = {};
                         }
 
-                        // Now merge properties: prioritize stored data, fall back to default
-                        // Ensure quantity and price are numbers/strings, default to 0/'0' if undefined
-                        // Use default quantity if parsed is undefined or null, otherwise parse it
                         productData[productId][unit].quantity = (parsedData[productId][unit] && parsedData[productId][unit].quantity !== undefined) ? parseInt(parsedData[productId][unit].quantity) : 0;
-                        productData[productId][unit].price = (parsedData[productId][unit] && parsedData[productId][unit].price !== undefined) ? parsedData[productId][unit].price : defaultProduct[unit].price; // Use default price if stored is missing
+                        productData[productId][unit].price = (parsedData[productId][unit] && parsedData[productId][unit].price !== undefined) ? parsedData[productId][unit].price : defaultProduct[unit].price;
 
-                        // Also ensure pcsPerCase is correctly set for CASE unit
                         if (unit === 'CASE' && defaultProduct.CASE.pcsPerCase !== undefined) {
                             productData[productId][unit].pcsPerCase = (parsedData[productId][unit] && parsedData[productId][unit].pcsPerCase !== undefined) ? parsedData[productId][unit].pcsPerCase : defaultProduct.CASE.pcsPerCase;
                         }
                     });
 
-                    // Merge other top-level properties like productName, size, currentUnit
                     productData[productId].productName = parsedData[productId].productName || defaultProduct.productName;
                     productData[productId].size = parsedData[productId].size || defaultProduct.size;
                     productData[productId].currentUnit = parsedData[productId].currentUnit || defaultProduct.currentUnit;
                 }
 
-                initializeProductUI(); // Always initialize UI after attempting to load data
-                checkOrderValidity(); // Check order validity after loading all data
-                filterProducts(); // Apply filter to all products after loading/initialization
+                initializeProductUI();
+                checkOrderValidity();
+                filterProducts();
             }
             catch (e) {
                 console.error("Error loading or parsing product data from localStorage:", e);
-                // If parsing fails or any other error occurs during loading,
-                // re-initialize productData to its pristine state (quantities to 0).
-                // This means discarding any potentially corrupted local storage data for products.
                 for (const productId in productData) {
-                    // Reset quantities to 0 for both PC and CASE units, based on our hardcoded defaults
                     productData[productId]['PC'].quantity = 0;
                     productData[productId]['CASE'].quantity = 0;
                 }
-                initializeProductUI(); // Re-initialize UI with clean default data
+                initializeProductUI();
                 checkOrderValidity();
                 filterProducts();
             }
@@ -1479,10 +1520,9 @@
                 if (productCard) {
                     const product = productData[i];
 
-                    // Set initial UI values from productData (which might have been loaded from localStorage)
                     const productNameInput = productCard.querySelector(`#productName${i}`);
                     productNameInput.value = product.productName;
-                    productNameInput.title = product.productName; // Add title for tooltip
+                    productNameInput.title = product.productName;
 
                     const productCodeDisplay = productCard.querySelector(`#productCode${i}Display`);
                     if (productCodeDisplay) {
@@ -1490,29 +1530,25 @@
                     }
                     productCard.querySelector(`#productSize${i}`).value = product.size;
 
-                    // Set correct active unit button and display price/quantity based on currentUnit
-                    const currentUnit = product.currentUnit || 'PC'; // Default to PC if not set
+                    const currentUnit = product.currentUnit || 'PC';
                     productCard.dataset.currentUnit = currentUnit;
 
                     const unitButtons = productCard.querySelectorAll('.unit-button');
                     unitButtons.forEach(button => {
                         button.classList.remove('active');
-                        // Use button.textContent to check if it contains the unit name (e.g., "PER PC" contains "PC")
                         if (button.textContent.includes(currentUnit)) {
                             button.classList.add('active');
                         }
                     });
 
-                    // Update price input with "PHP" prefix
-                    productCard.querySelector(`#productPrice${i}`).placeholder = `Price per ${currentUnit}`; // Removed PHP from placeholder
-                    productCard.querySelector(`#productPrice${i}`).value = `PHP ${parseFloat(product[currentUnit].price).toFixed(2)}`; // Added PHP prefix and fixed to 2 decimal places
+                    productCard.querySelector(`#productPrice${i}`).placeholder = `Price per ${currentUnit}`;
+                    productCard.querySelector(`#productPrice${i}`).value = `PHP ${parseFloat(product[currentUnit].price).toFixed(2)}`;
                     productCard.querySelector(`#productQuantity${i}`).value = product[currentUnit].quantity;
 
-                    // Update pcsPerCase display
                     const pcsPerCaseValueSpan = productCard.querySelector(`#pcsPerCaseValue${i}`);
                     if (pcsPerCaseValueSpan) {
                         if (currentUnit === 'CASE' && product.CASE.pcsPerCase !== undefined) {
-                            pcsPerCaseValueSpan.textContent = product.CASE.pcsPerCase; // Removed quotes around value
+                            pcsPerCaseValueSpan.textContent = product.CASE.pcsPerCase;
                         } else {
                             pcsPerCaseValueSpan.textContent = '';
                         }
@@ -1529,7 +1565,6 @@
             let hasItems = false;
             for (const productId in productData) {
                 const product = productData[productId];
-                // Check both PC and CASE quantities
                 if ((product['PC'] && parseInt(product['PC'].quantity) > 0) ||
                     (product['CASE'] && parseInt(product['CASE'].quantity) > 0)) {
                     hasItems = true;
@@ -1549,22 +1584,21 @@
             const storeName = document.getElementById('storeNameInput').value.trim();
             const fullName = document.getElementById('fullNameInput').value.trim();
             const address = document.getElementById('addressInput').value.trim();
-            const phoneNumber = document.getElementById('phoneNumberInput').value.trim(); // Get phone number
+            const phoneNumber = document.getElementById('phoneNumberInput').value.trim();
 
             const getStartedButton = document.getElementById('getStartedButton');
 
-            if (storeName && fullName && address && phoneNumber) { // All four fields must be filled
+            if (storeName && fullName && address && phoneNumber) {
                 getStartedButton.disabled = false;
             } else {
                 getStartedButton.disabled = true;
             }
 
-            // Update clientInfo object
             clientInfo.storeName = storeName;
             clientInfo.fullName = fullName;
             clientInfo.address = address;
-            clientInfo.phoneNumber = phoneNumber; // Update phone number
-            saveClientInfo(); // Save client info on every input change
+            clientInfo.phoneNumber = phoneNumber;
+            saveClientInfo();
         }
 
         // Make functions globally accessible for HTML onclick attributes
@@ -1572,69 +1606,61 @@
             const landingPage = document.getElementById('landingPage');
             const orderPage = document.getElementById('orderPage');
             const receiptPage = document.getElementById('receiptPage');
+            const mainHeader = document.getElementById('mainHeader');
             const returnToTopBtn = document.getElementById('returnToTopBtn');
 
-
-            // Hide other pages immediately for smooth transition
             landingPage.classList.add('hidden');
             receiptPage.classList.add('hidden');
-            returnToTopBtn.style.display = 'none'; // Hide button when showing order page initially
+            returnToTopBtn.style.display = 'none';
 
-
-            // Set order page display to flex so it can transition
             orderPage.style.display = 'flex';
+            mainHeader.style.display = 'flex'; /* Show the fixed header */
 
             setTimeout(() => {
                 landingPage.style.display = 'none';
                 receiptPage.style.display = 'none';
-                orderPage.classList.remove('hidden'); // Remove hidden to allow opacity/transform transition
-                orderPage.classList.add('visible'); // Add visible class
-                loadProductData(); // Load product data when order page is shown
-                window.scrollTo(0, 0); // Scroll to the top of the page when order page is shown
-            }, 500); // Allow some time for landing page to fade out
+                orderPage.classList.remove('hidden');
+                orderPage.classList.add('visible');
+                loadProductData();
+                window.scrollTo(0, 0); /* Scroll the whole window to top */
+            }, 500);
         }
 
         window.showLandingPage = function() {
             const landingPage = document.getElementById('landingPage');
             const orderPage = document.getElementById('orderPage');
             const receiptPage = document.getElementById('receiptPage');
+            const mainHeader = document.getElementById('mainHeader');
             const returnToTopBtn = document.getElementById('returnToTopBtn');
 
-
-            // Hide other pages with transition
             orderPage.classList.remove('visible');
             receiptPage.classList.remove('visible');
             orderPage.classList.add('hidden');
             receiptPage.classList.add('hidden');
-            returnToTopBtn.style.display = 'none'; // Hide button when going back to landing page
+            mainHeader.style.display = 'none'; /* Hide the fixed header */
+            returnToTopBtn.style.display = 'none';
 
-
-            // Set landing page display to flex so it can transition
             landingPage.style.display = 'flex';
 
             setTimeout(() => {
                 orderPage.style.display = 'none';
                 receiptPage.style.display = 'none';
-                landingPage.classList.remove('hidden'); // Remove hidden to allow opacity/transform transition
-                landingPage.classList.add('visible'); // Add visible class
-                // When returning to landing page via back button, don't clear client info immediately
-                // The clear is handled on initial page load or "Order Again" click.
-                loadClientInfo(); // Reload client info in case user modified inputs and then went back
-            }, 700); // Allow some time for other pages to fade out
+                landingPage.classList.remove('hidden');
+                landingPage.classList.add('visible');
+                loadClientInfo();
+            }, 700);
         }
 
         window.selectUnit = function(selectedButton, newUnit, productIdTrigger) {
             console.log(`Switching unit for product ${productIdTrigger} to ${newUnit}`);
-            // Save the quantity of the product whose unit button was explicitly clicked
             const productTrigger = productData[productIdTrigger];
             const quantityInputTrigger = document.getElementById(`productQuantity${productIdTrigger}`);
             if (productTrigger && productTrigger.currentUnit && productTrigger[productTrigger.currentUnit]) {
-                productTrigger[productTrigger.currentUnit].quantity = parseInt(quantityInputTrigger.value) || 0;
+                productTrigger[newUnit].quantity = parseInt(quantityInputTrigger.value) || 0; // Update quantity of the *new* unit
                 console.log(`Saved quantity ${productTrigger[productTrigger.currentUnit].quantity} for product ${productIdTrigger} in old unit ${productTrigger.currentUnit}`);
             }
 
-            // Now, iterate through ALL products to set their unit
-            for (let i = 1; i <= 10; i++) { // Loop through all product IDs
+            for (let i = 1; i <= 10; i++) {
                 const product = productData[i];
                 if (product) {
                     const productCard = document.getElementById(`productCard${i}`);
@@ -1643,23 +1669,18 @@
                     const quantityInput = productCard.querySelector(`#productQuantity${i}`);
                     const pcsPerCaseValueSpan = productCard.querySelector(`#pcsPerCaseValue${i}`);
 
-                    // Update productData.currentUnit and dataset.currentUnit for THIS product
                     product.currentUnit = newUnit;
                     productCard.dataset.currentUnit = newUnit;
 
-                    // Ensure quantity is initialized if undefined for the new unit
-                    if (typeof product[newUnit].quantity === 'undefined') {
-                        product[newUnit].quantity = 0;
-                    }
+                    // No need for typeof check, ensure initial quantity is 0 if undefined
+                    product[newUnit].quantity = parseInt(quantityInput.value) || 0;
 
-                    // Update price input placeholder and value based on the new unit
+
                     priceInput.placeholder = `Price per ${newUnit}`;
                     priceInput.value = `PHP ${parseFloat(product[newUnit].price).toFixed(2)}`;
 
-                    // Load the quantity for the new unit for THIS product
                     quantityInput.value = product[newUnit].quantity;
 
-                    // Update pcsPerCase display based on the new unit for THIS product
                     if (pcsPerCaseValueSpan) {
                         if (newUnit === 'CASE' && product.CASE.pcsPerCase !== undefined) {
                             pcsPerCaseValueSpan.textContent = product.CASE.pcsPerCase;
@@ -1668,17 +1689,14 @@
                         }
                     }
 
-                    // Update active button styling for THIS product's unit buttons
                     unitButtons.forEach(button => {
                         button.classList.remove('active');
-                        // Corrected logic: check button's text content for the unit name
                         if (button.textContent.includes(newUnit)) {
                             button.classList.add('active');
                         }
                     });
                 }
             }
-            // After looping through all products and updating their in-memory data, save the entire productData object once.
             try {
                 localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
                 console.log("All product data updated and saved to localStorage after global unit switch.");
@@ -1687,10 +1705,9 @@
                 console.error("Error saving all product data to localStorage after global unit switch:", e);
             }
 
-            checkOrderValidity(); // Re-check order validity after global unit selection
+            checkOrderValidity();
         }
 
-        // New function to validate remove quantity input
         window.validateRemoveQuantity = function(inputElement, maxQty) {
             let value = parseInt(inputElement.value);
             if (isNaN(value) || value < 0) {
@@ -1705,13 +1722,19 @@
             const orderItemsContainer = document.getElementById('orderItemsContainer');
             const orderTotalElement = document.getElementById('orderTotal');
 
-            orderItemsContainer.innerHTML = ''; // Clear previous items
+            orderItemsContainer.innerHTML = '';
             let totalPurchasePrice = 0;
 
             for (const productId in productData) {
                 const product = productData[productId];
 
-                // Iterate through all possible units for each product
+                // Synchronize quantities from UI inputs before showing summary
+                const quantityInput = document.getElementById(`productQuantity${productId}`);
+                const productCard = document.getElementById(`productCard${productId}`);
+                if (product && quantityInput && productCard && productCard.dataset.currentUnit) {
+                    product[productCard.dataset.currentUnit].quantity = parseInt(quantityInput.value) || 0;
+                }
+
                 ['PC', 'CASE'].forEach(unit => {
                     const unitDetails = product[unit];
                     const quantity = parseInt(unitDetails?.quantity || 0);
@@ -1744,6 +1767,14 @@
 
             orderTotalElement.textContent = `Total Purchase: PHP ${totalPurchasePrice.toFixed(2)}`;
             orderSummaryModal.classList.add('visible');
+
+            // Save the updated productData to localStorage after synchronizing and displaying summary
+            try {
+                localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
+                console.log("Product data synchronized and saved to localStorage before showing summary.");
+            } catch (e) {
+                console.error("Error saving product data to localStorage after summary synchronization:", e);
+            }
         }
 
         window.closeOrderSummary = function() {
@@ -1757,7 +1788,6 @@
                 ['PC', 'CASE'].forEach(unit => {
                     if (product[unit]) {
                         product[unit].quantity = 0;
-                        // Update the quantity input on the main page if this product is currently displayed
                         const quantityInput = document.getElementById(`productQuantity${productId}`);
                         const productCard = document.getElementById(`productCard${productId}`);
                         if (quantityInput && productCard.dataset.currentUnit === unit) {
@@ -1766,7 +1796,6 @@
                     }
                 });
             }
-            // Save the cleared state to localStorage
             try {
                 localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
                 console.log("All orders cleared from localStorage.");
@@ -1776,7 +1805,7 @@
             }
             console.log("All orders cleared.");
             showOrderSummary();
-            checkOrderValidity(); // Check order validity after clearing all orders
+            checkOrderValidity();
         }
 
         window.removeItemFromOrder = function(productId, unit) {
@@ -1790,7 +1819,7 @@
                     console.log(`Quantity to remove read from input: ${quantityToRemove}`);
                 } else {
                     console.error(`Remove quantity input element not found for Product ${productId}, Unit ${unit}. Defaulting removal to 1.`);
-                    quantityToRemove = 1; // Default to 1 if input not found, though should not happen with correct IDs
+                    quantityToRemove = 1;
                 }
 
                 const currentStoredQuantity = product[unit].quantity;
@@ -1818,7 +1847,7 @@
                     console.warn(`No quantity specified for removal or invalid quantity (0 or less) for Product ${productId}, Unit ${unit}.`);
                 }
 
-                showOrderSummary(); // Re-render the summary to reflect changes
+                showOrderSummary();
                 checkOrderValidity();
             } else {
                 console.error(`Product data not found or unit not valid for Product ID: ${productId}, Unit: ${unit}.`);
@@ -1829,17 +1858,16 @@
             console.log("Finalize Order button clicked.");
             const orderPage = document.getElementById('orderPage');
             const receiptPage = document.getElementById('receiptPage');
-            const receiptItemsContainer = document.getElementById('receiptItemsContainer');
+            const receiptItemsBody = document.getElementById('receiptItemsBody'); // Target tbody
             const receiptTotalElement = document.getElementById('receiptTotal');
             const receiptClientInfoElement = document.getElementById('receiptClientInfo');
+            const mainHeader = document.getElementById('mainHeader');
             const returnToTopBtn = document.getElementById('returnToTopBtn');
 
-
-            receiptItemsContainer.innerHTML = '';
+            receiptItemsBody.innerHTML = ''; // Clear tbody
             let totalReceiptPrice = 0;
             const currentOrderItems = [];
 
-            // Display client info on receipt
             receiptClientInfoElement.innerHTML = `
                 <p><strong>Store Name:</strong> ${clientInfo.storeName}</p>
                 <p><strong>Full Name:</strong> ${clientInfo.fullName}</p>
@@ -1849,6 +1877,13 @@
 
             for (const productId in productData) {
                 const product = productData[productId];
+                // Ensure product quantities are synchronized from the main order page UI inputs
+                const quantityInput = document.getElementById(`productQuantity${productId}`);
+                const productCard = document.getElementById(`productCard${productId}`);
+                if (product && quantityInput && productCard && productCard.dataset.currentUnit) {
+                    product[productCard.dataset.currentUnit].quantity = parseInt(quantityInput.value) || 0;
+                }
+
                 ['PC', 'CASE'].forEach(unit => {
                     const unitDetails = product[unit];
                     const quantity = parseInt(unitDetails?.quantity || 0);
@@ -1862,9 +1897,10 @@
                             productName: product.productName,
                             productCode: product.productCode,
                             size: product.size,
-                            pcsPerCase: unit === 'CASE' && product.CASE.pcsPerCase !== undefined ? product.CASE.pcsPerCase : undefined,
+                            pcsPerCase: unit === 'CASE' && product.CASE.pcsPerCase !== undefined ? product.CASE.pcsPerCase : '', // Ensure empty string for non-case
                             quantity: quantity,
                             unit: unit,
+                            pricePerUnit: unitPrice.toFixed(2), // Price per unit
                             totalPrice: itemTotalPrice.toFixed(2)
                         });
                     }
@@ -1873,20 +1909,23 @@
 
             if (currentOrderItems.length === 0) {
                 console.warn("Cannot finalize empty order. The button should have been disabled.");
+                receiptItemsBody.innerHTML = '<tr><td colspan="8" class="text-center text-gray-500">No items in your order.</td></tr>';
+                receiptTotalElement.textContent = `Total: PHP 0.00`;
                 return;
             }
 
             currentOrderItems.forEach(item => {
-                const receiptItemDiv = document.createElement('div');
-                receiptItemDiv.classList.add('receipt-item');
-                receiptItemDiv.innerHTML = `
-                    <div class="receipt-item-details">
-                        <strong>${item.productName}</strong><br>
-                        <span>Code: ${item.productCode} | Size: ${item.size} ${item.pcsPerCase !== undefined ? `| Pcs/Case: ${item.pcsPerCase}` : ''} | Qty: ${item.quantity} ${item.unit}</span>
-                    </div>
-                    <div class="receipt-item-price">PHP ${item.totalPrice}</div>
+                const row = receiptItemsBody.insertRow();
+                row.innerHTML = `
+                    <td>${item.productCode}</td>
+                    <td>${item.productName}</td>
+                    <td>${item.size}</td>
+                    <td>${item.unit}</td>
+                    <td>${item.pcsPerCase}</td>
+                    <td>${item.quantity}</td>
+                    <td>PHP ${item.pricePerUnit}</td>
+                    <td>PHP ${item.totalPrice}</td>
                 `;
-                receiptItemsContainer.appendChild(receiptItemDiv);
             });
 
             receiptTotalElement.textContent = `Total: PHP ${totalReceiptPrice.toFixed(2)}`;
@@ -1894,7 +1933,8 @@
             orderPage.classList.remove('visible');
             orderPage.classList.add('hidden');
             orderPage.style.display = 'none';
-            returnToTopBtn.style.display = 'none'; // Hide button on receipt page
+            mainHeader.style.display = 'none'; /* Hide the fixed header */
+            returnToTopBtn.style.display = 'none';
 
 
             receiptPage.style.display = 'flex';
@@ -1903,15 +1943,15 @@
                 receiptPage.classList.add('visible');
                 console.log("Receipt page should now be visible.");
 
-                // After showing receipt, clear all current orders and save to localStorage
+                // Reset quantities in productData for a new order session
                 for (const productId in productData) {
                     const product = productData[productId];
                     ['PC', 'CASE'].forEach(unit => {
-                        if (product[unit]) { // Ensure the unit object exists before trying to set quantity
+                        if (product[unit]) {
                             product[unit].quantity = 0;
-                            // Reset main page quantity inputs too if they are active
                             const quantityInput = document.getElementById(`productQuantity${productId}`);
                             const productCard = document.getElementById(`productCard${productId}`);
+                            // Ensure UI input is also reset if on the active unit
                             if (quantityInput && productCard.dataset.currentUnit === unit) {
                                 quantityInput.value = 0;
                             }
@@ -1925,22 +1965,114 @@
                 catch (e) {
                     console.error("Error resetting orders in localStorage after finalization:", e);
                 }
-                checkOrderValidity(); // Re-check order validity after clearing all orders (will disable finalize button)
+                checkOrderValidity(); // Re-evaluate finalization button state
             }, 50);
         }
 
         window.orderAgain = function() {
-            // Clear client information and input fields
             clearClientInfoAndInputs();
-            // Transition back to the landing page
             showLandingPage();
         }
 
-        // New function to trigger printing/sharing the receipt page
-        window.shareReceipt = function() {
-            // This will open the browser's print dialog, which typically includes
-            // options like "Save as PDF" or "Share" (to other apps).
-            window.print();
+        /**
+         * Saves the current receipt data as an HTML file.
+         */
+        window.saveReceiptAsHtml = function() {
+            // First, ensure all current UI quantities are synchronized to productData
+            for (let i = 1; i <= 10; i++) {
+                const productCard = document.getElementById(`productCard${i}`);
+                if (productCard) {
+                    const product = productData[i];
+                    const quantityInput = productCard.querySelector(`#productQuantity${i}`);
+                    const currentUnit = productCard.dataset.currentUnit;
+                    if (product && quantityInput && currentUnit) {
+                        product[currentUnit].quantity = parseInt(quantityInput.value) || 0;
+                    }
+                }
+            }
+            // Save the synchronized data to localStorage immediately before saving HTML
+            try {
+                localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
+                console.log("Product data synchronized and saved to localStorage before saving HTML.");
+            } catch (e) {
+                console.error("Error saving product data to localStorage before saving HTML:", e);
+            }
+
+            // Capture the content of the receipt page
+            const receiptPageContent = document.getElementById('receiptPage').innerHTML;
+
+            // Get the entire style block content
+            const styleContent = document.getElementById('app-styles').innerHTML;
+
+            // Construct a complete HTML document for the download
+            const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyTindahan Receipt</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        ${styleContent}
+        /* Specific print styles to hide buttons/header for cleaner saved HTML */
+        @media all {
+            .main-fixed-header, #returnToTopBtn,
+            .print-receipt-button, .order-again-button {
+                display: none !important;
+            }
+            body {
+                padding: 20px; /* Add some padding for the content in the saved HTML */
+                background-color: #fff;
+            }
+            .receipt-page-container {
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 auto !important; /* Center the content */
+                max-width: 900px !important; /* Keep a reasonable width */
+                width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
+                transform: none !important;
+                opacity: 1 !important;
+                display: block !important; /* Ensure it behaves like a block */
+            }
+            .receipt-client-info,
+            .receipt-page-container h3,
+            .receipt-total {
+                padding: 10px 20px;
+            }
+            .receipt-table-container {
+                max-height: none !important;
+                overflow: visible !important;
+            }
+            .receipt-table-container table {
+                border: 1px solid #ccc;
+            }
+            .receipt-table-container th, .receipt-table-container td {
+                border: 1px solid #ccc;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt-page-container" style="display: block;">
+        ${receiptPageContent}
+    </div>
+</body>
+</html>
+            `.trim();
+
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `MyTindahan_Receipt_${clientInfo.storeName.replace(/\s/g, '_')}_${new Date().toISOString().split('T')[0]}.html`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         }
 
         window.filterProducts = function() {
@@ -2002,9 +2134,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Always clear client info on initial load/refresh
             clearClientInfoAndInputs();
-            loadProductData(); // Load product data from localStorage on startup
+            loadProductData();
 
             for (let i = 1; i <= 10; i++) {
                 const quantityInput = document.getElementById(`productQuantity${i}`);
@@ -2013,20 +2144,18 @@
                     if (product && product.currentUnit && product[product.currentUnit]) {
                         product[product.currentUnit].quantity = parseInt(quantityInput.value) || 0;
                     }
-                    saveProductData(i); // Debounced save to localStorage
-                    checkOrderValidity(); // Check order validity immediately
+                    saveProductData(i);
+                    checkOrderValidity();
                 });
             }
 
-            // Scroll event listener for the "Return to Top" button
             window.onscroll = function() {
                 const returnToTopBtn = document.getElementById('returnToTopBtn');
-                const orderPage = document.getElementById('orderPage');
-                const receiptPage = document.getElementById('receiptPage');
+                const orderPageDiv = document.getElementById('orderPage');
 
-                // Only show the button if on the order page
-                if (orderPage.classList.contains('visible') && window.scrollY > 200) { // Show after scrolling 200px
-                    returnToTopBtn.style.display = 'flex'; // Use flex to match its display style
+                // Only show the button if on the order page and scrolled down
+                if (orderPageDiv.classList.contains('visible') && window.scrollY > 200) {
+                    returnToTopBtn.style.display = 'flex';
                 } else {
                     returnToTopBtn.style.display = 'none';
                 }
