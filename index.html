@@ -306,17 +306,20 @@
             box-sizing: border-box;
             color: #333;
         }
-        /* Styling for product name to make it more prominent - now black */
-        .product-card .input-group input[id^="productName"] {
-            font-size: 0.95rem; /* Smaller font size for product name */
-            font-weight: 600;
+         /* Styling for product name (readonly textarea) */
+        .product-card .input-group textarea[id^="productName"] { /* Changed 'input' to 'textarea' */
+            font-size: 0.95rem;
+            font-weight: 700; /* As per your previous request for bolding */
             color: #333;
-            min-height: 38px;
+            min-height: 58px; /* Increased height to allow for multiple lines */
             padding: 6px 0;
-            white-space: normal; /* Allow text to wrap */
-            overflow: visible;
-            text-overflow: clip;
-            resize: none; /* Prevents manual resizing of the textarea */
+            white-space: normal; /* Ensures text wraps */
+            overflow: hidden; /* Important: Hides scrollbars and clips content if it exceeds min-height */
+            resize: none; /* This is what removes the resizing handle */
+            background-color: transparent; /* Keep it transparent */
+            border: none; /* Ensures no visible border */
+            border-radius: 0;
+            box-shadow: none;
         }
         /* Styling for product price - now black */
         .product-card .input-group input[id^="productPrice"] {
