@@ -807,25 +807,28 @@
             .main-fixed-header .header-action-buttons {
                 order: 3; /* Third on mobile */
                 width: 100%; /* Full width */
-                flex-direction: column; /* Stack buttons within this group vertically */
-                gap: 8px; /* Vertical spacing between buttons in this group */
+                flex-direction: row; /* !!! CHANGED: Now horizontal on mobile !!! */
+                gap: 5px; /* Smaller horizontal spacing between buttons */
                 margin: 0; /* Reset all margins for mobile (handled by gap) */
+                justify-content: center; /* Center the buttons horizontally */
+                flex-wrap: wrap; /* Allow buttons to wrap if screen is too narrow */
             }
             .main-fixed-header .finalize-order-button,
             .main-fixed-header .order-list-button,
             .main-fixed-header .clear-order-button {
-                width: 100%; /* Full width for individual buttons on mobile */
-                font-size: 0.9rem; /* Slightly larger font for better touch */
-                padding: 12px 15px; /* Adjust padding */
+                width: auto; /* !!! CHANGED: Allow width to shrink to content !!! */
+                font-size: 0.8rem; /* !!! CHANGED: Made font size smaller !!! */
+                padding: 8px 10px; /* !!! CHANGED: Reduced padding for smaller size !!! */
+                min-height: 38px; /* Slightly reduce min-height for very small buttons, but keep tappable */
             }
 
 
             /* Adjust order-page-container.visible margin-top for new mobile header height */
             /* This value needs to clear the stacked header. Estimate based on content: */
             /* (Padding top/bottom: 15px*2) + (3 rows of buttons/search: ~48px each * 3) + (2 gaps: 15px*2) = 30 + 144 + 30 = 204px */
-            /* Let's use a slightly generous value like 220px to ensure clearance */
+            /* Let's use a slightly generous value like 200px to ensure clearance */
             .order-page-container.visible {
-                margin-top: 220px; /* Adjusted to clear the stacked header on mobile */
+                margin-top: 200px; /* Adjusted to clear the stacked header on mobile */
             }
             .product-grid {
                 grid-template-columns: 1fr;
