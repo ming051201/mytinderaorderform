@@ -23,7 +23,7 @@
         }
         body {
             margin: 0;
-            padding: 0;
+            padding: 0 10px; /* Added horizontal padding for safety margin on all screens */
             font-family: inherit;
             line-height: inherit;
             background-color: #ffffff; /* All white background */
@@ -139,12 +139,12 @@
         }
 
         .landing-container, .order-page-container, .receipt-page-container {
-            background-color: #ffffff;
+            background-color: #6495ED; /* This is the "blue background" */
             padding: 20px; /* Mobile padding applied globally */
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             text-align: center;
-            max-width: 900px;
+            max-width: 900px; /* Default max-width for mobile/tablet */
             width: 100%;
             opacity: 0;
             transform: translateY(20px);
@@ -164,12 +164,7 @@
             margin-top: 200px; /* Mobile margin-top applied globally */
         }
 
-        .landing-container {
-            background-color: #6495ED;
-        }
-        .order-page-container {
-            background-color: #6495ED;
-        }
+        /* Visible states */
         .landing-container.visible, .order-page-container.visible, .receipt-page-container.visible {
             opacity: 1;
             transform: translateY(0);
@@ -295,6 +290,8 @@
             gap: 20px;
             justify-content: center;
             margin-top: 0;
+            width: 100%; /* Ensure grid takes full available width of its container */
+            max-width: 1200px; /* Limit grid max-width for overall page consistency */
         }
         .product-card {
             background-color: #ffffff;
@@ -305,12 +302,22 @@
             flex-direction: column;
             gap: 10px; /* Mobile gap applied globally */
             align-items: center;
+            height: 100%; /* Ensure all cards in a row have the same height */
         }
         .product-code-display {
             font-size: 0.9rem; /* Mobile font size applied globally */
             font-weight: 600;
             color: #5C6F78;
             margin-bottom: 3px;
+        }
+        /* Style for product images within cards */
+        .product-card .product-image {
+            width: 100%;
+            height: auto; /* Maintain aspect ratio */
+            display: block; /* Ensures it behaves as a block element, removing extra space below it */
+            border-radius: 8px; /* Consistent rounded corners */
+            object-fit: cover; /* Ensures image covers area without distorting */
+            margin-bottom: 5px; /* Small margin below image */
         }
         .input-group {
             width: 100%;
@@ -340,10 +347,10 @@
             font-size: 0.9rem; /* Mobile font size applied globally */
             font-weight: 700;
             color: #333;
-            min-height: 58px;
+            min-height: 58px; /* Fixed height for 2 lines of text */
             padding: 6px 0;
             white-space: normal;
-            overflow: hidden;
+            overflow: hidden; /* Hide overflow if text exceeds 2 lines */
             resize: none;
             background-color: transparent;
             border: none;
@@ -437,9 +444,6 @@
             flex-grow: 1; /* Allow buttons to grow and shrink to fit available space */
             min-width: unset; /* Allow shrinking */
         }
-        /* No need for first-child margin-right when using flex-grow and gap */
-        /* .unit-button:first-child { margin-right: 2%; } */
-        /* .unit-button:last-child { margin-right: 0; } */
 
         .unit-button:hover {
             background-color: #e6e6e6;
@@ -793,6 +797,10 @@
             /* Desktop grid: 4 columns */
             .product-grid {
                 grid-template-columns: repeat(4, 1fr);
+            }
+            /* Increase max-width for the main containers on larger screens */
+            .landing-container, .order-page-container, .receipt-page-container {
+                max-width: 1200px; /* Wider for 4 columns */
             }
         }
 
@@ -1355,12 +1363,6 @@
                     if (productCodeDisplay) {
                         productCodeDisplay.textContent = product.productCode;
                     }
-
-                    // Combined info is now part of productName, so this is removed.
-                    // const combinedInfoDisplay = productCard.querySelector(`#productCombinedInfo${i}`);
-                    // if (combinedInfoDisplay) {
-                    //     combinedInfoDisplay.textContent = product.combinedSpec;
-                    // }
 
                     const currentUnit = product.currentUnit || 'PC';
                     productCard.dataset.currentUnit = currentUnit;
