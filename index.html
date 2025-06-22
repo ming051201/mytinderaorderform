@@ -871,12 +871,17 @@
             }
         }
         @media (max-width: 640px) {
-            .unit-buttons {
-                flex-direction: column; /* THIS MAKES THEM STACK. CHANGE TO row; */
-                gap: 8px; /* This is for vertical gap, if changing to row, this becomes horizontal gap */
+         .unit-buttons {
+                flex-direction: row; /* Changed to row for horizontal layout */
+                gap: 5px; /* Adjust horizontal gap as needed */
+                justify-content: center; /* Center the buttons within their container */
+                flex-wrap: wrap; /* Allow wrapping if they become too wide for the screen */
             }
             .unit-button {
-                width: 100px; /* Specific fixed width for buttons on very small screens */
+                width: auto; /* Allow width to shrink to content, or set a small fixed width */
+                min-width: 80px; /* Example: minimum width to ensure tappability */
+                padding: 6px 8px; /* Further reduce padding if needed for smaller size */
+                font-size: 0.75rem; /* Smaller font size */
             }
             .landing-container {
                 padding: 30px;
