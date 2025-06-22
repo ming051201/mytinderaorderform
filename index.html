@@ -23,7 +23,7 @@
         }
         body {
             margin: 0;
-            padding: 0 15px; /* Increased horizontal padding for safety margin on all screens, especially mobile */
+            padding: 0;
             font-family: inherit;
             line-height: inherit;
             background-color: #ffffff; /* All white background */
@@ -139,12 +139,12 @@
         }
 
         .landing-container, .order-page-container, .receipt-page-container {
-            background-color: #6495ED; /* This is the "blue background" */
+            background-color: #ffffff;
             padding: 20px; /* Mobile padding applied globally */
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             text-align: center;
-            max-width: 900px; /* Default max-width for mobile/tablet */
+            max-width: 900px;
             width: 100%;
             opacity: 0;
             transform: translateY(20px);
@@ -158,14 +158,18 @@
             box-sizing: border-box;
             margin-top: 20px;
             margin-bottom: 20px;
-            overflow: hidden; /* Added to ensure no content visually overflows the blue background */
         }
         /* Specific margin for order page to clear fixed header */
         .order-page-container.visible {
             margin-top: 200px; /* Mobile margin-top applied globally */
         }
 
-        /* Visible states */
+        .landing-container {
+            background-color: #6495ED;
+        }
+        .order-page-container {
+            background-color: #6495ED;
+        }
         .landing-container.visible, .order-page-container.visible, .receipt-page-container.visible {
             opacity: 1;
             transform: translateY(0);
@@ -285,14 +289,11 @@
         }
 
         .product-grid {
-            /* Default for smaller screens (including mobile), now 2 columns */
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1fr; /* Mobile grid applied globally */
             display: grid;
             gap: 20px;
             justify-content: center;
             margin-top: 0;
-            width: 100%; /* Ensure grid takes full available width of its container */
-            max-width: 1200px; /* Limit grid max-width for overall page consistency */
         }
         .product-card {
             background-color: #ffffff;
@@ -303,23 +304,12 @@
             flex-direction: column;
             gap: 10px; /* Mobile gap applied globally */
             align-items: center;
-            height: 100%; /* Ensure all cards in a row have the same height */
-            overflow: hidden; /* Added to ensure content within card doesn't visually escape */
         }
         .product-code-display {
             font-size: 0.9rem; /* Mobile font size applied globally */
             font-weight: 600;
             color: #5C6F78;
             margin-bottom: 3px;
-        }
-        /* Style for product images within cards */
-        .product-card .product-image {
-            width: 100%;
-            height: auto; /* Maintain aspect ratio */
-            display: block; /* Ensures it behaves as a block element, removing extra space below it */
-            border-radius: 8px; /* Consistent rounded corners */
-            object-fit: cover; /* Ensures image covers area without distorting */
-            margin-bottom: 5px; /* Small margin below image */
         }
         .input-group {
             width: 100%;
@@ -344,30 +334,22 @@
             box-sizing: border-box;
             color: #333;
         }
-         /* Styling for product name (textarea, now editable) */
+         /* Styling for product name (readonly textarea) */
         .product-card .input-group textarea[id^="productName"] {
             font-size: 0.9rem; /* Mobile font size applied globally */
             font-weight: 700;
             color: #333;
-            min-height: 58px; /* Fixed height for 2 lines of text */
+            min-height: 58px;
             padding: 6px 0;
             white-space: normal;
-            /* Removed: overflow: hidden; */ /* Allows content to expand vertically */
-            resize: none; /* Prevent manual resizing */
+            overflow: hidden;
+            resize: none;
             background-color: transparent;
             border: none;
             border-radius: 0;
             box-shadow: none;
             text-align: center;
-            cursor: text; /* Indicate it's editable */
         }
-        /* Style for active/focused editable product name */
-        .product-card .input-group textarea[id^="productName"]:focus {
-            outline: 1px solid #0050A0; /* Highlight when focused */
-            background-color: #f0f8ff; /* Light background on focus */
-            border-radius: 5px;
-        }
-
 
         /* Container for price only, ensuring it's centered */
         .product-price-container {
@@ -417,15 +399,14 @@
             border-color: transparent;
             box-shadow: none;
         }
-        /* Removed readonly styling for textarea. Only applies to inputs that remain readonly. */
-        .input-group input[readonly] {
+        .input-group input[readonly], .input-group textarea[readonly] {
             background-color: transparent;
             cursor: default;
             color: #666;
             border: none;
             box-shadow: none;
         }
-        .input-group input[readonly]:focus {
+        .input-group input[readonly]:focus, .input-group textarea[readonly]:focus {
             box-shadow: none;
             border-color: transparent;
         }
@@ -455,6 +436,9 @@
             flex-grow: 1; /* Allow buttons to grow and shrink to fit available space */
             min-width: unset; /* Allow shrinking */
         }
+        /* No need for first-child margin-right when using flex-grow and gap */
+        /* .unit-button:first-child { margin-right: 2%; } */
+        /* .unit-button:last-child { margin-right: 0; } */
 
         .unit-button:hover {
             background-color: #e6e6e6;
@@ -803,16 +787,44 @@
             margin-left: 0; /* Mobile margin-left applied globally */
         }
 
-        /* Responsive adjustments */
+        /* Responsive adjustments - removed mobile-specific media queries as styles are now global */
         @media (min-width: 769px) {
-            /* Desktop grid: 4 columns */
+            /* This media query can be used for any desktop-specific overrides if needed in the future,
+               but the current design is a mobile-first approach applied globally. */
+            /* For example, if you wanted the product grid to be 2 columns on larger screens:
             .product-grid {
-                grid-template-columns: repeat(4, 1fr);
+                grid-template-columns: repeat(2, 1fr);
             }
-            /* Increase max-width for the main containers on larger screens */
-            .landing-container, .order-page-container, .receipt-page-container {
-                max-width: 1200px; /* Wider for 4 columns */
+            */
+            /* Or if the header should revert to row layout on desktop:
+            .main-fixed-header {
+                flex-direction: row;
+                padding: 10px 40px;
             }
+            .main-fixed-header .header-left-group {
+                width: auto;
+            }
+            .main-fixed-header .search-bar-container {
+                max-width: 400px;
+                margin: 0 15px;
+            }
+            .main-fixed-header .header-action-buttons {
+                flex-direction: row;
+                gap: 10px;
+                margin-left: 15px;
+                width: auto;
+            }
+            .main-fixed-header .finalize-order-button,
+            .main-fixed-header .order-list-button,
+            .main-fixed-header .clear-order-button {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+                min-height: 44px;
+            }
+            .order-page-container.visible {
+                margin-top: 100px;
+            }
+            */
         }
 
     </style>
@@ -880,7 +892,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 1)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName1" placeholder="Product Name" rows="2" oninput="updateProductName(1)"></textarea>
+                    <textarea id="productName1" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -901,7 +913,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 2)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName2" placeholder="Product Name" rows="2" oninput="updateProductName(2)"></textarea>
+                    <textarea id="productName2" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -922,7 +934,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 3)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName3" placeholder="Product Name" rows="2" oninput="updateProductName(3)"></textarea>
+                    <textarea id="productName3" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -943,7 +955,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 4)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName4" placeholder="Product Name" rows="2" oninput="updateProductName(4)"></textarea>
+                    <textarea id="productName4" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -964,7 +976,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 5)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName5" placeholder="Product Name" rows="2" oninput="updateProductName(5)"></textarea>
+                    <textarea id="productName5" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -985,7 +997,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 6)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName6" placeholder="Product Name" rows="2" oninput="updateProductName(6)"></textarea>
+                    <textarea id="productName6" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -1006,7 +1018,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 7)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName7" placeholder="Product Name" rows="2" oninput="updateProductName(7)"></textarea>
+                    <textarea id="productName7" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -1027,7 +1039,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 8)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName8" placeholder="Product Name" rows="2" oninput="updateProductName(8)"></textarea>
+                    <textarea id="productName8" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -1048,7 +1060,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 9)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName9" placeholder="Product Name" rows="2" oninput="updateProductName(9)"></textarea>
+                    <textarea id="productName9" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -1069,7 +1081,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 10)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName10" placeholder="Product Name" rows="2" oninput="updateProductName(10)"></textarea>
+                    <textarea id="productName10" placeholder="Product Name" rows="2" readonly></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -1375,6 +1387,12 @@
                         productCodeDisplay.textContent = product.productCode;
                     }
 
+                    // Combined info is now part of productName, so this is removed.
+                    // const combinedInfoDisplay = productCard.querySelector(`#productCombinedInfo${i}`);
+                    // if (combinedInfoDisplay) {
+                    //     combinedInfoDisplay.textContent = product.combinedSpec;
+                    // }
+
                     const currentUnit = product.currentUnit || 'PC';
                     productCard.dataset.currentUnit = currentUnit;
 
@@ -1486,24 +1504,6 @@
                 loadClientInfo();
             }, 700);
         }
-
-        /**
-         * Updates the product name in the productData object and saves to localStorage.
-         * @param {number} productId - The ID of the product being updated.
-         */
-        window.updateProductName = debounce((productId) => {
-            const productNameInput = document.getElementById(`productName${productId}`);
-            if (productNameInput && productData[productId]) {
-                productData[productId].productName = productNameInput.value;
-                try {
-                    localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
-                    console.log(`Product ${productId} name updated and saved to localStorage.`);
-                } catch (e) {
-                    console.error("Error saving product name to localStorage:", e);
-                }
-            }
-        }, 500); // Debounce to prevent excessive saving on every keystroke
-
 
         window.selectUnit = function(selectedButton, newUnit, productIdTrigger) {
             console.log(`Switching unit for product ${productIdTrigger} to ${newUnit}`);
