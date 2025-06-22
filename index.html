@@ -344,7 +344,7 @@
             box-sizing: border-box;
             color: #333;
         }
-         /* Styling for product name (readonly textarea) */
+         /* Styling for product name (textarea, now editable) */
         .product-card .input-group textarea[id^="productName"] {
             font-size: 0.9rem; /* Mobile font size applied globally */
             font-weight: 700;
@@ -352,14 +352,22 @@
             min-height: 58px; /* Fixed height for 2 lines of text */
             padding: 6px 0;
             white-space: normal;
-            overflow: hidden; /* Hide overflow if text exceeds 2 lines */
-            resize: none;
+            /* Removed: overflow: hidden; */ /* Allows content to expand vertically */
+            resize: none; /* Prevent manual resizing */
             background-color: transparent;
             border: none;
             border-radius: 0;
             box-shadow: none;
             text-align: center;
+            cursor: text; /* Indicate it's editable */
         }
+        /* Style for active/focused editable product name */
+        .product-card .input-group textarea[id^="productName"]:focus {
+            outline: 1px solid #0050A0; /* Highlight when focused */
+            background-color: #f0f8ff; /* Light background on focus */
+            border-radius: 5px;
+        }
+
 
         /* Container for price only, ensuring it's centered */
         .product-price-container {
@@ -409,14 +417,15 @@
             border-color: transparent;
             box-shadow: none;
         }
-        .input-group input[readonly], .input-group textarea[readonly] {
+        /* Removed readonly styling for textarea. Only applies to inputs that remain readonly. */
+        .input-group input[readonly] {
             background-color: transparent;
             cursor: default;
             color: #666;
             border: none;
             box-shadow: none;
         }
-        .input-group input[readonly]:focus, .input-group textarea[readonly]:focus {
+        .input-group input[readonly]:focus {
             box-shadow: none;
             border-color: transparent;
         }
@@ -871,7 +880,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 1)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName1" placeholder="Product Name" rows="2" readonly></textarea>
+                    <textarea id="productName1" placeholder="Product Name" rows="2" oninput="updateProductName(1)"></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -892,7 +901,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 2)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName2" placeholder="Product Name" rows="2" readonly></textarea>
+                    <textarea id="productName2" placeholder="Product Name" rows="2" oninput="updateProductName(2)"></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -913,7 +922,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 3)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName3" placeholder="Product Name" rows="2" readonly></textarea>
+                    <textarea id="productName3" placeholder="Product Name" rows="2" oninput="updateProductName(3)"></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -934,7 +943,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 4)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName4" placeholder="Product Name" rows="2" readonly></textarea>
+                    <textarea id="productName4" placeholder="Product Name" rows="2" oninput="updateProductName(4)"></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -955,7 +964,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 5)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName5" placeholder="Product Name" rows="2" readonly></textarea>
+                    <textarea id="productName5" placeholder="Product Name" rows="2" oninput="updateProductName(5)"></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -976,7 +985,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 6)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName6" placeholder="Product Name" rows="2" readonly></textarea>
+                    <textarea id="productName6" placeholder="Product Name" rows="2" oninput="updateProductName(6)"></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -997,7 +1006,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 7)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName7" placeholder="Product Name" rows="2" readonly></textarea>
+                    <textarea id="productName7" placeholder="Product Name" rows="2" oninput="updateProductName(7)"></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -1018,7 +1027,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 8)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName8" placeholder="Product Name" rows="2" readonly></textarea>
+                    <textarea id="productName8" placeholder="Product Name" rows="2" oninput="updateProductName(8)"></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -1039,7 +1048,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 9)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName9" placeholder="Product Name" rows="2" readonly></textarea>
+                    <textarea id="productName9" placeholder="Product Name" rows="2" oninput="updateProductName(9)"></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -1060,7 +1069,7 @@
                     <button class="unit-button" onclick="selectUnit(this, 'CASE', 10)">PER CASE</button>
                 </div>
                 <div class="input-group">
-                    <textarea id="productName10" placeholder="Product Name" rows="2" readonly></textarea>
+                    <textarea id="productName10" placeholder="Product Name" rows="2" oninput="updateProductName(10)"></textarea>
                 </div>
                 <!-- Price Container -->
                 <div class="product-price-container">
@@ -1477,6 +1486,24 @@
                 loadClientInfo();
             }, 700);
         }
+
+        /**
+         * Updates the product name in the productData object and saves to localStorage.
+         * @param {number} productId - The ID of the product being updated.
+         */
+        window.updateProductName = debounce((productId) => {
+            const productNameInput = document.getElementById(`productName${productId}`);
+            if (productNameInput && productData[productId]) {
+                productData[productId].productName = productNameInput.value;
+                try {
+                    localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
+                    console.log(`Product ${productId} name updated and saved to localStorage.`);
+                } catch (e) {
+                    console.error("Error saving product name to localStorage:", e);
+                }
+            }
+        }, 500); // Debounce to prevent excessive saving on every keystroke
+
 
         window.selectUnit = function(selectedButton, newUnit, productIdTrigger) {
             console.log(`Switching unit for product ${productIdTrigger} to ${newUnit}`);
@@ -1981,3 +2008,4 @@
     </script>
 </body>
 </html>
+
