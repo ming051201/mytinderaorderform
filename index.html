@@ -44,7 +44,8 @@
             padding: 20px 40px; /* Increased padding for thickness */
             min-height: 84px; /* Ensure a minimum height for logo */
             display: flex; /* Use flexbox for button alignment */
-            justify-content: space-between; /* Space out button groups */
+            flex-direction: column;
+            justify-content: flex-start;
             align-items: center; /* Vertically center buttons */
             box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Subtle shadow */
             box-sizing: border-box; /* Include padding in total width/height */
@@ -135,7 +136,7 @@
         }
         /* Specific margin for order page to clear fixed header */
         .order-page-container.visible {
-            margin-top: 104px; /* Height of fixed header (84px) + 20px extra space */
+            margin-top: 190px; /* Height of fixed header (84px) + 20px extra space */
         }
 
         .landing-container {
@@ -241,8 +242,9 @@
         /* Search Bar Specific Styles (now below fixed header) */
         .search-bar-container {
             width: 100%;
-            margin-bottom: 20px;
             max-width: 500px;
+            margin-top: 15px
+            margin-bottom: 0;
         }
         .search-bar-container input {
             width: 100%;
@@ -768,8 +770,9 @@
             }
             .main-fixed-header .header-left-group, .main-fixed-header .header-right-group {
                 width: 100%;
+                display: flex;
                 justify-content: space-between;
-                flex-wrap: wrap;
+                align-items: center;
             }
             .main-fixed-header .header-right-group {
                 justify-content: flex-end;
@@ -825,7 +828,7 @@
                 min-height: 36px;
             }
             .search-bar-container {
-                margin-top: 10px;
+                margin-top: 0px;
             }
             .order-summary-scrollable-content {
                 max-height: calc(90vh - 150px);
@@ -938,6 +941,9 @@
             <button class="order-list-button" onclick="showOrderSummary()">List of Orders</button>
             <button class="clear-order-button" onclick="clearAllOrders()">Clear Order</button>
         </div>
+        <div class="search-bar-container">
+            <input type="text" id="productSearch" placeholder="Search products..." oninput="filterProducts()">
+        </div>
     </header>
 
     <div id="landingPage" class="landing-container visible">
@@ -965,11 +971,6 @@
     </div>
 
     <div id="orderPage" class="order-page-container">
-        <!-- Search Bar (now directly inside order-page-container, below where the fixed header would be) -->
-        <div class="search-bar-container">
-            <input type="text" id="productSearch" placeholder="Search products..." oninput="filterProducts()">
-        </div>
-
         <!-- No Available Stocks Message -->
         <div id="noStockMessage" class="no-stock-message">
             No Available Stocks
