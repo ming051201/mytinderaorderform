@@ -419,25 +419,26 @@
             margin-bottom: 5px; /* Keep consistent with other compact elements */
             flex-direction: row; /* Always horizontal */
             gap: 5px; /* Reduced gap for horizontal layout */
-            flex-wrap: wrap;
+            flex-wrap: nowrap; /* Ensure buttons stay on one line */
         }
         .unit-button {
             background-color: #f0f0f0;
             color: #5C6F78;
-            padding: 6px 8px; /* Reduced padding globally */
+            padding: 4px 6px; /* Reduced padding for smaller size */
             border-radius: 8px;
-            font-size: 0.75rem; /* Smaller font size globally */
+            font-size: 0.7rem; /* Smaller font size */
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
             border: 1px solid #e0e0e0;
-            min-height: 40px; /* Still provide a decent tap target */
+            min-height: 36px; /* Adjusted min-height for smaller buttons */
             margin: 0; /* Reset margins, use gap on parent */
-            width: 48%; /* Adjust width to fit two buttons horizontally with a small gap */
+            flex-grow: 1; /* Allow buttons to grow and shrink to fit available space */
             min-width: unset; /* Allow shrinking */
         }
-        .unit-button:first-child { margin-right: 2%; } /* Add some margin between buttons for small screens */
-        .unit-button:last-child { margin-right: 0; }
+        /* No need for first-child margin-right when using flex-grow and gap */
+        /* .unit-button:first-child { margin-right: 2%; } */
+        /* .unit-button:last-child { margin-right: 0; } */
 
         .unit-button:hover {
             background-color: #e6e6e6;
