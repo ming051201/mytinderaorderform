@@ -871,18 +871,20 @@
             }
         }
         @media (max-width: 640px) {
-         .unit-buttons {
+            .unit-buttons {
                 flex-direction: row; /* Changed to row for horizontal layout */
-                gap: 5px; /* Adjust horizontal gap as needed */
-                justify-content: center; /* Center the buttons within their container */
-                flex-wrap: wrap; /* Allow wrapping if they become too wide for the screen */
+                gap: 5px; /* Adjusted horizontal gap */
+                justify-content: center;
+                flex-wrap: wrap;
             }
             .unit-button {
-                width: auto; /* Allow width to shrink to content, or set a small fixed width */
-                min-width: 80px; /* Example: minimum width to ensure tappability */
-                padding: 6px 8px; /* Further reduce padding if needed for smaller size */
+                width: 48%; /* Adjusted width to fit two buttons horizontally with a small gap */
+                min-width: unset; /* Remove fixed min-width to allow shrinking */
+                padding: 6px 8px; /* Further reduced padding */
                 font-size: 0.75rem; /* Smaller font size */
+                margin: 0; /* Remove individual margins as gap is handled by parent */
             }
+            .unit-button:first-child { margin-right: 2%; } /* Add some margin between buttons for small screens */
             .landing-container {
                 padding: 30px;
                 border-radius: 15px;
@@ -897,13 +899,16 @@
                 font-size: 1rem;
                 padding: 12px 25px;
             }
-            .unit-buttons {
+            /* Original unit-buttons/unit-button rules from previous iteration for mobile where they were stacked,
+               now overridden by the more specific 640px media query to make them horizontal.
+               Keeping these in mind for context, but the above rules are now dominant for 640px breakpoint. */
+            /* .unit-buttons {
                 flex-direction: column;
                 gap: 8px;
             }
             .unit-button {
                 width: 100%;
-            }
+            } */
             .product-card {
                 padding: 15px;
                 gap: 10px;
