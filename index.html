@@ -871,6 +871,10 @@
             }
         }
         @media (max-width: 640px) {
+            .unit-buttons {
+                flex-direction: column; /* THIS MAKES THEM STACK. CHANGE TO row; */
+                gap: 8px; /* This is for vertical gap, if changing to row, this becomes horizontal gap */
+            }
             .unit-button {
                 width: 100px; /* Specific fixed width for buttons on very small screens */
             }
