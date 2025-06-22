@@ -900,14 +900,14 @@
                 padding: 10px 20px; /* Add some padding back for these elements in print */
             }
             .receipt-table-container {
-                max-height: none !important; /* Allow table to expand fully for print */
+                max-height: none !important;
                 overflow: visible !important;
             }
             .receipt-table-container table {
-                border: 1px solid #ccc; /* Add overall border to table for print */
+                border: 1px solid #ccc;
             }
             .receipt-table-container th, .receipt-table-container td {
-                border: 1px solid #ccc; /* Ensure all cells have borders in print */
+                border: 1px solid #ccc;
             }
         }
 
@@ -1651,61 +1651,55 @@
             }, 700);
         }
 
-        window.selectUnit = function(selectedButton, newUnit, productIdTrigger) {
-            console.log(`Switching unit for product ${productIdTrigger} to ${newUnit}`);
-            const productTrigger = productData[productIdTrigger];
-            const quantityInputTrigger = document.getElementById(`productQuantity${productIdTrigger}`);
-            if (productTrigger && productTrigger.currentUnit && productTrigger[productTrigger.currentUnit]) {
-                productTrigger[newUnit].quantity = parseInt(quantityInputTrigger.value) || 0; // Update quantity of the *new* unit
-                console.log(`Saved quantity ${productTrigger[productTrigger.currentUnit].quantity} for product ${productIdTrigger} in old unit ${productTrigger.currentUnit}`);
+        window.selectUnit = function(selectedButton, newUnit, productId) {
+            const product = productData[productId];
+            if (!product) {
+                console.error(`Product with ID ${productId} not found.`);
+                return;
             }
 
-            for (let i = 1; i <= 10; i++) {
-                const product = productData[i];
-                if (product) {
-                    const productCard = document.getElementById(`productCard${i}`);
-                    const unitButtons = productCard.querySelectorAll('.unit-button');
-                    const priceInput = productCard.querySelector(`#productPrice${i}`);
-                    const quantityInput = productCard.querySelector(`#productQuantity${i}`);
-                    const pcsPerCaseValueSpan = productCard.querySelector(`#pcsPerCaseValue${i}`);
+            const quantityInput = document.getElementById(`productQuantity${productId}`);
+            const priceInput = document.getElementById(`productPrice${productId}`);
+            const pcsPerCaseValueSpan = document.getElementById(`pcsPerCaseValue${productId}`);
+            const unitButtons = selectedButton.parentNode.querySelectorAll('.unit-button');
 
-                    product.currentUnit = newUnit;
-                    productCard.dataset.currentUnit = newUnit;
+            // 1. Save the current quantity from the input field to the OLD unit's data
+            // This is crucial to persist the quantity the user typed before switching.
+            if (product.currentUnit && product[product.currentUnit]) {
+                product[product.currentUnit].quantity = parseInt(quantityInput.value) || 0;
+            }
 
-                    // No need for typeof check, ensure initial quantity is 0 if undefined
-                    product[newUnit].quantity = parseInt(quantityInput.value) || 0;
+            // 2. Update the product's current unit
+            product.currentUnit = newUnit;
 
+            // 3. Update the UI based on the NEW unit's stored data
+            priceInput.placeholder = `Price per ${newUnit}`;
+            priceInput.value = `PHP ${parseFloat(product[newUnit].price).toFixed(2)}`;
+            quantityInput.value = product[newUnit].quantity; // Load the stored quantity for the new unit
 
-                    priceInput.placeholder = `Price per ${newUnit}`;
-                    priceInput.value = `PHP ${parseFloat(product[newUnit].price).toFixed(2)}`;
-
-                    quantityInput.value = product[newUnit].quantity;
-
-                    if (pcsPerCaseValueSpan) {
-                        if (newUnit === 'CASE' && product.CASE.pcsPerCase !== undefined) {
-                            pcsPerCaseValueSpan.textContent = product.CASE.pcsPerCase;
-                        } else {
-                            pcsPerCaseValueSpan.textContent = '';
-                        }
-                    }
-
-                    unitButtons.forEach(button => {
-                        button.classList.remove('active');
-                        if (button.textContent.includes(newUnit)) {
-                            button.classList.add('active');
-                        }
-                    });
+            if (pcsPerCaseValueSpan) {
+                if (newUnit === 'CASE' && product.CASE.pcsPerCase !== undefined) {
+                    pcsPerCaseValueSpan.textContent = product.CASE.pcsPerCase;
+                } else {
+                    pcsPerCaseValueSpan.textContent = '';
                 }
             }
+
+            // Update active state of unit buttons for this specific product card
+            unitButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            selectedButton.classList.add('active');
+
+            // 4. Save the updated product data (especially the currentUnit and the saved old quantity) to localStorage
             try {
                 localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
-                console.log("All product data updated and saved to localStorage after global unit switch.");
-            }
-            catch (e) {
-                console.error("Error saving all product data to localStorage after global unit switch:", e);
+                console.log(`Product ${productId} data and currentUnit updated and saved to localStorage.`);
+            } catch (e) {
+                console.error("Error saving product data to localStorage after unit switch:", e);
             }
 
-            checkOrderValidity();
+            checkOrderValidity(); // Re-check order validity after a unit switch (quantity might change)
         }
 
         window.validateRemoveQuantity = function(inputElement, maxQty) {
