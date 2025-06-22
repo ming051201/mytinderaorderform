@@ -33,7 +33,7 @@
             min-height: 100vh; /* Ensure body takes at least full viewport height */
         }
 
-        /* Main Fixed Header (new) */
+        /* Main Fixed Header */
         .main-fixed-header {
             position: fixed; /* Stick to the viewport */
             top: 0;
@@ -41,12 +41,13 @@
             width: 100%; /* Occupy whole screen width */
             background-color: #003a7a; /* Dark blue background */
             z-index: 100; /* Ensure it's above other content */
-            padding: 20px 40px; /* Increased padding for thickness */
+            padding: 10px 40px; /* Adjusted padding for horizontal layout */
             min-height: 84px; /* Ensure a minimum height for logo */
-            display: flex; /* Use flexbox for button alignment */
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center; /* Vertically center buttons */
+            display: flex; /* Use flexbox for layout */
+            flex-direction: row; /* Default to row for desktop */
+            justify-content: space-between; /* Space out groups: left, middle, right */
+            align-items: center; /* Vertically center items in the row */
+            flex-wrap: nowrap; /* Prevent wrapping on desktop unless necessary */
             box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Subtle shadow */
             box-sizing: border-box; /* Include padding in total width/height */
             display: none; /* Hidden by default, shown by JS on order page */
@@ -86,11 +87,12 @@
             font-size: 0.9rem;
             font-weight: 600;
             border-radius: 8px;
-            border: 1px solid white; /* White border */
+            border: none; /* REMOVED BORDER */
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: none; /* No individual shadow, header has one */
             min-height: 44px;
+            white-space: nowrap; /* Prevents text wrap, keeping button length dependent on words */
         }
         .main-fixed-header .finalize-order-button:disabled {
             background: rgba(255, 255, 255, 0.1); /* Lighter grey for disabled */
@@ -111,6 +113,25 @@
         .main-fixed-header .clear-order-button:active {
             transform: none;
             box-shadow: none;
+        }
+
+        /* Header Groups for Desktop Flex Order */
+        .main-fixed-header .header-left-group {
+            order: 1; /* Desktop order: first (only back button) */
+            width: auto; /* Allow content to dictate width */
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        /* Group for Clear Order, List of Orders, Finalize Order */
+        .main-fixed-header .header-action-buttons {
+            order: 3; /* Desktop order: last (to the right of search bar) */
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Spacing between these buttons */
+            margin-left: 15px; /* Space from the search bar */
+            width: auto; /* Let content dictate width */
         }
 
         .landing-container, .order-page-container, .receipt-page-container {
@@ -136,7 +157,8 @@
         }
         /* Specific margin for order page to clear fixed header */
         .order-page-container.visible {
-            margin-top: 190px; /* Height of fixed header (84px) + 20px extra space */
+            /* Adjusted margin-top to clear new single-row header layout */
+            margin-top: 100px;
         }
 
         .landing-container {
@@ -239,12 +261,13 @@
             box-shadow: 0 0 0 3px rgba(0, 80, 160, 0.1);
         }
 
-        /* Search Bar Specific Styles (now below fixed header) */
+        /* Search Bar Specific Styles (now inside fixed header) */
         .search-bar-container {
-            width: 100%;
-            max-width: 500px;
-            margin-top: 15px
-            margin-bottom: 0;
+            width: 100%; /* Take full width within its flex-grow area */
+            max-width: 400px; /* Limit max width for desktop */
+            margin: 0 15px; /* Space to the left and right */
+            flex-grow: 1; /* Allow it to take available space in the middle */
+            order: 2; /* Desktop order: second */
         }
         .search-bar-container input {
             width: 100%;
@@ -344,13 +367,14 @@
             border-color: transparent;
             box-shadow: none;
         }
-        .input-group input[readonly] {
+        .input-group input[readonly], .input-group textarea[readonly] {
             background-color: transparent;
             cursor: default;
             color: #666;
             border: none;
+            box-shadow: none;
         }
-        .input-group input[readonly]:focus {
+        .input-group input[readonly]:focus, .input-group textarea[readonly]:focus {
             box-shadow: none;
             border-color: transparent;
         }
@@ -374,7 +398,7 @@
             border: 1px solid #e0e0e0;
             min-height: 40px;
             margin: 0 4px;
-            width: 100px
+            width: 100px; /* Fixed width for desktop */
         }
         .unit-button:first-child { margin-left: 0; }
         .unit-button:last-child { margin-right: 0; }
@@ -762,45 +786,46 @@
                 padding: 20px;
             }
             .main-fixed-header {
-                flex-direction: column; /* Stack header items vertically */
+                flex-direction: column; /* Stack header items vertically on mobile */
                 align-items: flex-start; /* Align stacked items to the left */
                 gap: 15px; /* More space between stacked groups */
                 padding: 15px 20px; /* Adjust padding for smaller screens */
                 min-height: auto; /* Allow height to adjust */
             }
-            .main-fixed-header .header-left-group, .main-fixed-header .header-right-group {
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
+            /* Mobile order for header groups and items */
+            .main-fixed-header .header-left-group {
+                order: 1; /* First on mobile */
+                width: 100%; /* Full width */
+                justify-content: space-between; /* Keep internal button spacing */
             }
-            .main-fixed-header .header-right-group {
-                justify-content: flex-end;
+            .main-fixed-header .search-bar-container {
+                order: 2; /* Second on mobile */
+                width: 100%; /* Full width */
+                max-width: none; /* Remove desktop max-width constraint */
+                margin: 0; /* Reset all margins for mobile (handled by gap) */
             }
-            .main-fixed-header .back-button {
-                padding: 8px;
-                min-width: 40px;
-                min-height: 40px;
-                margin-right: 0;
-            }
-            .main-fixed-header .back-button svg {
-                width: 20px;
-                height: 20px;
+            .main-fixed-header .header-action-buttons {
+                order: 3; /* Third on mobile */
+                width: 100%; /* Full width */
+                flex-direction: column; /* Stack buttons within this group vertically */
+                gap: 8px; /* Vertical spacing between buttons in this group */
+                margin: 0; /* Reset all margins for mobile (handled by gap) */
             }
             .main-fixed-header .finalize-order-button,
             .main-fixed-header .order-list-button,
             .main-fixed-header .clear-order-button {
-                padding: 8px 12px;
-                font-size: 0.8rem;
-                min-height: 40px;
-                flex-grow: 1;
+                width: 100%; /* Full width for individual buttons on mobile */
+                font-size: 0.9rem; /* Slightly larger font for better touch */
+                padding: 12px 15px; /* Adjust padding */
             }
+
+
+            /* Adjust order-page-container.visible margin-top for new mobile header height */
+            /* This value needs to clear the stacked header. Estimate based on content: */
+            /* (Padding top/bottom: 15px*2) + (3 rows of buttons/search: ~48px each * 3) + (2 gaps: 15px*2) = 30 + 144 + 30 = 204px */
+            /* Let's use a slightly generous value like 220px to ensure clearance */
             .order-page-container.visible {
-                margin-top: calc(84px + 20px); /* Adjust margin-top for mobile header height */
-                /* Re-calculate based on mobile header height: (15px*2 + button_height) */
-                /* If buttons are 44px, then (30 + 44 + 15) = 89px. So use 89 + 20 = 109px */
-                /* Or just use a fixed value that looks good: */
-                margin-top: 120px; /* A bit more generous for mobile */
+                margin-top: 220px; /* Adjusted to clear the stacked header on mobile */
             }
             .product-grid {
                 grid-template-columns: 1fr;
@@ -827,9 +852,6 @@
                 width: 50px;
                 min-height: 36px;
             }
-            .search-bar-container {
-                margin-top: 0px;
-            }
             .order-summary-scrollable-content {
                 max-height: calc(90vh - 150px);
             }
@@ -847,9 +869,8 @@
         }
         @media (max-width: 640px) {
             .unit-button {
-            /* ... other properties ... */
-            width: 100px; /* <--- ADD THIS LINE HERE */
-                
+                width: 100px; /* Specific fixed width for buttons on very small screens */
+            }
             .landing-container {
                 padding: 30px;
                 border-radius: 15px;
@@ -926,7 +947,7 @@
     </style>
 </head>
 <body>
-    <!-- Main Fixed Header (Moved here, outside content containers) -->
+    <!-- Main Fixed Header -->
     <header id="mainHeader" class="main-fixed-header">
         <div class="header-left-group">
             <button class="back-button" onclick="showLandingPage()">
@@ -934,15 +955,16 @@
                     <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
                 </svg>
             </button>
-            <button id="finalizeOrderButton" class="finalize-order-button" onclick="finalizeOrder()" disabled>Finalize Order</button>
         </div>
-        <div class="header-right-group">
-            <!-- Reordered buttons -->
-            <button class="order-list-button" onclick="showOrderSummary()">List of Orders</button>
-            <button class="clear-order-button" onclick="clearAllOrders()">Clear Order</button>
-        </div>
+        <!-- Search bar remains here for desktop alignment -->
         <div class="search-bar-container">
             <input type="text" id="productSearch" placeholder="Search products..." oninput="filterProducts()">
+        </div>
+        <!-- Group for Clear Order, List of Orders, Finalize Order buttons -->
+        <div class="header-action-buttons">
+            <button class="clear-order-button" onclick="clearAllOrders()">Clear Order</button>
+            <button class="order-list-button" onclick="showOrderSummary()">List of Orders</button>
+            <button id="finalizeOrderButton" class="finalize-order-button" onclick="finalizeOrder()" disabled>Finalize Order</button>
         </div>
     </header>
 
@@ -2059,7 +2081,7 @@
                 background-color: #fff;
             }
             .receipt-page-container {
-                box-shadow: none !important;
+                box-shadow: none !important; /* Remove shadow for print */
                 padding: 0 !important;
                 margin: 0 auto !important; /* Center the content */
                 max-width: 900px !important; /* Keep a reasonable width */
@@ -2073,7 +2095,7 @@
             .receipt-client-info,
             .receipt-page-container h3,
             .receipt-total {
-                padding: 10px 20px;
+                padding: 10px 20px; /* Add some padding back for these elements in print */
             }
             .receipt-table-container {
                 max-height: none !important;
