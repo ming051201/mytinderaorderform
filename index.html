@@ -289,39 +289,21 @@
         }
 
         .product-grid {
-            /* Updated for responsiveness and square cards */
+            grid-template-columns: 1fr; /* Mobile grid applied globally */
             display: grid;
             gap: 20px;
             justify-content: center;
             margin-top: 0;
-            /* Allow multiple columns on larger screens, minimum card size 260px */
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            width: 100%; /* Ensure grid takes full width available in container */
-            max-width: 900px; /* Limit overall grid width */
         }
         .product-card {
             background-color: #ffffff;
             border-radius: 15px;
-            padding: 10px; /* Reduced padding slightly for more content space within square */
+            padding: 15px; /* Mobile padding applied globally */
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
-            gap: 5px; /* Reduced gap slightly */
+            gap: 10px; /* Mobile gap applied globally */
             align-items: center;
-            width: 100%; /* Take full width of grid column */
-            max-width: 280px; /* Define a max width for the card */
-            aspect-ratio: 1 / 1; /* Make the card square */
-            justify-content: space-between; /* Distribute space vertically */
-            margin: 0 auto; /* Center card within its grid cell */
-        }
-        .product-card .product-image {
-            max-width: 80%; /* Limit image width within the card */
-            max-height: 50%; /* Limit image height within the card */
-            width: auto;
-            height: auto;
-            object-fit: contain; /* Ensure image fits without distortion */
-            margin: 5px auto; /* Center image and provide vertical spacing */
-            border-radius: 8px; /* Slightly rounded corners for images */
         }
         .product-code-display {
             font-size: 0.9rem; /* Mobile font size applied globally */
@@ -357,10 +339,10 @@
             font-size: 0.9rem; /* Mobile font size applied globally */
             font-weight: 700;
             color: #333;
-            min-height: 70px; /* Increased height to accommodate more text */
+            min-height: 58px;
             padding: 6px 0;
             white-space: normal;
-            overflow: hidden; /* Keep hidden to prevent scrollbar */
+            overflow: hidden;
             resize: none;
             background-color: transparent;
             border: none;
