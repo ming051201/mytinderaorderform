@@ -1111,6 +1111,7 @@
             1: { // Product 1
                 productCode: '10001',
                 productName: '555 SARDINES IN TOMATO SAUCE EOE',
+                pcSpec: '(155g)', // New property for PC unit
                 caseSpec: '(100/155g)', // New property for CASE unit
                 'PC': { price: '24.35', quantity: 0 },
                 'CASE': { price: '2414.77', quantity: 0 },
@@ -1119,6 +1120,7 @@
             2: { // Product 2
                 productCode: '10002',
                 productName: '555 SARDINES IN TOMATO SAUCE WITH CHILI',
+                pcSpec: '(155g)', // New property for PC unit
                 caseSpec: '(100/155g)', // New property for CASE unit
                 'PC': { price: '24.31', quantity: 0 },
                 'CASE': { price: '2412.20', quantity: 0 },
@@ -1127,6 +1129,7 @@
             3: { // Product 3
                 productCode: '10003',
                 productName: '555 TUNA FLAKES ADOBO EOE',
+                pcSpec: '(155g)', // New property for PC unit
                 caseSpec: '(50/155g)', // New property for CASE unit
                 'PC': { price: '29.15', quantity: 0 },
                 'CASE': { price: '1446.07', quantity: 0 },
@@ -1135,6 +1138,7 @@
             4: { // Product 4
                 productCode: '10004',
                 productName: '555 TUNA FLAKES AFRITADA EOE',
+                pcSpec: '(155g)', // New property for PC unit
                 caseSpec: '(50/155g)', // New property for CASE unit
                 'PC': { price: '28.51', quantity: 0 },
                 'CASE': { price: '1413.61', quantity: 0 },
@@ -1143,6 +1147,7 @@
             5: { // Product 5
                 productCode: '10005',
                 productName: '555 TUNA FLAKES CALDERETA EOE',
+                pcSpec: '(155g)', // New property for PC unit
                 caseSpec: '(50/155g)', // New property for CASE unit
                 'PC': { price: '28.51', quantity: 0 },
                 'CASE': { price: '1413.56', quantity: 0 },
@@ -1151,6 +1156,7 @@
             6: { // Product 6
                 productCode: '10006',
                 productName: '555 TUNA FLAKES IN OIL EOE',
+                pcSpec: '(155g)', // New property for PC unit
                 caseSpec: '(50/155g)', // New property for CASE unit
                 'PC': { price: '31.65', quantity: 0 },
                 'CASE': { price: '1569.26', quantity: 0 },
@@ -1159,6 +1165,7 @@
             7: { // Product 7
                 productCode: '10007',
                 productName: '555 TUNA FLAKES MECHADO EOE',
+                pcSpec: '(155g)', // New property for PC unit
                 caseSpec: '(50/155g)', // New property for CASE unit
                 'PC': { price: '28.51', quantity: 0 },
                 'CASE': { price: '1413.56', quantity: 0 },
@@ -1167,6 +1174,7 @@
             8: { // Product 8
                 productCode: '10008',
                 productName: 'ABSOLUTE DISTILLED WATER',
+                pcSpec: '(1L)', // New property for PC unit
                 caseSpec: '(12/1L)', // New property for CASE unit
                 'PC': { price: '23.23', quantity: 0 },
                 'CASE': { price: '277.62', quantity: 0 },
@@ -1175,6 +1183,7 @@
             9: { // Product 9
                 productCode: '10009',
                 productName: 'ABSOLUTE DISTILLED WATER',
+                pcSpec: '(350mL)', // New property for PC unit
                 caseSpec: '(35/350mL)', // New property for CASE unit
                 'PC': { price: '10.62', quantity: 0 },
                 'CASE': { price: '370.08', quantity: 0 },
@@ -1183,6 +1192,7 @@
             10: { // Product 10
                 productCode: '10010',
                 productName: 'ABSOLUTE DISTILLED WATER',
+                pcSpec: '(500mL)', // New property for PC unit
                 caseSpec: '(24/500mL)', // New property for CASE unit
                 'PC': { price: '14.82', quantity: 0 },
                 'CASE': { price: '352.29', quantity: 0 },
@@ -1313,8 +1323,9 @@
                         productData[productId][unit].price = (parsedData[productId][unit] && parsedData[productId][unit].price !== undefined) ? parsedData[productId][unit].price : defaultProduct[unit].price;
                     });
 
-                    // Ensure productName and caseSpec are correctly initialized/restored
+                    // Ensure productName, pcSpec, and caseSpec are correctly initialized/restored
                     productData[productId].productName = parsedData[productId].productName || defaultProduct.productName;
+                    productData[productId].pcSpec = parsedData[productId].pcSpec || defaultProduct.pcSpec; // Initialize pcSpec
                     productData[productId].caseSpec = parsedData[productId].caseSpec || defaultProduct.caseSpec; // Initialize caseSpec
                     productData[productId].currentUnit = parsedData[productId].currentUnit || defaultProduct.currentUnit;
                 }
@@ -1347,7 +1358,9 @@
                     
                     // Set product name based on the current unit
                     let displayProductName = product.productName;
-                    if (currentUnit === 'CASE' && product.caseSpec) {
+                    if (currentUnit === 'PC' && product.pcSpec) { // Use pcSpec for PC unit
+                        displayProductName += ` ${product.pcSpec}`;
+                    } else if (currentUnit === 'CASE' && product.caseSpec) { // Use caseSpec for CASE unit
                         displayProductName += ` ${product.caseSpec}`;
                     }
                     productNameInput.value = displayProductName;
@@ -1496,7 +1509,9 @@
 
                     // Set product name based on the newly selected unit
                     let displayProductName = product.productName;
-                    if (newUnit === 'CASE' && product.caseSpec) {
+                    if (newUnit === 'PC' && product.pcSpec) { // Use pcSpec for PC unit
+                        displayProductName += ` ${product.pcSpec}`;
+                    } else if (newUnit === 'CASE' && product.caseSpec) { // Use caseSpec for CASE unit
                         displayProductName += ` ${product.caseSpec}`;
                     }
                     productNameInput.value = displayProductName;
@@ -1565,9 +1580,11 @@
                         const itemTotalPrice = unitPrice * quantity;
                         totalPurchasePrice += itemTotalPrice;
 
-                        // Display name includes case specifier if unit is CASE
+                        // Display name includes specifier based on unit
                         let displayProductName = product.productName;
-                        if (unit === 'CASE' && product.caseSpec) {
+                        if (unit === 'PC' && product.pcSpec) { // Use pcSpec for PC unit
+                            displayProductName += ` ${product.pcSpec}`;
+                        } else if (unit === 'CASE' && product.caseSpec) { // Use caseSpec for CASE unit
                             displayProductName += ` ${product.caseSpec}`;
                         }
 
@@ -1720,9 +1737,11 @@
                         const itemTotalPrice = unitPrice * quantity;
                         totalReceiptPrice += itemTotalPrice;
 
-                        // Display name includes case specifier if unit is CASE
+                        // Display name includes specifier based on unit
                         let displayProductName = product.productName;
-                        if (unit === 'CASE' && product.caseSpec) {
+                        if (unit === 'PC' && product.pcSpec) { // Use pcSpec for PC unit
+                            displayProductName += ` ${product.pcSpec}`;
+                        } else if (unit === 'CASE' && product.caseSpec) { // Use caseSpec for CASE unit
                             displayProductName += ` ${product.caseSpec}`;
                         }
 
@@ -1920,9 +1939,10 @@
                 if (product) {
                     const productName = product.productName.toLowerCase();
                     const productCode = product.productCode.toLowerCase();
+                    const pcSpec = product.pcSpec ? product.pcSpec.toLowerCase() : '';
                     const caseSpec = product.caseSpec ? product.caseSpec.toLowerCase() : '';
 
-                    const searchableText = `${productName} ${productCode} ${caseSpec}`; // Updated searchable text
+                    const searchableText = `${productName} ${productCode} ${pcSpec} ${caseSpec}`; // Updated searchable text to include both specs
 
                     let matchesAllTerms = true;
                     if (searchTerms.length > 0) {
@@ -1994,6 +2014,7 @@
     </script>
 </body>
 </html>
+
 
 
 
