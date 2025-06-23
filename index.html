@@ -436,9 +436,6 @@
             flex-grow: 1; /* Allow buttons to grow and shrink to fit available space */
             min-width: unset; /* Allow shrinking */
         }
-        /* No need for first-child margin-right when using flex-grow and gap */
-        /* .unit-button:first-child { margin-right: 2%; } */
-        /* .unit-button:last-child { margin-right: 0; } */
 
         .unit-button:hover {
             background-color: #e6e6e6;
@@ -740,11 +737,6 @@
             text-align: center;
             display: none;
         }
-        /* Style for the new Pcs/Case value container to match input styling */
-        /* This is no longer used due to combinedSpec, but kept for context if needed */
-        .pcs-per-case-display-container {
-            display: none; /* Hide this as it's replaced by combinedSpec */
-        }
 
         /* Return to Top button styles */
         #returnToTopBtn {
@@ -786,47 +778,6 @@
             height: 20px;
             margin-left: 0; /* Mobile margin-left applied globally */
         }
-
-        /* Responsive adjustments - removed mobile-specific media queries as styles are now global */
-        @media (min-width: 769px) {
-            /* This media query can be used for any desktop-specific overrides if needed in the future,
-               but the current design is a mobile-first approach applied globally. */
-            /* For example, if you wanted the product grid to be 2 columns on larger screens:
-            .product-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            */
-            /* Or if the header should revert to row layout on desktop:
-            .main-fixed-header {
-                flex-direction: row;
-                padding: 10px 40px;
-            }
-            .main-fixed-header .header-left-group {
-                width: auto;
-            }
-            .main-fixed-header .search-bar-container {
-                max-width: 400px;
-                margin: 0 15px;
-            }
-            .main-fixed-header .header-action-buttons {
-                flex-direction: row;
-                gap: 10px;
-                margin-left: 15px;
-                width: auto;
-            }
-            .main-fixed-header .finalize-order-button,
-            .main-fixed-header .order-list-button,
-            .main-fixed-header .clear-order-button {
-                padding: 10px 15px;
-                font-size: 0.9rem;
-                min-height: 44px;
-            }
-            .order-page-container.visible {
-                margin-top: 100px;
-            }
-            */
-        }
-
     </style>
 </head>
 <body>
@@ -1386,12 +1337,6 @@
                     if (productCodeDisplay) {
                         productCodeDisplay.textContent = product.productCode;
                     }
-
-                    // Combined info is now part of productName, so this is removed.
-                    // const combinedInfoDisplay = productCard.querySelector(`#productCombinedInfo${i}`);
-                    // if (combinedInfoDisplay) {
-                    //     combinedInfoDisplay.textContent = product.combinedSpec;
-                    // }
 
                     const currentUnit = product.currentUnit || 'PC';
                     productCard.dataset.currentUnit = currentUnit;
@@ -2008,5 +1953,6 @@
     </script>
 </body>
 </html>
+
 
 
