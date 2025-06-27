@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -298,13 +299,42 @@
         .product-card {
             background-color: #ffffff;
             border-radius: 15px;
-            padding: 15px; /* Mobile padding applied globally */
+            padding: 10px; /* Reduced from 15px */
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            min-height: 150px;
+            /* Grid layout for precise positioning */
+            display: grid;
+            grid-template-columns: 1fr auto; /* Col 1 for text, Col 2 for image */
+            grid-template-rows: auto auto auto; /* Row 1: code, Row 2: name, Row 3: units */
+            gap: 5px 10px; /* Vertical gap, Horizontal gap */
+            align-items: start; /* Align content to the top of their grid cells */
+            justify-items: start; /* Align content to the start (left) of their grid cells */
+        }
+        /* Product Image - top-right position */
+        .product-image {
+            grid-column: 2 / 3; /* Place in the second column */
+            grid-row: 1 / span 2; /* Span the first two rows (next to code and name) */
+            width: 80px; /* Reduced size */
+            height: 80px; /* Reduced size */
+            object-fit: contain;
+            border-radius: 8px;
+            align-self: start; /* Align to the top of its grid area */
+            justify-self: end; /* Align to the end (right) of its grid area */
+            flex-shrink: 0; /* Ensure it doesn't shrink */
+        }
+        /* Main product details wrapper (now acts as a grid item) */
+        .product-info-left {
+            grid-column: 1 / 2; /* Place in the first column */
+            grid-row: 1 / span 2; /* Span the first two rows (next to image) */
             display: flex;
             flex-direction: column;
-            gap: 10px; /* Mobile gap applied globally */
-            align-items: center;
+            flex-grow: 1; /* Allow it to take available space in its column */
+            flex-basis: 0; /* Allows shrinking */
+            min-width: 150px; /* Gives it a reasonable minimum width */
+            text-align: left;
+            align-items: flex-start; /* Align contents to the left */
         }
+
         .product-code-display {
             font-size: 0.9rem; /* Mobile font size applied globally */
             font-weight: 600;
@@ -348,50 +378,81 @@
             border: none;
             border-radius: 0;
             box-shadow: none;
+            text-align: left; /* Align text to left */
+        }
+
+        /* Container for PC and CASE sections to be side-by-side */
+        .unit-sections-container {
+            grid-column: 1 / span 2; /* Spans both columns of the product-card grid */
+            grid-row: 3 / 4; /* Placed in the third row of the product-card grid */
+            display: flex;
+            flex-direction: row; /* Arrange children horizontally */
+            justify-content: center; /* Center the two sections horizontally */
+            align-items: flex-start; /* Align sections to their top */
+            width: 100%;
+            margin-top: 8px; /* Space between product name/code and unit sections */
+            border-top: 1px dashed #e0e0e0; /* Separator */
+            padding-top: 8px;
+            gap: 8px; /* Adjusted: Smaller gap between the PC and CASE sections */
+            flex-wrap: wrap; /* Allow wrapping on very small screens */
+        }
+
+        /* Unit specific sections */
+        .unit-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center content horizontally within each unit section */
+            flex: 1; /* Allow each unit section to grow and shrink */
+            min-width: 70px; /* Adjusted: Smaller minimum width for each section */
+        }
+
+        .unit-label {
+            font-size: 0.75rem; /* Adjusted: Smaller font size for label */
+            font-weight: 600;
+            color: #0050A0; /* Blue for unit labels */
+            margin-bottom: 5px;
             text-align: center;
+            width: 100%; /* Ensure label takes full width for centering text */
+        }
+        .spec-text {
+            font-weight: 400;
+            color: #5C6F78; /* Lighter color for spec text */
+            font-size: 0.7rem; /* Adjusted: Smaller font size for spec text */
         }
 
-        /* Container for price only, ensuring it's centered */
-        .product-price-container {
-            display: flex; /* Use flexbox to center content */
-            justify-content: center; /* Center horizontally */
-            width: 100%; /* Take full width to allow centering */
-            margin-top: 2px; /* Very little spacing below product name */
-            margin-bottom: 2px; /* Very little spacing above quantity */
+        .input-container {
+            /* No width here, let the input itself handle its size and centering */
+            margin-bottom: 5px;
         }
-
-        /* Styling for product price input */
-        .product-card .product-price-container input[id^="productPrice"] {
-            font-weight: 700;
-            color: #333;
-            font-size: 0.9rem; /* Same as product name */
-            border: none;
-            background-color: transparent;
-            padding: 0;
-            text-align: center; /* Center the text inside the input */
-            width: auto; /* Occupy only necessary width */
-            flex-grow: 0;
-            flex-shrink: 0;
-            min-width: unset; /* Ensure it can shrink based on content */
-            max-width: 100%; /* Prevent overflow */
-        }
-        /* Add specific styles for readonly inputs to prevent user interaction */
-        .product-card .product-price-container input[id^="productPrice"][readonly] {
-            cursor: default;
-            color: #666; /* Slightly faded color for readonly */
-        }
-
-        /* Styling for product quantity */
-        .product-card .input-group input[id^="productQuantity"] {
-            font-size: 0.9rem; /* Mobile font size applied globally */
-            width: 50%; /* Decreased width */
-            margin: 5px auto 0 auto; /* Center horizontally, add very small top margin, no bottom margin */
-            text-align: center; /* Center text inside */
-            padding: 8px; /* Adjust padding for smaller width */
+        .input-container input[type="number"] {
+            display: block; /* Make it a block element to respect margin: auto */
+            margin: 0 auto; /* Center horizontally within its container */
+            width: 100%;
+            max-width: 50px; /* New: To make it square and small */
+            padding: 3px 5px; /* Adjusted: Smaller padding for quantity input */
             border: 1px solid #ddd;
             border-radius: 8px;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
-            display: block; /* Ensure it takes full width for margin auto to work */
+            font-size: 0.75rem; /* Adjusted: Smaller font size for quantity input */
+            text-align: center; /* Center text in quantity input */
+            min-height: 24px; /* Adjusted: Smaller min-height for quantity input */
+            -moz-appearance: textfield; /* Remove arrows in Firefox */
+        }
+        /* Hide arrows for Chrome, Safari, Edge, Opera */
+        .input-container input[type="number"]::-webkit-outer-spin-button,
+        .input-container input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+
+        .unit-price {
+            font-size: 0.75rem; /* Adjusted: Smaller font size for price */
+            font-weight: 700;
+            color: black; /* Changed to black */
+            margin-bottom: 5px; /* Space below price, before next section or card end */
+            text-align: center;
+            width: 100%;
         }
 
         .input-group input:focus, .input-group textarea:focus {
@@ -411,45 +472,9 @@
             border-color: transparent;
         }
 
-        /* Unit selection buttons styling */
+        /* Remove unit selection buttons styling as they are no longer used */
         .unit-buttons {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            margin-bottom: 5px; /* Keep consistent with other compact elements */
-            flex-direction: row; /* Always horizontal */
-            gap: 5px; /* Reduced gap for horizontal layout */
-            flex-wrap: nowrap; /* Ensure buttons stay on one line */
-        }
-        .unit-button {
-            background-color: #f0f0f0;
-            color: #5C6F78;
-            padding: 4px 6px; /* Reduced padding for smaller size */
-            border-radius: 8px;
-            font-size: 0.7rem; /* Smaller font size */
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid #e0e0e0;
-            min-height: 36px; /* Adjusted min-height for smaller buttons */
-            margin: 0; /* Reset margins, use gap on parent */
-            flex-grow: 1; /* Allow buttons to grow and shrink to fit available space */
-            min-width: unset; /* Allow shrinking */
-        }
-
-        .unit-button:hover {
-            background-color: #e6e6e6;
-            transform: translateY(-1px);
-        }
-        .unit-button.active {
-            background-color: #0050A0;
-            color: white;
-            border-color: #0050A0;
-            box-shadow: 0 2px 5px rgba(0, 80, 160, 0.2);
-            transform: translateY(-2px);
-        }
-        .unit-button.active:hover {
-            background-color: #003a7a;
+            display: none;
         }
 
         /* New button for Print PDF - now the only button in that section */
@@ -584,9 +609,9 @@
         /* Enhanced order item styling */
         .order-item {
             display: flex;
-            flex-direction: column; /* Mobile flex-direction applied globally */
+            flex-direction: row; /* Changed to row for horizontal layout */
             justify-content: space-between;
-            align-items: flex-start; /* Mobile align-items applied globally */
+            align-items: center; /* Vertically center items in the row */
             padding: 15px;
             margin-bottom: 10px;
             background-color: #f9f9f9;
@@ -596,9 +621,17 @@
             font-size: 0.95rem;
             color: #333;
             border-bottom: none;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
         }
         .order-item:last-child {
             margin-bottom: 0;
+        }
+        .order-item-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Align text to the left */
+            flex-grow: 1; /* Allow details to take up available space */
+            min-width: 150px; /* Ensure it doesn't collapse too much */
         }
         .order-item-details strong {
             font-size: 1.05rem;
@@ -612,18 +645,41 @@
             color: #5C6F78;
             margin-top: 5px;
         }
-        .order-item-price {
-            font-weight: 700;
-            color: #C02C1F;
+        .order-item-actions {
             display: flex;
             flex-direction: column;
-            align-items: flex-end;
-            text-align: right;
-            margin-left: 15px;
+            align-items: flex-end; /* Align to the right */
+            margin-left: 15px; /* Space from details */
+            flex-shrink: 0; /* Prevent from shrinking */
         }
-        .order-item-price .remove-quantity-input {
-            margin-top: 10px;
-            margin-bottom: 5px;
+        .order-item-price-display {
+            font-weight: 700;
+            color: black; /* Changed to black */
+            white-space: nowrap; /* Keep price on one line */
+            margin-bottom: 5px; /* Space between price and remove controls */
+        }
+
+        /* Styling for the remove quantity input */
+        .remove-quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .remove-quantity-control input[type="number"] {
+            width: 50px;
+            padding: 4px 6px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+            font-size: 0.8rem;
+            text-align: center;
+            -moz-appearance: textfield;
+            min-height: 32px;
+        }
+        .remove-quantity-control input[type="number"]::-webkit-outer-spin-button,
+        .remove-quantity-control input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
 
         /* Apply similar enhancement to receipt items */
@@ -659,7 +715,7 @@
         }
         .receipt-item-price {
             font-weight: 700;
-            color: #C02C1F;
+            color: black; /* Changed to black */
             margin-left: 15px;
         }
 
@@ -689,7 +745,7 @@
             color: #EE3524;
         }
 
-        /* Remove Order button in modal */
+        /* Remove Order button in modal (modified for simple removal) */
         .remove-order-button {
             background-color: #f8d7da;
             color: #dc3545;
@@ -700,7 +756,8 @@
             cursor: pointer;
             transition: all 0.2s ease;
             margin-left: 0;
-            min-height: 38px;
+            min-height: 32px; /* Adjusted to align with input */
+            margin-top: 0; /* Align with input */
         }
         .remove-order-button:hover {
             background-color: #dc3545;
@@ -708,17 +765,6 @@
         }
         .remove-order-button:active {
             transform: translateY(1px);
-        }
-
-        .remove-quantity-input {
-            width: 50px; /* Mobile width applied globally */
-            padding: 8px 6px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            text-align: center;
-            margin-right: 0;
-            font-size: 0.9rem;
-            min-height: 36px; /* Mobile min-height applied globally */
         }
 
         .receipt-message {
@@ -834,212 +880,279 @@
 
         <div class="product-grid">
             <!-- Product Card 1 -->
-            <div class="product-card" id="productCard1" data-current-unit="PC">
-                <div class="product-code-display" id="productCode1Display">10001</div>
-                 <!-- Image for Product 10001 -->
+            <div class="product-card" id="productCard1">
+                <!-- Image goes first in HTML structure for grid placement -->
                 <img src="10001.jpg" alt="555 SARDINES IN TOMATO SAUCE EOE" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
-                <div class="unit-buttons">
-                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 1)">PER PC</button>
-                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 1)">PER CASE</button>
+                
+                <div class="product-info-left">
+                    <div class="product-code-display" id="productCode1Display">10001</div>
+                    <div class="input-group">
+                        <textarea id="productName1" placeholder="Product Name" rows="2" readonly></textarea>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <textarea id="productName1" placeholder="Product Name" rows="2" readonly></textarea>
-                </div>
-                <!-- Price Container -->
-                <div class="product-price-container">
-                    <input type="text" id="productPrice1" placeholder="Price" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity1" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
+                
+                <!-- New container to hold PER PC and PER CASE sections side-by-side -->
+                <div class="unit-sections-container">
+                    <!-- PER PC Section -->
+                    <div class="unit-section">
+                        <div class="unit-label">PC <span id="pcSpec1" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity1PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice1PC"></div>
+                    </div>
+
+                    <!-- PER CASE Section -->
+                    <div class="unit-section">
+                        <div class="unit-label">CSE <span id="caseSpec1" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity1CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice1CASE"></div>
+                    </div>
                 </div>
             </div>
 
             <!-- Product Card 2 -->
-            <div class="product-card" id="productCard2" data-current-unit="PC">
-                <div class="product-code-display" id="productCode2Display">10002</div>
-                <!-- Image for Product 10002 -->
+            <div class="product-card" id="productCard2">
                 <img src="10002.jpg" alt="555 SARDINES IN TOMATO SAUCE WITH CHILI" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
-                <div class="unit-buttons">
-                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 2)">PER PC</button>
-                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 2)">PER CASE</button>
+                <div class="product-info-left">
+                    <div class="product-code-display" id="productCode2Display">10002</div>
+                    <div class="input-group">
+                        <textarea id="productName2" placeholder="Product Name" rows="2" readonly></textarea>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <textarea id="productName2" placeholder="Product Name" rows="2" readonly></textarea>
-                </div>
-                <!-- Price Container -->
-                <div class="product-price-container">
-                    <input type="text" id="productPrice2" placeholder="Price" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity2" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
+                <div class="unit-sections-container">
+                    <div class="unit-section">
+                        <div class="unit-label">PC <span id="pcSpec2" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity2PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice2PC"></div>
+                    </div>
+                    <div class="unit-section">
+                        <div class="unit-label">CSE <span id="caseSpec2" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity2CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice2CASE"></div>
+                    </div>
                 </div>
             </div>
 
             <!-- Product Card 3 -->
-            <div class="product-card" id="productCard3" data-current-unit="PC">
-                <div class="product-code-display" id="productCode3Display">10003</div>
-                 <!-- Image for Product 10003 -->
+            <div class="product-card" id="productCard3">
                 <img src="10003.jpg" alt="555 TUNA FLAKES ADOBO EOE" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
-                <div class="unit-buttons">
-                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 3)">PER PC</button>
-                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 3)">PER CASE</button>
+                <div class="product-info-left">
+                    <div class="product-code-display" id="productCode3Display">10003</div>
+                    <div class="input-group">
+                        <textarea id="productName3" placeholder="Product Name" rows="2" readonly></textarea>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <textarea id="productName3" placeholder="Product Name" rows="2" readonly></textarea>
-                </div>
-                <!-- Price Container -->
-                <div class="product-price-container">
-                    <input type="text" id="productPrice3" placeholder="Price" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity3" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
+                <div class="unit-sections-container">
+                    <div class="unit-section">
+                        <div class="unit-label">PC <span id="pcSpec3" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity3PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice3PC"></div>
+                    </div>
+                    <div class="unit-section">
+                        <div class="unit-label">CSE <span id="caseSpec3" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity3CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice3CASE"></div>
+                    </div>
                 </div>
             </div>
 
             <!-- Product Card 4 -->
-            <div class="product-card" id="productCard4" data-current-unit="PC">
-                <div class="product-code-display" id="productCode4Display">10004</div>
-                 <!-- Image for Product 10004 -->
+            <div class="product-card" id="productCard4">
                 <img src="10004.jpg" alt="555 TUNA FLAKES AFRITADA EOE" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
-                <div class="unit-buttons">
-                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 4)">PER PC</button>
-                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 4)">PER CASE</button>
+                <div class="product-info-left">
+                    <div class="product-code-display" id="productCode4Display">10004</div>
+                    <div class="input-group">
+                        <textarea id="productName4" placeholder="Product Name" rows="2" readonly></textarea>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <textarea id="productName4" placeholder="Product Name" rows="2" readonly></textarea>
-                </div>
-                <!-- Price Container -->
-                <div class="product-price-container">
-                    <input type="text" id="productPrice4" placeholder="Price" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity4" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
+                <div class="unit-sections-container">
+                    <div class="unit-section">
+                        <div class="unit-label">PC <span id="pcSpec4" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity4PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice4PC"></div>
+                    </div>
+                    <div class="unit-section">
+                        <div class="unit-label">CSE <span id="caseSpec4" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity4CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice4CASE"></div>
+                    </div>
                 </div>
             </div>
 
             <!-- Product Card 5 -->
-            <div class="product-card" id="productCard5" data-current-unit="PC">
-                <div class="product-code-display" id="productCode5Display">10005</div>
-                <!-- Image for Product 10005 -->
+            <div class="product-card" id="productCard5">
                 <img src="10005.jpg" alt="555 TUNA FLAKES CALDERETA EOE" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
-                <div class="unit-buttons">
-                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 5)">PER PC</button>
-                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 5)">PER CASE</button>
+                <div class="product-info-left">
+                    <div class="product-code-display" id="productCode5Display">10005</div>
+                    <div class="input-group">
+                        <textarea id="productName5" placeholder="Product Name" rows="2" readonly></textarea>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <textarea id="productName5" placeholder="Product Name" rows="2" readonly></textarea>
-                </div>
-                <!-- Price Container -->
-                <div class="product-price-container">
-                    <input type="text" id="productPrice5" placeholder="Price" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity5" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
+                <div class="unit-sections-container">
+                    <div class="unit-section">
+                        <div class="unit-label">PC <span id="pcSpec5" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity5PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice5PC"></div>
+                    </div>
+                    <div class="unit-section">
+                        <div class="unit-label">CSE <span id="caseSpec5" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity5CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice5CASE"></div>
+                    </div>
                 </div>
             </div>
 
             <!-- Product Card 6 -->
-            <div class="product-card" id="productCard6" data-current-unit="PC">
-                <div class="product-code-display" id="productCode6Display">10006</div>
-                 <!-- Image for Product 10006 -->
+            <div class="product-card" id="productCard6">
                 <img src="10006.jpg" alt="555 TUNA FLAKES IN OIL EOE" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
-                <div class="unit-buttons">
-                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 6)">PER PC</button>
-                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 6)">PER CASE</button>
+                <div class="product-info-left">
+                    <div class="product-code-display" id="productCode6Display">10006</div>
+                    <div class="input-group">
+                        <textarea id="productName6" placeholder="Product Name" rows="2" readonly></textarea>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <textarea id="productName6" placeholder="Product Name" rows="2" readonly></textarea>
-                </div>
-                <!-- Price Container -->
-                <div class="product-price-container">
-                    <input type="text" id="productPrice6" placeholder="Price" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity6" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
+                <div class="unit-sections-container">
+                    <div class="unit-section">
+                        <div class="unit-label">PC <span id="pcSpec6" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity6PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice6PC"></div>
+                    </div>
+                    <div class="unit-section">
+                        <div class="unit-label">CSE <span id="caseSpec6" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity6CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice6CASE"></div>
+                    </div>
                 </div>
             </div>
 
             <!-- Product Card 7 -->
-            <div class="product-card" id="productCard7" data-current-unit="PC">
-                <div class="product-code-display" id="productCode7Display">10007</div>
-                 <!-- Image for Product 10007 -->
+            <div class="product-card" id="productCard7">
                 <img src="10007.jpg" alt="555 TUNA FLAKES MECHADO EOE" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
-                <div class="unit-buttons">
-                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 7)">PER PC</button>
-                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 7)">PER CASE</button>
+                <div class="product-info-left">
+                    <div class="product-code-display" id="productCode7Display">10007</div>
+                    <div class="input-group">
+                        <textarea id="productName7" placeholder="Product Name" rows="2" readonly></textarea>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <textarea id="productName7" placeholder="Product Name" rows="2" readonly></textarea>
-                </div>
-                <!-- Price Container -->
-                <div class="product-price-container">
-                    <input type="text" id="productPrice7" placeholder="Price" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity7" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
+                <div class="unit-sections-container">
+                    <div class="unit-section">
+                        <div class="unit-label">PC <span id="pcSpec7" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity7PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice7PC"></div>
+                    </div>
+                    <div class="unit-section">
+                        <div class="unit-label">CSE <span id="caseSpec7" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity7CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice7CASE"></div>
+                    </div>
                 </div>
             </div>
 
             <!-- Product Card 8 -->
-            <div class="product-card" id="productCard8" data-current-unit="PC">
-                <div class="product-code-display" id="productCode8Display">10008</div>
-                <!-- Image for Product 10008 -->
+            <div class="product-card" id="productCard8">
                 <img src="10008.jpg" alt="ABSOLUTE DISTILLED WATER" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
-                <div class="unit-buttons">
-                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 8)">PER PC</button>
-                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 8)">PER CASE</button>
+                <div class="product-info-left">
+                    <div class="product-code-display" id="productCode8Display">10008</div>
+                    <div class="input-group">
+                        <textarea id="productName8" placeholder="Product Name" rows="2" readonly></textarea>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <textarea id="productName8" placeholder="Product Name" rows="2" readonly></textarea>
-                </div>
-                <!-- Price Container -->
-                <div class="product-price-container">
-                    <input type="text" id="productPrice8" placeholder="Price" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity8" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
+                <div class="unit-sections-container">
+                    <div class="unit-section">
+                        <div class="unit-label">PC <span id="pcSpec8" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity8PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice8PC"></div>
+                    </div>
+                    <div class="unit-section">
+                        <div class="unit-label">CSE <span id="caseSpec8" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity8CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice8CASE"></div>
+                    </div>
                 </div>
             </div>
 
             <!-- Product Card 9 -->
-            <div class="product-card" id="productCard9" data-current-unit="PC">
-                <div class="product-code-display" id="productCode9Display">10009</div>
-                <!-- Image for Product 10009 -->
+            <div class="product-card" id="productCard9">
                 <img src="10009.jpg" alt="ABSOLUTE DISTILLED WATER" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
-                <div class="unit-buttons">
-                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 9)">PER PC</button>
-                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 9)">PER CASE</button>
+                <div class="product-info-left">
+                    <div class="product-code-display" id="productCode9Display">10009</div>
+                    <div class="input-group">
+                        <textarea id="productName9" placeholder="Product Name" rows="2" readonly></textarea>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <textarea id="productName9" placeholder="Product Name" rows="2" readonly></textarea>
-                </div>
-                <!-- Price Container -->
-                <div class="product-price-container">
-                    <input type="text" id="productPrice9" placeholder="Price" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity9" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
+                <div class="unit-sections-container">
+                    <div class="unit-section">
+                        <div class="unit-label">PC <span id="pcSpec9" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity9PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice9PC"></div>
+                    </div>
+                    <div class="unit-section">
+                        <div class="unit-label">CSE <span id="caseSpec9" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity9CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice9CASE"></div>
+                    </div>
                 </div>
             </div>
 
             <!-- Product Card 10 -->
-            <div class="product-card" id="productCard10" data-current-unit="PC">
-                <div class="product-code-display" id="productCode10Display">10010</div>
-                 <!-- Image for Product 10010 -->
+            <div class="product-card" id="productCard10">
                 <img src="10010.jpg" alt="ABSOLUTE DISTILLED WATER" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
-                <div class="unit-buttons">
-                    <button class="unit-button active" onclick="selectUnit(this, 'PC', 10)">PER PC</button>
-                    <button class="unit-button" onclick="selectUnit(this, 'CASE', 10)">PER CASE</button>
+                <div class="product-info-left">
+                    <div class="product-code-display" id="productCode10Display">10010</div>
+                    <div class="input-group">
+                        <textarea id="productName10" placeholder="Product Name" rows="2" readonly></textarea>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <textarea id="productName10" placeholder="Product Name" rows="2" readonly></textarea>
-                </div>
-                <!-- Price Container -->
-                <div class="product-price-container">
-                    <input type="text" id="productPrice10" placeholder="Price" readonly>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="productQuantity10" placeholder="Input quantity" min="0" inputmode="numeric" pattern="[0-9]*">
+                <div class="unit-sections-container">
+                    <div class="unit-section">
+                        <div class="unit-label">PC <span id="pcSpec10" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity10PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice10PC"></div>
+                    </div>
+                    <div class="unit-section">
+                        <div class="unit-label">CSE <span id="caseSpec10" class="spec-text"></span></div>
+                        <div class="input-container">
+                            <input type="number" id="productQuantity10CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="unit-price" id="productPrice10CASE"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1105,7 +1218,17 @@
         </svg>
     </button>
 
-    <script>
+    <script type="module">
+        // Firebase imports (placeholders, actual implementation requires specific user consent for persistence)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Initialize Firebase variables
+        let app, db, auth, userId;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+
         // Data structure to store product information including unit-specific prices/sizes
         const productData = {
             1: { // Product 1
@@ -1114,8 +1237,7 @@
                 pcSpec: '(155g)', // New property for PC unit
                 caseSpec: '(100/155g)', // New property for CASE unit
                 'PC': { price: '24.35', quantity: 0 },
-                'CASE': { price: '2414.77', quantity: 0 },
-                currentUnit: 'PC' // Initialize currentUnit
+                'CASE': { price: '2414.77', quantity: 0 }
             },
             2: { // Product 2
                 productCode: '10002',
@@ -1123,8 +1245,7 @@
                 pcSpec: '(155g)', // New property for PC unit
                 caseSpec: '(100/155g)', // New property for CASE unit
                 'PC': { price: '24.31', quantity: 0 },
-                'CASE': { price: '2412.20', quantity: 0 },
-                currentUnit: 'PC' // Initialize currentUnit
+                'CASE': { price: '2412.20', quantity: 0 }
             },
             3: { // Product 3
                 productCode: '10003',
@@ -1132,8 +1253,7 @@
                 pcSpec: '(155g)', // New property for PC unit
                 caseSpec: '(50/155g)', // New property for CASE unit
                 'PC': { price: '29.15', quantity: 0 },
-                'CASE': { price: '1446.07', quantity: 0 },
-                currentUnit: 'PC'
+                'CASE': { price: '1446.07', quantity: 0 }
             },
             4: { // Product 4
                 productCode: '10004',
@@ -1141,8 +1261,7 @@
                 pcSpec: '(155g)', // New property for PC unit
                 caseSpec: '(50/155g)', // New property for CASE unit
                 'PC': { price: '28.51', quantity: 0 },
-                'CASE': { price: '1413.61', quantity: 0 },
-                currentUnit: 'PC'
+                'CASE': { price: '1413.61', quantity: 0 }
             },
             5: { // Product 5
                 productCode: '10005',
@@ -1150,8 +1269,7 @@
                 pcSpec: '(155g)', // New property for PC unit
                 caseSpec: '(50/155g)', // New property for CASE unit
                 'PC': { price: '28.51', quantity: 0 },
-                'CASE': { price: '1413.56', quantity: 0 },
-                currentUnit: 'PC'
+                'CASE': { price: '1413.56', quantity: 0 }
             },
             6: { // Product 6
                 productCode: '10006',
@@ -1159,8 +1277,7 @@
                 pcSpec: '(155g)', // New property for PC unit
                 caseSpec: '(50/155g)', // New property for CASE unit
                 'PC': { price: '31.65', quantity: 0 },
-                'CASE': { price: '1569.26', quantity: 0 },
-                currentUnit: 'PC'
+                'CASE': { price: '1569.26', quantity: 0 }
             },
             7: { // Product 7
                 productCode: '10007',
@@ -1168,8 +1285,7 @@
                 pcSpec: '(155g)', // New property for PC unit
                 caseSpec: '(50/155g)', // New property for CASE unit
                 'PC': { price: '28.51', quantity: 0 },
-                'CASE': { price: '1413.56', quantity: 0 },
-                currentUnit: 'PC'
+                'CASE': { price: '1413.56', quantity: 0 }
             },
             8: { // Product 8
                 productCode: '10008',
@@ -1177,8 +1293,7 @@
                 pcSpec: '(1L)', // New property for PC unit
                 caseSpec: '(12/1L)', // New property for CASE unit
                 'PC': { price: '23.23', quantity: 0 },
-                'CASE': { price: '277.62', quantity: 0 },
-                currentUnit: 'PC'
+                'CASE': { price: '277.62', quantity: 0 }
             },
             9: { // Product 9
                 productCode: '10009',
@@ -1186,8 +1301,7 @@
                 pcSpec: '(350mL)', // New property for PC unit
                 caseSpec: '(35/350mL)', // New property for CASE unit
                 'PC': { price: '10.62', quantity: 0 },
-                'CASE': { price: '370.08', quantity: 0 },
-                currentUnit: 'PC'
+                'CASE': { price: '370.08', quantity: 0 }
             },
             10: { // Product 10
                 productCode: '10010',
@@ -1195,8 +1309,7 @@
                 pcSpec: '(500mL)', // New property for PC unit
                 caseSpec: '(24/500mL)', // New property for CASE unit
                 'PC': { price: '14.82', quantity: 0 },
-                'CASE': { price: '352.29', quantity: 0 },
-                currentUnit: 'PC'
+                'CASE': { price: '352.29', quantity: 0 }
             }
         };
 
@@ -1222,16 +1335,16 @@
          * Saves all product data to localStorage.
          * @param {number} productId - The ID of the product to save (used for triggering this debounced function).
          */
-        const saveProductData = debounce((productId) => {
+        const saveProductData = debounce((productId, unitType) => {
             const product = productData[productId];
-            const quantityInput = document.getElementById(`productQuantity${productId}`);
-            if (product && product.currentUnit && product[product.currentUnit]) {
-                product[product.currentUnit].quantity = parseInt(quantityInput.value) || 0;
+            const quantityInput = document.getElementById(`productQuantity${productId}${unitType}`);
+            if (product && product[unitType]) {
+                product[unitType].quantity = parseInt(quantityInput.value) || 0;
             }
 
             try {
                 localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
-                console.log(`Product ${productId} data saved to localStorage.`);
+                console.log(`Product ${productId} (${unitType}) data saved to localStorage.`);
                 checkOrderValidity();
             } catch (e) {
                 console.error("Error saving product data to localStorage:", e);
@@ -1327,7 +1440,7 @@
                     productData[productId].productName = parsedData[productId].productName || defaultProduct.productName;
                     productData[productId].pcSpec = parsedData[productId].pcSpec || defaultProduct.pcSpec; // Initialize pcSpec
                     productData[productId].caseSpec = parsedData[productId].caseSpec || defaultProduct.caseSpec; // Initialize caseSpec
-                    productData[productId].currentUnit = parsedData[productId].currentUnit || defaultProduct.currentUnit;
+                    // currentUnit is no longer needed
                 }
 
                 initializeProductUI();
@@ -1354,36 +1467,25 @@
                     const product = productData[i];
 
                     const productNameInput = productCard.querySelector(`#productName${i}`);
-                    const currentUnit = product.currentUnit || 'PC';
-                    
-                    // Set product name based on the current unit
-                    let displayProductName = product.productName;
-                    if (currentUnit === 'PC' && product.pcSpec) { // Use pcSpec for PC unit
-                        displayProductName += ` ${product.pcSpec}`;
-                    } else if (currentUnit === 'CASE' && product.caseSpec) { // Use caseSpec for CASE unit
-                        displayProductName += ` ${product.caseSpec}`;
-                    }
-                    productNameInput.value = displayProductName;
-                    productNameInput.title = displayProductName; // Set title for tooltip
+                    productNameInput.value = product.productName;
+                    productNameInput.title = product.productName; // Set title for tooltip
 
                     const productCodeDisplay = productCard.querySelector(`#productCode${i}Display`);
                     if (productCodeDisplay) {
                         productCodeDisplay.textContent = product.productCode;
                     }
 
-                    productCard.dataset.currentUnit = currentUnit;
+                    // Update PC section
+                    const pcUnitLabel = productCard.querySelector(`#productCard${i} .unit-section:first-child .unit-label`);
+                    if (pcUnitLabel) pcUnitLabel.innerHTML = `PC <span id="pcSpec${i}" class="spec-text">${product.pcSpec}</span>`; // Changed "PER PC" to "PC"
+                    productCard.querySelector(`#productQuantity${i}PC`).value = product['PC'].quantity > 0 ? product['PC'].quantity : '';
+                    productCard.querySelector(`#productPrice${i}PC`).textContent = `PHP ${parseFloat(product['PC'].price).toFixed(2)}`;
 
-                    const unitButtons = productCard.querySelectorAll('.unit-button');
-                    unitButtons.forEach(button => {
-                        button.classList.remove('active');
-                        if (button.textContent.includes(currentUnit)) {
-                            button.classList.add('active');
-                        }
-                    });
-
-                    productCard.querySelector(`#productPrice${i}`).placeholder = `Price per ${currentUnit}`;
-                    productCard.querySelector(`#productPrice${i}`).value = `PHP ${parseFloat(product[currentUnit].price).toFixed(2)}`;
-                    productCard.querySelector(`#productQuantity${i}`).value = product[currentUnit].quantity > 0 ? product[currentUnit].quantity : ''; // Keep quantity if > 0, else empty for placeholder
+                    // Update CASE section
+                    const caseUnitLabel = productCard.querySelector(`#productCard${i} .unit-section:last-child .unit-label`);
+                    if (caseUnitLabel) caseUnitLabel.innerHTML = `CSE <span id="caseSpec${i}" class="spec-text">${product.caseSpec}</span>`; // Changed "PER CASE" to "CSE"
+                    productCard.querySelector(`#productQuantity${i}CASE`).value = product['CASE'].quantity > 0 ? product['CASE'].quantity : '';
+                    productCard.querySelector(`#productPrice${i}CASE`).textContent = `PHP ${parseFloat(product['CASE'].price).toFixed(2)}`;
                 }
             }
         }
@@ -1482,76 +1584,7 @@
             }, 700);
         }
 
-        window.selectUnit = function(selectedButton, newUnit, productIdTrigger) {
-            console.log(`Switching unit for product ${productIdTrigger} to ${newUnit}`);
-            const productTrigger = productData[productIdTrigger];
-            const quantityInputTrigger = document.getElementById(`productQuantity${productIdTrigger}`);
-
-            // Save the current quantity for the old unit of the clicked product BEFORE changing its unit
-            if (productTrigger && productTrigger.currentUnit && productTrigger[productTrigger.currentUnit]) {
-                productTrigger[productTrigger.currentUnit].quantity = parseInt(quantityInputTrigger.value) || 0;
-                console.log(`Saved quantity ${productTrigger[productTrigger.currentUnit].quantity} for product ${productIdTrigger} in old unit ${productTrigger.currentUnit}`);
-            }
-
-            // Now, iterate through ALL products to update their units and UI
-            for (let i = 1; i <= 10; i++) {
-                const product = productData[i];
-                if (product) {
-                    const productCard = document.getElementById(`productCard${i}`);
-                    const unitButtons = productCard.querySelectorAll('.unit-button');
-                    const priceInput = productCard.querySelector(`#productPrice${i}`);
-                    const quantityInput = productCard.querySelector(`#productQuantity${i}`);
-                    const productNameInput = productCard.querySelector(`#productName${i}`);
-
-                    // Update the product's current unit in the data model
-                    product.currentUnit = newUnit;
-                    productCard.dataset.currentUnit = newUnit; // Update data attribute on the card
-
-                    // Set product name based on the newly selected unit
-                    let displayProductName = product.productName;
-                    if (newUnit === 'PC' && product.pcSpec) { // Use pcSpec for PC unit
-                        displayProductName += ` ${product.pcSpec}`;
-                    } else if (newUnit === 'CASE' && product.caseSpec) { // Use caseSpec for CASE unit
-                        displayProductName += ` ${product.caseSpec}`;
-                    }
-                    productNameInput.value = displayProductName;
-                    productNameInput.title = displayProductName; // Update title for tooltip
-
-                    // Update price and quantity inputs based on the NEW unit's stored data
-                    priceInput.placeholder = `Price per ${newUnit}`;
-                    priceInput.value = `PHP ${parseFloat(product[newUnit].price).toFixed(2)}`;
-                    quantityInput.value = product[newUnit].quantity > 0 ? product[newUnit].quantity : ''; // Load the stored quantity for the new unit, or empty for placeholder
-
-
-                    // Update active state of unit buttons for the current product card
-                    unitButtons.forEach(button => {
-                        button.classList.remove('active');
-                        if (button.textContent.includes(newUnit)) {
-                            button.classList.add('active');
-                        }
-                    });
-                }
-            }
-            // Save the updated product data after all changes have been applied
-            try {
-                localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
-                console.log("All product data updated and saved to localStorage after global unit switch.");
-            }
-            catch (e) {
-                console.error("Error saving all product data to localStorage after global unit switch:", e);
-            }
-
-            checkOrderValidity();
-        }
-
-        window.validateRemoveQuantity = function(inputElement, maxQty) {
-            let value = parseInt(inputElement.value);
-            if (isNaN(value) || value < 0) {
-                inputElement.value = 0;
-            } else if (value > maxQty) {
-                inputElement.value = maxQty;
-            }
-        }
+        // Removed selectUnit function as it's no longer needed
 
         window.showOrderSummary = function() {
             const orderSummaryModal = document.getElementById('orderSummaryModal');
@@ -1565,39 +1598,37 @@
                 const product = productData[productId];
 
                 // Synchronize quantities from UI inputs before showing summary
-                const quantityInput = document.getElementById(`productQuantity${productId}`);
-                const productCard = document.getElementById(`productCard${productId}`);
-                if (product && quantityInput && productCard && productCard.dataset.currentUnit) {
-                    product[productCard.dataset.currentUnit].quantity = parseInt(quantityInput.value) || 0;
-                }
+                const quantityInputPC = document.getElementById(`productQuantity${productId}PC`);
+                const quantityInputCASE = document.getElementById(`productQuantity${productId}CASE`);
+
+                if (quantityInputPC) product['PC'].quantity = parseInt(quantityInputPC.value) || 0;
+                if (quantityInputCASE) product['CASE'].quantity = parseInt(quantityInputCASE.value) || 0;
 
                 ['PC', 'CASE'].forEach(unit => {
                     const unitDetails = product[unit];
                     const quantity = parseInt(unitDetails?.quantity || 0);
                     const unitPrice = parseFloat(unitDetails?.price || '0');
+                    const unitLabel = (unit === 'PC' ? 'PC' : 'CSE');
+                    const spec = (unit === 'PC' ? product.pcSpec : product.caseSpec);
+                    const removeQuantityInputId = `removeQuantityInput_${productId}_${unit}`;
 
                     if (quantity > 0 && !isNaN(unitPrice)) {
                         const itemTotalPrice = unitPrice * quantity;
                         totalPurchasePrice += itemTotalPrice;
 
-                        // Display name includes specifier based on unit
-                        let displayProductName = product.productName;
-                        if (unit === 'PC' && product.pcSpec) { // Use pcSpec for PC unit
-                            displayProductName += ` ${product.pcSpec}`;
-                        } else if (unit === 'CASE' && product.caseSpec) { // Use caseSpec for CASE unit
-                            displayProductName += ` ${product.caseSpec}`;
-                        }
-
                         const orderItemDiv = document.createElement('div');
                         orderItemDiv.classList.add('order-item');
                         orderItemDiv.innerHTML = `
                             <div class="order-item-details">
-                                <strong>${displayProductName}</strong><br>
-                                <span>Code: ${product.productCode} | Qty: ${quantity} ${unit}</span>
+                                <strong>${product.productName} <span class="spec-text">${spec}</span></strong><br>
+                                <span>Code: ${product.productCode} | Qty: ${quantity} ${unitLabel}</span>
                             </div>
-                            <div class="order-item-price">PHP ${itemTotalPrice.toFixed(2)}
-                                <input type="number" id="removeQtyInput_${productId}_${unit}" class="remove-quantity-input" value="0" min="0" max="${quantity}" oninput="validateRemoveQuantity(this, ${quantity})">
-                                <button class="remove-order-button" onclick="removeItemFromOrder(${productId}, '${unit}')">Remove Order</button>
+                            <div class="order-item-actions">
+                                <div class="order-item-price-display">PHP ${itemTotalPrice.toFixed(2)}</div>
+                                <div class="remove-quantity-control">
+                                    <input type="number" id="${removeQuantityInputId}" value="0" min="0" max="${quantity}" inputmode="numeric" pattern="[0-9]*">
+                                    <button class="remove-order-button" onclick="removeItemFromOrder(${productId}, '${unit}', '${removeQuantityInputId}')">Remove Order</button>
+                                </div>
                             </div>
                         `;
                         orderItemsContainer.appendChild(orderItemDiv);
@@ -1632,9 +1663,8 @@
                 ['PC', 'CASE'].forEach(unit => {
                     if (product[unit]) {
                         product[unit].quantity = 0;
-                        const quantityInput = document.getElementById(`productQuantity${productId}`);
-                        const productCard = document.getElementById(`productCard${productId}`);
-                        if (quantityInput && productCard.dataset.currentUnit === unit) {
+                        const quantityInput = document.getElementById(`productQuantity${productId}${unit}`);
+                        if (quantityInput) {
                             quantityInput.value = ''; // Set to empty string to show placeholder
                         }
                     }
@@ -1652,49 +1682,41 @@
             checkOrderValidity();
         }
 
-        window.removeItemFromOrder = function(productId, unit) {
+        window.removeItemFromOrder = function(productId, unit, qtyToRemoveInputId) {
             console.log(`Attempting to remove order for Product ID: ${productId}, Unit: ${unit}`);
             const product = productData[productId];
-            if (product && product[unit]) {
-                const removeQtyInput = document.getElementById(`removeQtyInput_${productId}_${unit}`);
-                let quantityToRemove = 0;
-                if (removeQtyInput) {
-                    quantityToRemove = parseInt(removeQtyInput.value) || 0;
-                    console.log(`Quantity to remove read from input: ${quantityToRemove}`);
-                } else {
-                    console.error(`Remove quantity input element not found for Product ${productId}, Unit ${unit}. Defaulting removal to 1.`);
-                    quantityToRemove = 1;
+            const qtyToRemoveInput = document.getElementById(qtyToRemoveInputId);
+            const qtyToRemove = parseInt(qtyToRemoveInput.value) || 0;
+
+            if (product && product[unit] && qtyToRemove > 0) {
+                let currentQuantity = parseInt(product[unit].quantity) || 0;
+                let newQuantity = currentQuantity - qtyToRemove;
+
+                if (newQuantity < 0) {
+                    newQuantity = 0; // Ensure quantity doesn't go negative
+                }
+                product[unit].quantity = newQuantity;
+                console.log(`New quantity for ${unit} after removal: ${product[unit].quantity}`);
+
+                const quantityInputOnMainPage = document.getElementById(`productQuantity${productId}${unit}`);
+                if (quantityInputOnMainPage) {
+                    quantityInputOnMainPage.value = newQuantity > 0 ? newQuantity : ''; // Update and show placeholder if 0
+                    console.log(`Updated main page quantity input for product ${productId}, unit ${unit} to ${newQuantity}.`);
                 }
 
-                const currentStoredQuantity = product[unit].quantity;
-                console.log(`Current stored quantity for ${unit}: ${currentStoredQuantity}`);
-
-                if (quantityToRemove > 0) {
-                    product[unit].quantity = Math.max(0, currentStoredQuantity - quantityToRemove);
-                    console.log(`New quantity for ${unit} after deduction: ${product[unit].quantity}`);
-
-                    const quantityInputOnMainPage = document.getElementById(`productQuantity${productId}`);
-                    const productCardOnMainPage = document.getElementById(`productCard${productId}`);
-                    if (quantityInputOnMainPage && productCardOnMainPage && productCardOnMainPage.dataset.currentUnit === unit) {
-                        quantityInputOnMainPage.value = product[unit].quantity > 0 ? product[unit].quantity : ''; // Update and show placeholder if 0
-                        console.log(`Updated main page quantity input for product ${productId}, unit ${unit} to: ${product[productId].quantity}`);
-                    }
-
-                    try {
-                        localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
-                        console.log(`localStorage updated for Product ${productId}.`);
-                    }
-                    catch (e) {
-                        console.error("Error saving product data during removal to localStorage:", e);
-                    }
-                } else {
-                    console.warn(`No quantity specified for removal or invalid quantity (0 or less) for Product ${productId}, Unit ${unit}.`);
+                try {
+                    localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
+                    console.log(`localStorage updated for Product ${productId}.`);
+                }
+                catch (e) {
+                    console.error("Error saving product data during removal to localStorage:", e);
                 }
 
+                // Re-open summary to reflect changes
                 showOrderSummary();
                 checkOrderValidity();
             } else {
-                console.error(`Product data not found or unit not valid for Product ID: ${productId}, Unit: ${unit}.`);
+                console.warn(`No quantity specified for removal or product data not found/unit not valid for Product ID: ${productId}, Unit: ${unit}.`);
             }
         }
 
@@ -1722,34 +1744,30 @@
             for (const productId in productData) {
                 const product = productData[productId];
                 // Ensure product quantities are synchronized from the main order page UI inputs
-                const quantityInput = document.getElementById(`productQuantity${productId}`);
-                const productCard = document.getElementById(`productCard${productId}`);
-                if (product && quantityInput && productCard && productCard.dataset.currentUnit) {
-                    product[productCard.dataset.currentUnit].quantity = parseInt(quantityInput.value) || 0;
-                }
+                const quantityInputPC = document.getElementById(`productQuantity${productId}PC`);
+                const quantityInputCASE = document.getElementById(`productQuantity${productId}CASE`);
+
+                if (quantityInputPC) product['PC'].quantity = parseInt(quantityInputPC.value) || 0;
+                if (quantityInputCASE) product['CASE'].quantity = parseInt(quantityInputCASE.value) || 0;
+
 
                 ['PC', 'CASE'].forEach(unit => {
                     const unitDetails = product[unit];
                     const quantity = parseInt(unitDetails?.quantity || 0);
                     const unitPrice = parseFloat(unitDetails?.price || '0');
+                    const unitLabel = (unit === 'PC' ? 'PC' : 'CSE'); // Use PC or CSE
+                    const spec = (unit === 'PC' ? product.pcSpec : product.caseSpec);
+
 
                     if (quantity > 0 && !isNaN(unitPrice)) {
                         const itemTotalPrice = unitPrice * quantity;
                         totalReceiptPrice += itemTotalPrice;
 
-                        // Display name includes specifier based on unit
-                        let displayProductName = product.productName;
-                        if (unit === 'PC' && product.pcSpec) { // Use pcSpec for PC unit
-                            displayProductName += ` ${product.pcSpec}`;
-                        } else if (unit === 'CASE' && product.caseSpec) { // Use caseSpec for CASE unit
-                            displayProductName += ` ${product.caseSpec}`;
-                        }
-
                         currentOrderItems.push({
-                            productName: displayProductName, // Now includes combined spec
+                            productName: `${product.productName} ${spec}`,
                             productCode: product.productCode,
                             quantity: quantity,
-                            unit: unit,
+                            unit: unitLabel, // Use the new unitLabel here
                             pricePerUnit: unitPrice.toFixed(2), // Price per unit
                             totalPrice: itemTotalPrice.toFixed(2)
                         });
@@ -1769,7 +1787,7 @@
                 const row = receiptItemsBody.insertRow();
                 row.innerHTML = `
                     <td>${item.productCode}</td>
-                    <td>${item.productName}</td> <!-- Now includes combined spec -->
+                    <td>${item.productName}</td>
                     <td>${item.unit}</td>
                     <td>${item.quantity}</td>
                     <td>PHP ${item.pricePerUnit}</td>
@@ -1798,10 +1816,9 @@
                     ['PC', 'CASE'].forEach(unit => {
                         if (product[unit]) {
                             product[unit].quantity = 0;
-                            const quantityInput = document.getElementById(`productQuantity${productId}`);
-                            const productCard = document.getElementById(`productCard${productId}`);
-                            // Ensure UI input is also reset if on the active unit
-                            if (quantityInput && productCard.dataset.currentUnit === unit) {
+                            const quantityInput = document.getElementById(`productQuantity${productId}${unit}`);
+                            // Ensure UI input is also reset
+                            if (quantityInput) {
                                 quantityInput.value = ''; // Set to empty string to show placeholder
                             }
                         }
@@ -1832,11 +1849,11 @@
                 const productCard = document.getElementById(`productCard${i}`);
                 if (productCard) {
                     const product = productData[i];
-                    const quantityInput = productCard.querySelector(`#productQuantity${i}`);
-                    const currentUnit = productCard.dataset.currentUnit;
-                    if (product && quantityInput && currentUnit) {
-                        product[currentUnit].quantity = parseInt(quantityInput.value) || 0;
-                    }
+                    const quantityInputPC = productCard.querySelector(`#productQuantity${i}PC`);
+                    const quantityInputCASE = productCard.querySelector(`#productQuantity${i}CASE`);
+
+                    if (quantityInputPC) product['PC'].quantity = parseInt(quantityInputPC.value) || 0;
+                    if (quantityInputCASE) product['CASE'].quantity = parseInt(quantityInputCASE.value) || 0;
                 }
             }
             // Save the synchronized data to localStorage immediately before saving HTML
@@ -1957,7 +1974,7 @@
                     }
 
                     if (matchesAllTerms) {
-                        productCard.style.display = 'flex';
+                        productCard.style.display = 'grid'; // Ensure grid display for visible cards
                         anyProductVisible = true;
                     } else {
                         productCard.style.display = 'none';
@@ -1983,20 +2000,74 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Firebase if config is available
+            try {
+                if (Object.keys(firebaseConfig).length > 0) {
+                    app = initializeApp(firebaseConfig);
+                    db = getFirestore(app);
+                    auth = getAuth(app);
+
+                    // Sign in anonymously if no token, otherwise use custom token
+                    // Only attempt signInWithCustomToken if __initial_auth_token is provided and is not empty
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        signInWithCustomToken(auth, __initial_auth_token)
+                            .then(userCredential => {
+                                userId = userCredential.user.uid;
+                                console.log("Signed in with custom token:", userId);
+                            })
+                            .catch(error => {
+                                console.error("Error signing in with custom token:", error);
+                                // Fallback to anonymous sign-in even if custom token fails
+                                signInAnonymously(auth).then(userCredential => {
+                                    userId = userCredential.user.uid;
+                                    console.log("Signed in anonymously (fallback):", userId);
+                                }).catch(anonError => {
+                                    console.error("Error signing in anonymously:", anonError);
+                                });
+                            });
+                    } else {
+                        // If no custom token is provided or it's empty, sign in anonymously directly
+                        signInAnonymously(auth).then(userCredential => {
+                            userId = userCredential.user.uid;
+                            console.log("Signed in anonymously:", userId);
+                        }).catch(error => {
+                            console.error("Error signing in anonymously:", error);
+                        });
+                    }
+                } else {
+                    console.warn("Firebase config not found. Data persistence will not be available.");
+                }
+            } catch (error) {
+                console.error("Error initializing Firebase:", error);
+                console.warn("Firebase features will be unavailable.");
+            }
+
+
             clearClientInfoAndInputs();
             loadProductData();
 
             for (let i = 1; i <= 10; i++) {
-                const quantityInput = document.getElementById(`productQuantity${i}`);
-                quantityInput.addEventListener('input', () => {
-                    const product = productData[i];
-                    if (product && product.currentUnit && product[product.currentUnit]) {
+                // Add event listeners for both PC and CASE quantity inputs
+                const quantityInputPC = document.getElementById(`productQuantity${i}PC`);
+                const quantityInputCASE = document.getElementById(`productQuantity${i}CASE`);
+
+                if (quantityInputPC) {
+                    quantityInputPC.addEventListener('input', () => {
                         // Ensure quantity is an integer, or 0 if empty/invalid
-                        product[product.currentUnit].quantity = parseInt(quantityInput.value) || 0;
-                    }
-                    saveProductData(i);
-                    checkOrderValidity();
-                });
+                        productData[i]['PC'].quantity = parseInt(quantityInputPC.value) || 0;
+                        saveProductData(i, 'PC');
+                        checkOrderValidity();
+                    });
+                }
+
+                if (quantityInputCASE) {
+                    quantityInputCASE.addEventListener('input', () => {
+                        // Ensure quantity is an integer, or 0 if empty/invalid
+                        productData[i]['CASE'].quantity = parseInt(quantityInputCASE.value) || 0;
+                        saveProductData(i, 'CASE');
+                        checkOrderValidity();
+                    });
+                }
             }
 
             window.onscroll = function() {
@@ -2014,6 +2085,7 @@
     </script>
 </body>
 </html>
+
 
 
 
