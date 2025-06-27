@@ -504,7 +504,7 @@
 
 
         /* Modals and their content */
-        .order-summary-modal, .receipt-modal {
+        .order-summary-modal, .receipt-modal, .image-modal { /* Added .image-modal */
             position: fixed;
             top: 0;
             left: 0;
@@ -519,11 +519,11 @@
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
-        .order-summary-modal.visible, .receipt-modal.visible {
+        .order-summary-modal.visible, .receipt-modal.visible, .image-modal.visible { /* Added .image-modal */
             opacity: 1;
             visibility: visible;
         }
-        .order-summary-content, .receipt-modal .receipt-content {
+        .order-summary-content, .receipt-modal .receipt-content, .image-modal-content { /* Added .image-modal-content */
             background-color: #ffffff;
             padding: 30px;
             border-radius: 15px;
@@ -537,7 +537,7 @@
             flex-direction: column;
             max-height: 90vh;
         }
-        .order-summary-modal.visible .order-summary-content, .receipt-modal.visible .receipt-content {
+        .order-summary-modal.visible .order-summary-content, .receipt-modal.visible .receipt-content, .image-modal.visible .image-modal-content { /* Added .image-modal-content */
             transform: translateY(0);
         }
         .order-summary-content h3, .receipt-page-container h3, .receipt-modal .receipt-content h3 {
@@ -609,9 +609,10 @@
         /* Enhanced order item styling */
         .order-item {
             display: flex;
-            flex-direction: row; /* Changed to row for horizontal layout */
+            flex-direction: row; /* Default for wider screens */
+            flex-wrap: nowrap; /* Prevent wrapping of details and actions on wider screens */
             justify-content: space-between;
-            align-items: center; /* Vertically center items in the row */
+            align-items: flex-start; /* Align content to the top of the flex item */
             padding: 15px;
             margin-bottom: 10px;
             background-color: #f9f9f9;
@@ -621,7 +622,6 @@
             font-size: 0.95rem;
             color: #333;
             border-bottom: none;
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
         }
         .order-item:last-child {
             margin-bottom: 0;
@@ -631,13 +631,17 @@
             flex-direction: column;
             align-items: flex-start; /* Align text to the left */
             flex-grow: 1; /* Allow details to take up available space */
+            flex-basis: 70%; /* Prefer 70% width */
+            flex-shrink: 1;
             min-width: 150px; /* Ensure it doesn't collapse too much */
+            text-align: left;
+            word-break: break-word; /* Ensure long words break */
         }
         .order-item-details strong {
             font-size: 1.05rem;
             font-weight: 700;
             color: #0050A0;
-            display: block;
+            display: block; /* Ensure it behaves like a block for multi-line content */
         }
         .order-item-details span {
             display: block;
@@ -650,7 +654,10 @@
             flex-direction: column;
             align-items: flex-end; /* Align to the right */
             margin-left: 15px; /* Space from details */
+            flex-basis: 30%; /* Prefer 30% width */
             flex-shrink: 0; /* Prevent from shrinking */
+            min-width: 120px; /* Ensure enough space for buttons/input */
+            align-self: flex-start; /* Align to the top of the order-item container */
         }
         .order-item-price-display {
             font-weight: 700;
@@ -824,13 +831,109 @@
             height: 20px;
             margin-left: 0; /* Mobile margin-left applied globally */
         }
+
+        /* Styles for Image Modal */
+        .image-modal-content {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 15px;
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .image-modal-img {
+            max-width: 100%;
+            max-height: 80vh; /* Adjust as needed */
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .image-modal-close-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #5C6F78;
+            transition: color 0.2s ease;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-modal-close-button:hover {
+            color: #EE3524;
+        }
+
+        /* Mobile specific styles for order summary modal */
+        @media (max-width: 768px) {
+            .order-item {
+                flex-direction: column; /* Stack details and actions vertically on small screens */
+                align-items: flex-start; /* Align all content to the left within the item */
+                padding: 10px; /* Adjust padding for smaller screens */
+                flex-wrap: wrap; /* Allow internal wrapping on mobile if necessary */
+            }
+
+            .order-item-details, .order-item-actions {
+                width: 100%; /* Make them take full width when stacked */
+                margin-left: 0; /* Remove left margin for actions when stacked */
+                align-items: flex-start; /* Align content to the left within their own container */
+                text-align: left; /* Ensure text alignment is consistent */
+                flex-basis: auto; /* Reset flex-basis for mobile column layout */
+            }
+
+            .order-item-details strong {
+                font-size: 1rem; /* Slightly smaller for mobile */
+            }
+            .order-item-details span {
+                font-size: 0.8rem; /* Slightly smaller for mobile */
+            }
+            .order-item-price-display {
+                font-size: 0.95rem; /* Adjust price font size for mobile */
+                margin-top: 10px; /* Add space between details and price */
+            }
+
+            /* For the price/remove control within actions */
+            .order-item-actions .order-item-price-display,
+            .order-item-actions .remove-quantity-control {
+                width: 100%; /* Make them take full width within actions */
+                justify-content: flex-start; /* Align content to the left */
+                box-sizing: border-box; /* Include padding/border in width */
+            }
+
+            .remove-quantity-control {
+                flex-direction: row; /* Keep input and button side-by-side */
+                justify-content: flex-start; /* Align to the left */
+                gap: 5px;
+                margin-top: 5px; /* Space from price display */
+            }
+
+            .remove-quantity-control input[type="number"] {
+                width: 60px; /* Give a bit more width for input */
+                min-height: 36px;
+                font-size: 0.9rem;
+            }
+            .remove-order-button {
+                min-height: 36px; /* Match height of input */
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Main Fixed Header -->
     <header id="mainHeader" class="main-fixed-header">
         <div class="header-left-group">
-            <button class="back-button" onclick="showLandingPage()">
+            <!-- The back button's behavior will be handled by JS based on current page -->
+            <button class="back-button" onclick="handleBackButtonClick()">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
                 </svg>
@@ -882,7 +985,7 @@
             <!-- Product Card 1 -->
             <div class="product-card" id="productCard1">
                 <!-- Image goes first in HTML structure for grid placement -->
-                <img src="10001.jpg" alt="555 SARDINES IN TOMATO SAUCE EOE" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
+                <img src="10001.jpg" alt="555 SARDINES IN TOMATO SAUCE EOE" class="product-image" onclick="openImageModal('10001.jpg')">
                 
                 <div class="product-info-left">
                     <div class="product-code-display" id="productCode1Display">10001</div>
@@ -915,7 +1018,7 @@
 
             <!-- Product Card 2 -->
             <div class="product-card" id="productCard2">
-                <img src="10002.jpg" alt="555 SARDINES IN TOMATO SAUCE WITH CHILI" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
+                <img src="10002.jpg" alt="555 SARDINES IN TOMATO SAUCE WITH CHILI" class="product-image" onclick="openImageModal('10002.jpg')">
                 <div class="product-info-left">
                     <div class="product-code-display" id="productCode2Display">10002</div>
                     <div class="input-group">
@@ -942,7 +1045,7 @@
 
             <!-- Product Card 3 -->
             <div class="product-card" id="productCard3">
-                <img src="10003.jpg" alt="555 TUNA FLAKES ADOBO EOE" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
+                <img src="10003.jpg" alt="555 TUNA FLAKES ADOBO EOE" class="product-image" onclick="openImageModal('10003.jpg')">
                 <div class="product-info-left">
                     <div class="product-code-display" id="productCode3Display">10003</div>
                     <div class="input-group">
@@ -969,7 +1072,7 @@
 
             <!-- Product Card 4 -->
             <div class="product-card" id="productCard4">
-                <img src="10004.jpg" alt="555 TUNA FLAKES AFRITADA EOE" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
+                <img src="10004.jpg" alt="555 TUNA FLAKES AFRITADA EOE" class="product-image" onclick="openImageModal('10004.jpg')">
                 <div class="product-info-left">
                     <div class="product-code-display" id="productCode4Display">10004</div>
                     <div class="input-group">
@@ -996,7 +1099,7 @@
 
             <!-- Product Card 5 -->
             <div class="product-card" id="productCard5">
-                <img src="10005.jpg" alt="555 TUNA FLAKES CALDERETA EOE" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
+                <img src="10005.jpg" alt="555 TUNA FLAKES CALDERETA EOE" class="product-image" onclick="openImageModal('10005.jpg')">
                 <div class="product-info-left">
                     <div class="product-code-display" id="productCode5Display">10005</div>
                     <div class="input-group">
@@ -1023,7 +1126,7 @@
 
             <!-- Product Card 6 -->
             <div class="product-card" id="productCard6">
-                <img src="10006.jpg" alt="555 TUNA FLAKES IN OIL EOE" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
+                <img src="10006.jpg" alt="555 TUNA FLAKES IN OIL EOE" class="product-image" onclick="openImageModal('10006.jpg')">
                 <div class="product-info-left">
                     <div class="product-code-display" id="productCode6Display">10006</div>
                     <div class="input-group">
@@ -1050,7 +1153,7 @@
 
             <!-- Product Card 7 -->
             <div class="product-card" id="productCard7">
-                <img src="10007.jpg" alt="555 TUNA FLAKES MECHADO EOE" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
+                <img src="10007.jpg" alt="555 TUNA FLAKES MECHADO EOE" class="product-image" onclick="openImageModal('10007.jpg')">
                 <div class="product-info-left">
                     <div class="product-code-display" id="productCode7Display">10007</div>
                     <div class="input-group">
@@ -1077,7 +1180,7 @@
 
             <!-- Product Card 8 -->
             <div class="product-card" id="productCard8">
-                <img src="10008.jpg" alt="ABSOLUTE DISTILLED WATER" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
+                <img src="10008.jpg" alt="ABSOLUTE DISTILLED WATER" class="product-image" onclick="openImageModal('10008.jpg')">
                 <div class="product-info-left">
                     <div class="product-code-display" id="productCode8Display">10008</div>
                     <div class="input-group">
@@ -1104,7 +1207,7 @@
 
             <!-- Product Card 9 -->
             <div class="product-card" id="productCard9">
-                <img src="10009.jpg" alt="ABSOLUTE DISTILLED WATER" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
+                <img src="10009.jpg" alt="ABSOLUTE DISTILLED WATER" class="product-image" onclick="openImageModal('10009.jpg')">
                 <div class="product-info-left">
                     <div class="product-code-display" id="productCode9Display">10009</div>
                     <div class="input-group">
@@ -1131,7 +1234,7 @@
 
             <!-- Product Card 10 -->
             <div class="product-card" id="productCard10">
-                <img src="10010.jpg" alt="ABSOLUTE DISTILLED WATER" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/150x150/CCCCCC/000000?text=No+Image';">
+                <img src="10010.jpg" alt="ABSOLUTE DISTILLED WATER" class="product-image" onclick="openImageModal('10010.jpg')">
                 <div class="product-info-left">
                     <div class="product-code-display" id="productCode10Display">10010</div>
                     <div class="input-group">
@@ -1208,6 +1311,14 @@
             <button class="print-receipt-button" onclick="saveReceiptAsHtml()">Save Receipt (as HTML)</button>
         </div>
         <button class="order-again-button mt-8" onclick="orderAgain()">Order Again</button>
+    </div>
+
+    <!-- Image Enlargement Modal -->
+    <div id="imageModal" class="image-modal">
+        <div class="image-modal-content">
+            <button class="image-modal-close-button" onclick="closeImageModal()">&times;</button>
+            <img id="imageModalImg" src="" alt="Enlarged Product Image" class="image-modal-img">
+        </div>
     </div>
 
     <!-- Return to Top Button (Hidden by default) -->
@@ -1534,6 +1645,32 @@
             saveClientInfo();
         }
 
+        /**
+         * Handles the back button click based on the currently visible page.
+         */
+        window.handleBackButtonClick = function() {
+            const landingPage = document.getElementById('landingPage');
+            const orderPage = document.getElementById('orderPage');
+            const receiptPage = document.getElementById('receiptPage');
+
+            if (receiptPage.classList.contains('visible')) {
+                // If on receipt page, go back to order page
+                // Do not reset orders when going back from receipt
+                receiptPage.classList.remove('visible');
+                receiptPage.classList.add('hidden');
+                receiptPage.style.display = 'none';
+                orderPage.style.display = 'flex';
+                orderPage.classList.remove('hidden');
+                orderPage.classList.add('visible');
+                document.getElementById('mainHeader').style.display = 'flex'; // Ensure header is visible
+                checkOrderValidity(); // Re-evaluate finalization button state
+            } else if (orderPage.classList.contains('visible')) {
+                // If on order page, go back to landing page
+                showLandingPage();
+            }
+            // If on landing page, do nothing (or could hide header/exit app if implemented)
+        }
+
         // Make functions globally accessible for HTML onclick attributes
         window.showOrderPage = function() {
             const landingPage = document.getElementById('landingPage');
@@ -1730,6 +1867,7 @@
             const mainHeader = document.getElementById('mainHeader');
             const returnToTopBtn = document.getElementById('returnToTopBtn');
 
+
             receiptItemsBody.innerHTML = ''; // Clear tbody
             let totalReceiptPrice = 0;
             const currentOrderItems = [];
@@ -1800,8 +1938,7 @@
             orderPage.classList.remove('visible');
             orderPage.classList.add('hidden');
             orderPage.style.display = 'none';
-            mainHeader.style.display = 'none'; /* Hide the fixed header */
-            returnToTopBtn.style.display = 'none';
+            mainHeader.style.display = 'flex'; /* Keep the fixed header visible for back button */
 
 
             receiptPage.style.display = 'flex';
@@ -1810,32 +1947,42 @@
                 receiptPage.classList.add('visible');
                 console.log("Receipt page should now be visible.");
 
-                // Reset quantities in productData for a new order session
-                for (const productId in productData) {
-                    const product = productData[productId];
-                    ['PC', 'CASE'].forEach(unit => {
-                        if (product[unit]) {
-                            product[unit].quantity = 0;
-                            const quantityInput = document.getElementById(`productQuantity${productId}${unit}`);
-                            // Ensure UI input is also reset
-                            if (quantityInput) {
-                                quantityInput.value = ''; // Set to empty string to show placeholder
-                            }
-                        }
-                    });
-                }
+                // Hide the "Return to Top" button on the receipt page
+                returnToTopBtn.style.display = 'none';
+
+                // We no longer reset quantities here. They persist unless 'Clear Order' or 'Order Again' is clicked.
                 try {
                     localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
-                    console.log("Order finalized and quantities reset in localStorage for new order session.");
+                    console.log("Order finalized and saved to localStorage.");
                 }
                 catch (e) {
-                    console.error("Error resetting orders in localStorage after finalization:", e);
+                    console.error("Error saving product data after finalization:", e);
                 }
                 checkOrderValidity(); // Re-evaluate finalization button state
             }, 50);
         }
 
         window.orderAgain = function() {
+            // Reset quantities in productData for a new order session
+            for (const productId in productData) {
+                const product = productData[productId];
+                ['PC', 'CASE'].forEach(unit => {
+                    if (product[unit]) {
+                        product[unit].quantity = 0;
+                        const quantityInput = document.getElementById(`productQuantity${productId}${unit}`);
+                        if (quantityInput) {
+                            quantityInput.value = ''; // Set to empty string to show placeholder
+                        }
+                    }
+                });
+            }
+            try {
+                localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
+                console.log("Orders reset in localStorage for new order session via 'Order Again'.");
+            }
+            catch (e) {
+                console.error("Error resetting orders in localStorage via 'Order Again':", e);
+            }
             clearClientInfoAndInputs();
             showLandingPage();
         }
@@ -1999,6 +2146,28 @@
             });
         }
 
+        /**
+         * Opens the image modal with the specified image source.
+         * @param {string} imgSrc - The source URL of the image to display.
+         */
+        window.openImageModal = function(imgSrc) {
+            const imageModal = document.getElementById('imageModal');
+            const imageModalImg = document.getElementById('imageModalImg');
+            imageModalImg.src = imgSrc;
+            imageModal.classList.add('visible');
+        }
+
+        /**
+         * Closes the image enlargement modal.
+         */
+        window.closeImageModal = function() {
+            const imageModal = document.getElementById('imageModal');
+            imageModal.classList.remove('visible');
+            const imageModalImg = document.getElementById('imageModalImg');
+            imageModalImg.src = ''; // Clear the image source
+        }
+
+
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize Firebase if config is available
             try {
@@ -2073,6 +2242,7 @@
             window.onscroll = function() {
                 const returnToTopBtn = document.getElementById('returnToTopBtn');
                 const orderPageDiv = document.getElementById('orderPage');
+                const receiptPageDiv = document.getElementById('receiptPage');
 
                 // Only show the button if on the order page and scrolled down
                 if (orderPageDiv.classList.contains('visible') && window.scrollY > 200) {
@@ -2085,6 +2255,7 @@
     </script>
 </body>
 </html>
+
 
 
 
