@@ -946,6 +946,45 @@
         .image-modal-close-button:hover {
             color: #EE3524;
         }
+        .back-to-order-button {
+            background: linear-gradient(145deg, #0050A0, #003a7a); /* Consistent with other buttons */
+            color: white;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            min-height: 44px;
+            display: flex; /* To align SVG and text */
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Space between icon and text */
+            margin-top: 20px; /* Spacing from receipt table */
+            width: fit-content; /* Adjust width to content */
+            margin-left: auto; /* Push to right, or center if desired */
+            margin-right: auto;
+        }
+
+        .back-to-order-button:hover {
+            background: linear-gradient(145deg, #003a7a, #0050A0);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-to-order-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-to-order-button svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor; /* Inherit color from button text */
+        }
+
 
         /* Mobile specific styles for order summary modal */
         @media (max-width: 768px) {
@@ -1093,14 +1132,14 @@
                 </div>
                 <div class="unit-sections-container">
                     <div class="unit-section">
-                        <div class="unit-label">Pcs <span id="pcSpec1" class="spec-text"></span></div>
+                        <div class="unit-label">PC. <span id="pcSpec1" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity1PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
                         <div class="unit-price" id="productPrice1PC"></div>
                     </div>
                     <div class="unit-section">
-                        <div class="unit-label">Cs <span id="caseSpec1" class="spec-text"></span></div>
+                        <div class="unit-label">CS. <span id="caseSpec1" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity1CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
@@ -1120,14 +1159,14 @@
                 </div>
                 <div class="unit-sections-container">
                     <div class="unit-section">
-                        <div class="unit-label">Pcs <span id="pcSpec2" class="spec-text"></span></div>
+                        <div class="unit-label">PC. <span id="pcSpec2" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity2PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
                         <div class="unit-price" id="productPrice2PC"></div>
                     </div>
                     <div class="unit-section">
-                        <div class="unit-label">Cs <span id="caseSpec2" class="spec-text"></span></div>
+                        <div class="unit-label">CS. <span id="caseSpec2" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity2CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
@@ -1147,14 +1186,14 @@
                 </div>
                 <div class="unit-sections-container">
                     <div class="unit-section">
-                        <div class="unit-label">Pcs <span id="pcSpec3" class="spec-text"></span></div>
+                        <div class="unit-label">PC. <span id="pcSpec3" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity3PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
                         <div class="unit-price" id="productPrice3PC"></div>
                     </div>
                     <div class="unit-section">
-                        <div class="unit-label">Cs <span id="caseSpec3" class="spec-text"></span></div>
+                        <div class="unit-label">CS. <span id="caseSpec3" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity3CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
@@ -1174,14 +1213,14 @@
                 </div>
                 <div class="unit-sections-container">
                     <div class="unit-section">
-                        <div class="unit-label">Pcs <span id="pcSpec4" class="spec-text"></span></div>
+                        <div class="unit-label">PC. <span id="pcSpec4" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity4PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
                         <div class="unit-price" id="productPrice4PC"></div>
                     </div>
                     <div class="unit-section">
-                        <div class="unit-label">Cs <span id="caseSpec4" class="spec-text"></span></div>
+                        <div class="unit-label">CS. <span id="caseSpec4" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity4CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
@@ -1201,14 +1240,14 @@
                 </div>
                 <div class="unit-sections-container">
                     <div class="unit-section">
-                        <div class="unit-label">Pcs <span id="pcSpec5" class="spec-text"></span></div>
+                        <div class="unit-label">PC. <span id="pcSpec5" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity5PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
                         <div class="unit-price" id="productPrice5PC"></div>
                     </div>
                     <div class="unit-section">
-                        <div class="unit-label">Cs <span id="caseSpec5" class="spec-text"></span></div>
+                        <div class="unit-label">CS. <span id="caseSpec5" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity5CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
@@ -1228,14 +1267,14 @@
                 </div>
                 <div class="unit-sections-container">
                     <div class="unit-section">
-                        <div class="unit-label">Pcs <span id="pcSpec6" class="spec-text"></span></div>
+                        <div class="unit-label">PC. <span id="pcSpec6" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity6PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
                         <div class="unit-price" id="productPrice6PC"></div>
                     </div>
                     <div class="unit-section">
-                        <div class="unit-label">Cs <span id="caseSpec6" class="spec-text"></span></div>
+                        <div class="unit-label">CS. <span id="caseSpec6" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity6CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
@@ -1255,14 +1294,14 @@
                 </div>
                 <div class="unit-sections-container">
                     <div class="unit-section">
-                        <div class="unit-label">Pcs <span id="pcSpec7" class="spec-text"></span></div>
+                        <div class="unit-label">PC. <span id="pcSpec7" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity7PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
                         <div class="unit-price" id="productPrice7PC"></div>
                     </div>
                     <div class="unit-section">
-                        <div class="unit-label">Cs <span id="caseSpec7" class="spec-text"></span></div>
+                        <div class="unit-label">CS. <span id="caseSpec7" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity7CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
@@ -1282,14 +1321,14 @@
                 </div>
                 <div class="unit-sections-container">
                     <div class="unit-section">
-                        <div class="unit-label">Pcs <span id="pcSpec8" class="spec-text"></span></div>
+                        <div class="unit-label">PC. <span id="pcSpec8" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity8PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
                         <div class="unit-price" id="productPrice8PC"></div>
                     </div>
                     <div class="unit-section">
-                        <div class="unit-label">Cs <span id="caseSpec8" class="spec-text"></span></div>
+                        <div class="unit-label">CS. <span id="caseSpec8" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity8CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
@@ -1309,14 +1348,14 @@
                 </div>
                 <div class="unit-sections-container">
                     <div class="unit-section">
-                        <div class="unit-label">Pcs <span id="pcSpec9" class="spec-text"></span></div>
+                        <div class="unit-label">PC. <span id="pcSpec9" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity9PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
                         <div class="unit-price" id="productPrice9PC"></div>
                     </div>
                     <div class="unit-section">
-                        <div class="unit-label">Cs <span id="caseSpec9" class="spec-text"></span></div>
+                        <div class="unit-label">CS. <span id="caseSpec9" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity9CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
@@ -1336,14 +1375,14 @@
                 </div>
                 <div class="unit-sections-container">
                     <div class="unit-section">
-                        <div class="unit-label">Pcs <span id="pcSpec10" class="spec-text"></span></div>
+                        <div class="unit-label">PC. <span id="pcSpec10" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity10PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
                         <div class="unit-price" id="productPrice10PC"></div>
                     </div>
                     <div class="unit-section">
-                        <div class="unit-label">Cs <span id="caseSpec10" class="spec-text"></span></div>
+                        <div class="unit-label">CS. <span id="caseSpec10" class="spec-text"></span></div>
                         <div class="input-container">
                             <input type="number" id="productQuantity10CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*">
                         </div>
@@ -1382,8 +1421,7 @@
                     <tr>
                         <th>Code</th>
                         <th>Product Name</th>
-                        <th>Unit</th>
-                        <th>Quantity</th>
+                        <th>Quantity</th> <!-- Combined Quantity and Unit -->
                         <th>Price/Unit</th>
                         <th>Total Price</th>
                     </tr>
@@ -1399,7 +1437,14 @@
         <div class="flex justify-center mt-8 space-x-4">
             <!-- Removed the "Save Receipt (as HTML)" button -->
         </div>
-        <button class="order-again-button mt-8" onclick="orderAgain()">Order Again</button>
+        <!-- Back to Order Button -->
+        <button class="back-to-order-button" onclick="goToOrderPage()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
+            </svg>
+            Back to Order
+        </button>
+        <button class="order-again-button mt-4" onclick="orderAgain()">Order Again</button>
     </div>
 
     <!-- Image Enlargement Modal -->
@@ -1584,13 +1629,15 @@
                     }
 
                     const pcUnitLabel = productCard.querySelector(`#productCard${i} .unit-section:first-child .unit-label`);
-                    if (pcUnitLabel) pcUnitLabel.innerHTML = `Pcs <span id="pcSpec${i}" class="spec-text">${product.pcSpec}</span>`; // Use 'Pcs' and new spec
+                    // Added 'PC.' text before the spec
+                    if (pcUnitLabel) pcUnitLabel.innerHTML = `PC. <span id="pcSpec${i}" class="spec-text">${product.pcSpec}</span>`;
                     // Ensure input value is correctly set, showing empty string for 0
                     productCard.querySelector(`#productQuantity${i}PC`).value = product['Pcs'].quantity > 0 ? product['Pcs'].quantity : ''; // Use 'Pcs'
                     productCard.querySelector(`#productPrice${i}PC`).textContent = `PHP ${parseFloat(product['Pcs'].price).toFixed(2)}`; // Use 'Pcs'
 
                     const caseUnitLabel = productCard.querySelector(`#productCard${i} .unit-section:last-child .unit-label`);
-                    if (caseUnitLabel) caseUnitLabel.innerHTML = `Cs <span id="caseSpec${i}" class="spec-text">${product.caseSpec}</span>`; // Use 'Cs' and new spec
+                    // Added 'CS.' text before the spec
+                    if (caseUnitLabel) caseUnitLabel.innerHTML = `CS. <span id="caseSpec${i}" class="spec-text">${product.caseSpec}</span>`;
                      // Ensure input value is correctly set, showing empty string for 0
                     productCard.querySelector(`#productQuantity${i}CASE`).value = product['Cs'].quantity > 0 ? product['Cs'].quantity : ''; // Use 'Cs'
                     productCard.querySelector(`#productPrice${i}CASE`).textContent = `PHP ${parseFloat(product['Cs'].price).toFixed(2)}`; // Use 'Cs'
@@ -1666,8 +1713,8 @@
                     const unitDetails = product[unit];
                     const quantity = parseInt(unitDetails?.quantity || 0);
                     const unitPrice = parseFloat(unitDetails?.price || '0');
-                    const unitLabel = (unit === 'Pcs' ? 'Pcs' : 'Cs'); // Corrected unitLabel
-                    const spec = (unit === 'Pcs' ? product.pcSpec : product.caseSpec); // Use the correct spec
+                    const unitPrefix = (unit === 'Pcs' ? 'PC.' : 'CS.'); // Get 'PC.' or 'CS.'
+                    const spec = (unit === 'Pcs' ? product.pcSpec : product.caseSpec); // Get spec
 
                     const removeQuantityInputId = `removeQuantityInput_${productId}_${unit}`;
 
@@ -1680,7 +1727,7 @@
                         orderItemDiv.innerHTML = `
                             <div class="order-item-details">
                                 <strong>${product.productName}</strong><br>
-                                <span>Code: ${product.productCode} | Qty: ${quantity} ${unitLabel} ${spec}</span>
+                                <span>Code: ${product.productCode} | Qty: ${quantity} ${unitPrefix} ${spec}</span>
                             </div>
                             <div class="order-item-actions">
                                 <div class="order-item-price-display">PHP ${itemTotalPrice.toFixed(2)}</div>
@@ -1813,18 +1860,19 @@
                     const unitDetails = product[unit];
                     const quantity = parseInt(unitDetails?.quantity || 0);
                     const unitPrice = parseFloat(unitDetails?.price || '0');
-                    const unitLabel = (unit === 'Pcs' ? 'Pcs' : 'Cs'); // Corrected unitLabel
-                    const spec = (unit === 'Pcs' ? product.pcSpec : product.caseSpec);
+                    const unitPrefix = (unit === 'Pcs' ? 'PC.' : 'CS.'); // Get 'PC.' or 'CS.'
+                    const spec = (unit === 'Pcs' ? product.pcSpec : product.caseSpec); // Get spec
 
                     if (quantity > 0 && !isNaN(unitPrice)) {
                         const itemTotalPrice = unitPrice * quantity;
                         totalReceiptPrice += itemTotalPrice;
 
                         currentOrderItems.push({
-                            productName: `${product.productName} ${spec}`, // Include spec in product name for receipt
+                            productName: `${product.productName}`, // Use product name directly
                             productCode: product.productCode,
                             quantity: quantity,
-                            unit: unitLabel,
+                            unit: unitPrefix, // Store 'PC.' or 'CS.'
+                            spec: spec, // Add spec to the item for receipt display
                             pricePerUnit: unitPrice.toFixed(2),
                             totalPrice: itemTotalPrice.toFixed(2)
                         });
@@ -1836,7 +1884,7 @@
 
             if (currentOrderItems.length === 0) {
                 console.warn("No items in order after synchronization. Receipt will be empty.");
-                receiptItemsBody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-500">No items in your order.</td></tr>';
+                receiptItemsBody.innerHTML = '<tr><td colspan="5" class="text-center text-gray-500">No items in your order.</td></tr>'; // Updated colspan
                 receiptTotalElement.textContent = `Total: PHP 0.00`;
                 return;
             }
@@ -1846,8 +1894,7 @@
                 row.innerHTML = `
                     <td>${item.productCode}</td>
                     <td>${item.productName}</td>
-                    <td>${item.unit}</td>
-                    <td>${item.quantity}</td>
+                    <td>${item.quantity} ${item.unit} ${item.spec}</td> <!-- Combined quantity, unit prefix and spec -->
                     <td>PHP ${item.pricePerUnit}</td>
                     <td>PHP ${item.totalPrice}</td>
                 `;
@@ -1921,6 +1968,25 @@
             window.scrollTo(0, 0); // Scroll to top of order page
         }
 
+        window.goToOrderPage = function() {
+            const orderPage = document.getElementById('orderPage');
+            const receiptPage = document.getElementById('receiptPage');
+            const mainHeader = document.getElementById('mainHeader');
+            // returnToTopBtn visibility is handled by window.onscroll, no need to explicitly set here.
+
+            receiptPage.classList.remove('visible');
+            receiptPage.classList.add('hidden');
+            receiptPage.style.display = 'none'; // Hide completely
+
+            orderPage.style.display = 'flex'; // Show order page
+            orderPage.classList.remove('hidden');
+            orderPage.classList.add('visible'); // Add visible class for transition
+            mainHeader.style.display = 'flex'; // Ensure header is visible
+
+            window.scrollTo(0, 0); // Scroll to top of order page
+            checkOrderValidity(); // Re-check button state
+        };
+
         window.filterProducts = function() {
             const searchInput = document.getElementById('productSearch').value.toLowerCase().trim();
             const searchTerms = searchInput.split(/\s+/).filter(term => term.length > 0);
@@ -1936,9 +2002,11 @@
                 if (product) {
                     const productName = product.productName.toLowerCase();
                     const productCode = product.productCode.toLowerCase();
-                    // Removed pcSpec and caseSpec from searchableText as they are now part of productName
+                    // pcSpec and caseSpec are still available for searching, even if not explicitly displayed as "Pcs" or "Cs"
+                    const pcSpecText = product.pcSpec ? product.pcSpec.toLowerCase() : '';
+                    const caseSpecText = product.caseSpec ? product.caseSpec.toLowerCase() : '';
 
-                    const searchableText = `${productName} ${productCode}`;
+                    const searchableText = `${productName} ${productCode} ${pcSpecText} ${caseSpecText}`;
 
                     let matchesAllTerms = true;
                     if (searchTerms.length > 0) {
@@ -2149,6 +2217,7 @@
     </script>
 </body>
 </html>
+
 
 
 
