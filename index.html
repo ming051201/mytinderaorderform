@@ -463,7 +463,8 @@
             min-height: 58px;
             padding: 6px 0;
             white-space: normal;
-            overflow: hidden;
+            /* Changed from overflow: hidden; to overflow: auto; to allow scrolling for long names */
+            overflow: auto;
             resize: none;
             background-color: transparent;
             border: none;
@@ -2215,6 +2216,7 @@
     </script>
 </body>
 </html>
+
 
 
    
