@@ -1439,25 +1439,18 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Function to remove size/quantity descriptors from product names
-        function cleanProductName(name) {
-            // Regex to match common size/quantity patterns (e.g., "155g", "1L", "350ML", "500ML", "100/155G")
-            // Updated regex to include various number/unit combinations and "EOE"
-            return name.replace(/\s*(EOE|\d+\s*(g|ml|L|pcs|cs|G|ML|L)\.?\s*(\(\d+\/\d+G\))?|\d+\s*\/\s*\d+[A-Z])\s*$/i, '').trim();
-        }
-
         // Data structure to store product information including unit-specific prices/sizes
         const productData = {
-            1: { productCode: '10001', productName: cleanProductName('555 SARDINES IN TOMATO SAUCE EOE 155g'), pcSpec: '', caseSpec: '', 'Pcs': { price: '24.35', quantity: 0 }, 'Cs': { price: '2414.77', quantity: 0 } },
-            2: { productCode: '10002', productName: cleanProductName('555 SARDINES IN TOMATO SAUCE WITH CHILI 155g'), pcSpec: '', caseSpec: '', 'Pcs': { price: '24.31', quantity: 0 }, 'Cs': { price: '2412.20', quantity: 0 } },
-            3: { productCode: '10003', productName: cleanProductName('555 TUNA ADOBO EOE 155G'), pcSpec: '', caseSpec: '', 'Pcs': { price: '29.15', quantity: 0 }, 'Cs': { price: '1446.07', quantity: 0 } },
-            4: { productCode: '10004', productName: cleanProductName('555 TUNA AFRITADA EOE 155G'), pcSpec: '', caseSpec: '', 'Pcs': { price: '28.51', quantity: 0 }, 'Cs': { price: '1413.61', quantity: 0 } },
-            5: { productCode: '10005', productName: cleanProductName('555 TUNA CALDERETA EOE 155G'), pcSpec: '', caseSpec: '', 'Pcs': { price: '28.51', quantity: 0 }, 'Cs': { price: '1413.56', quantity: 0 } },
-            6: { productCode: '10006', productName: cleanProductName('555 TUNA FLAKES IN OIL EOE 155G'), pcSpec: '', caseSpec: '', 'Pcs': { price: '31.65', quantity: 0 }, 'Cs': { price: '1569.26', quantity: 0 } },
-            7: { productCode: '10007', productName: cleanProductName('555 TUNA MECHADO EOE 155G'), pcSpec: '', caseSpec: '', 'Pcs': { price: '28.51', quantity: 0 }, 'Cs': { price: '1413.56', quantity: 0 } },
-            8: { productCode: '10008', productName: cleanProductName('ABSOLUTE DISTILLED WATER 1L'), pcSpec: '', caseSpec: '', 'Pcs': { price: '23.23', quantity: 0 }, 'Cs': { price: '277.62', quantity: 0 } },
-            9: { productCode: '10009', productName: cleanProductName('ABSOLUTE DISTILLED WATER 350ML'), pcSpec: '', caseSpec: '', 'Pcs': { price: '10.62', quantity: 0 }, 'Cs': { price: '370.08', quantity: 0 } },
-            10: { productCode: '10010', productName: cleanProductName('ABSOLUTE DISTILLED WATER 500ML'), pcSpec: '', caseSpec: '', 'Pcs': { price: '14.82', quantity: 0 }, 'Cs': { price: '352.29', quantity: 0 } }
+            1: { productCode: '10001', productName: '555 SARDINES IN TOMATO SAUCE EOE 155g', pcSpec: '1', caseSpec: '100', 'Pcs': { price: '24.35', quantity: 0 }, 'Cs': { price: '2414.77', quantity: 0 } },
+            2: { productCode: '10002', productName: '555 SARDINES IN TOMATO SAUCE WITH CHILI 155g', pcSpec: '1', caseSpec: '100', 'Pcs': { price: '24.31', quantity: 0 }, 'Cs': { price: '2412.20', quantity: 0 } },
+            3: { productCode: '10003', productName: '555 TUNA ADOBO EOE 155G', pcSpec: '1', caseSpec: '50', 'Pcs': { price: '29.15', quantity: 0 }, 'Cs': { price: '1446.07', quantity: 0 } },
+            4: { productCode: '10004', productName: '555 TUNA AFRITADA EOE 155G', pcSpec: '1', caseSpec: '50', 'Pcs': { price: '28.51', quantity: 0 }, 'Cs': { price: '1413.61', quantity: 0 } },
+            5: { productCode: '10005', productName: '555 TUNA CALDERETA EOE 155G', pcSpec: '1', caseSpec: '50', 'Pcs': { price: '28.51', quantity: 0 }, 'Cs': { price: '1413.56', quantity: 0 } },
+            6: { productCode: '10006', productName: '555 TUNA FLAKES IN OIL EOE 155G', pcSpec: '1', caseSpec: '50', 'Pcs': { price: '31.65', quantity: 0 }, 'Cs': { price: '1569.26', quantity: 0 } },
+            7: { productCode: '10007', productName: '555 TUNA MECHADO EOE 155G', pcSpec: '1', caseSpec: '50', 'Pcs': { price: '28.51', quantity: 0 }, 'Cs': { price: '1413.56', quantity: 0 } },
+            8: { productCode: '10008', productName: 'ABSOLUTE DISTILLED WATER 1L', pcSpec: '1', caseSpec: '12', 'Pcs': { price: '23.23', quantity: 0 }, 'Cs': { price: '277.62', quantity: 0 } },
+            9: { productCode: '10009', productName: 'ABSOLUTE DISTILLED WATER 350ML', pcSpec: '1', caseSpec: '35', 'Pcs': { price: '10.62', quantity: 0 }, 'Cs': { price: '370.08', quantity: 0 } },
+            10: { productCode: '10010', productName: 'ABSOLUTE DISTILLED WATER 500ML', pcSpec: '1', caseSpec: '25', 'Pcs': { price: '14.82', quantity: 0 }, 'Cs': { price: '352.29', quantity: 0 } }
         };
 
         // Note: clientInfo is no longer explicitly used for display but kept for potential future use or debugging
@@ -1553,11 +1546,11 @@
                             productData[productId][unit].price = (parsedData[productId][unit] && parsedData[productId][unit].price !== undefined) ? parsedData[productId][unit].price : defaultProduct[unit].price;
                         }
                     });
-                    // Only update productName from parsedData if it exists and is not empty after cleaning
-                    productData[productId].productName = parsedData[productId].productName ? cleanProductName(parsedData[productId].productName) : defaultProduct.productName;
-                    // Update pcSpec and caseSpec from the defaultProduct if not in parsedData
-                    productData[productId].pcSpec = parsedData[productId].pcSpec || defaultProduct.pcSpec;
-                    productData[productId].caseSpec = parsedData[productId].caseSpec || defaultProduct.caseSpec;
+                    // Only update productName from parsedData if it exists, otherwise use default full name
+                    productData[productId].productName = parsedData[productId].productName || defaultProduct.productName;
+                    // Update pcSpec and caseSpec from the parsedData if present, otherwise use default
+                    productData[productId].pcSpec = (parsedData[productId].pcSpec !== undefined && parsedData[productId].pcSpec !== null) ? parsedData[productId].pcSpec : defaultProduct.pcSpec;
+                    productData[productId].caseSpec = (parsedData[productId].caseSpec !== undefined && parsedData[productId].caseSpec !== null) ? parsedData[productId].caseSpec : defaultProduct.caseSpec;
                 }
                 initializeProductUI();
                 checkOrderValidity();
@@ -1688,12 +1681,12 @@
 
                         const orderItemDiv = document.createElement('div');
                         orderItemDiv.classList.add('order-item');
-                        // Modify the span content in order summary to not include the size text for the product name if spec is empty
+                        // Display product name with its size from productData, and include unit spec in the quantity line
                         const displayName = product.productName;
                         orderItemDiv.innerHTML = `
                             <div class="order-item-details">
                                 <strong>${displayName}</strong><br>
-                                <span>Code: ${product.productCode} | Qty: ${quantity} ${unitLabel}</span>
+                                <span>Code: ${product.productCode} | Qty: ${quantity} ${unitLabel} ${spec}</span>
                             </div>
                             <div class="order-item-actions">
                                 <div class="order-item-price-display">PHP ${itemTotalPrice.toFixed(2)}</div>
@@ -1834,14 +1827,14 @@
                         const itemTotalPrice = unitPrice * quantity;
                         totalReceiptPrice += itemTotalPrice;
 
-                        // Only include the spec in product name for receipt if it's not empty
-                        const productNameForReceipt = `${product.productName}${spec ? ' ' + spec : ''}`;
+                        // Use the full product name and include the spec in the quantity display for the receipt
+                        const productNameForReceipt = product.productName;
 
                         currentOrderItems.push({
-                            productName: productNameForReceipt, // Use cleaned product name for receipt
+                            productName: productNameForReceipt,
                             productCode: product.productCode,
                             quantity: quantity,
-                            unit: unitLabel,
+                            unit: `${unitLabel} ${spec}`, // Display unit and its spec
                             pricePerUnit: unitPrice.toFixed(2),
                             totalPrice: itemTotalPrice.toFixed(2)
                         });
@@ -1951,11 +1944,14 @@
                 const product = productData[productId];
 
                 if (product) {
+                    // Use the full product name for search
                     const productName = product.productName.toLowerCase();
                     const productCode = product.productCode.toLowerCase();
-                    // Removed pcSpec and caseSpec from searchableText as they are now part of productName
+                    const pcSpec = product.pcSpec.toLowerCase();
+                    const caseSpec = product.caseSpec.toLowerCase();
 
-                    const searchableText = `${productName} ${productCode}`;
+                    // Include specs in searchable text
+                    const searchableText = `${productName} ${productCode} ${pcSpec} ${caseSpec}`;
 
                     let matchesAllTerms = true;
                     if (searchTerms.length > 0) {
@@ -2166,6 +2162,7 @@
     </script>
 </body>
 </html>
+
 
 
 
