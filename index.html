@@ -505,7 +505,7 @@
         }
         .spec-text {
             font-weight: 400;
-            color: #5C6F78;
+            color: #5C6F78; /* This is the color for the text inside spec-text span */
             font-size: 0.7rem;
         }
 
@@ -1441,16 +1441,16 @@
 
         // Data structure to store product information including unit-specific prices/sizes
         const productData = {
-            1: { productCode: '10001', productName: '555 SARDINES IN TOMATO SAUCE EOE 155g', pcSpec: '(1) PC.', caseSpec: '(100) CS.', 'Pcs': { price: '24.35', quantity: 0 }, 'Cs': { price: '2414.77', quantity: 0 } },
-            2: { productCode: '10002', productName: '555 SARDINES IN TOMATO SAUCE WITH CHILI 155g', pcSpec: '(1) PC.', caseSpec: '(100) CS.', 'Pcs': { price: '24.31', quantity: 0 }, 'Cs': { price: '2412.20', quantity: 0 } },
-            3: { productCode: '10003', productName: '555 TUNA ADOBO EOE 155G', pcSpec: '(1) PC.', caseSpec: '(50) CS.', 'Pcs': { price: '29.15', quantity: 0 }, 'Cs': { price: '1446.07', quantity: 0 } },
-            4: { productCode: '10004', productName: '555 TUNA AFRITADA EOE 155G', pcSpec: '(1) PC.', caseSpec: '(50) CS.', 'Pcs': { price: '28.51', quantity: 0 }, 'Cs': { price: '1413.61', quantity: 0 } },
-            5: { productCode: '10005', productName: '555 TUNA CALDERETA EOE 155G', pcSpec: '(1) PC.', caseSpec: '(50) CS.', 'Pcs': { price: '28.51', quantity: 0 }, 'Cs': { price: '1413.56', quantity: 0 } },
-            6: { productCode: '10006', productName: '555 TUNA FLAKES IN OIL EOE 155G', pcSpec: '(1) PC.', caseSpec: '(50) CS.', 'Pcs': { price: '31.65', quantity: 0 }, 'Cs': { price: '1569.26', quantity: 0 } },
-            7: { productCode: '10007', productName: '555 TUNA MECHADO EOE 155G', pcSpec: '(1) PC.', caseSpec: '(50) CS.', 'Pcs': { price: '28.51', quantity: 0 }, 'Cs': { price: '1413.56', quantity: 0 } },
-            8: { productCode: '10008', productName: 'ABSOLUTE DISTILLED WATER 1L', pcSpec: '(1) PC.', caseSpec: '(12) CS.', 'Pcs': { price: '23.23', quantity: 0 }, 'Cs': { price: '277.62', quantity: 0 } },
-            9: { productCode: '10009', productName: 'ABSOLUTE DISTILLED WATER 350ML', pcSpec: '(1) PC.', caseSpec: '(35) CS.', 'Pcs': { price: '10.62', quantity: 0 }, 'Cs': { price: '370.08', quantity: 0 } },
-            10: { productCode: '10010', productName: 'ABSOLUTE DISTILLED WATER 500ML', pcSpec: '(1) PC.', caseSpec: '(25) CS.', 'Pcs': { price: '14.82', quantity: 0 }, 'Cs': { price: '352.29', quantity: 0 } }
+            1: { productCode: '10001', productName: '555 SARDINES IN TOMATO SAUCE EOE 155g', pcSpec: '', caseSpec: '', 'Pcs': { price: '24.35', quantity: 0 }, 'Cs': { price: '2414.77', quantity: 0 } },
+            2: { productCode: '10002', productName: '555 SARDINES IN TOMATO SAUCE WITH CHILI 155g', pcSpec: '', caseSpec: '', 'Pcs': { price: '24.31', quantity: 0 }, 'Cs': { price: '2412.20', quantity: 0 } },
+            3: { productCode: '10003', productName: '555 TUNA ADOBO EOE 155G', pcSpec: '', caseSpec: '', 'Pcs': { price: '29.15', quantity: 0 }, 'Cs': { price: '1446.07', quantity: 0 } },
+            4: { productCode: '10004', productName: '555 TUNA AFRITADA EOE 155G', pcSpec: '', caseSpec: '', 'Pcs': { price: '28.51', quantity: 0 }, 'Cs': { price: '1413.61', quantity: 0 } },
+            5: { productCode: '10005', productName: '555 TUNA CALDERETA EOE 155G', pcSpec: '', caseSpec: '', 'Pcs': { price: '28.51', quantity: 0 }, 'Cs': { price: '1413.56', quantity: 0 } },
+            6: { productCode: '10006', productName: '555 TUNA FLAKES IN OIL EOE 155G', pcSpec: '', caseSpec: '', 'Pcs': { price: '31.65', quantity: 0 }, 'Cs': { price: '1569.26', quantity: 0 } },
+            7: { productCode: '10007', productName: '555 TUNA MECHADO EOE 155G', pcSpec: '', caseSpec: '', 'Pcs': { price: '28.51', quantity: 0 }, 'Cs': { price: '1413.56', quantity: 0 } },
+            8: { productCode: '10008', productName: 'ABSOLUTE DISTILLED WATER 1L', pcSpec: '', caseSpec: '', 'Pcs': { price: '23.23', quantity: 0 }, 'Cs': { price: '277.62', quantity: 0 } },
+            9: { productCode: '10009', productName: 'ABSOLUTE DISTILLED WATER 350ML', pcSpec: '', caseSpec: '', 'Pcs': { price: '10.62', quantity: 0 }, 'Cs': { price: '370.08', quantity: 0 } },
+            10: { productCode: '10010', productName: 'ABSOLUTE DISTILLED WATER 500ML', pcSpec: '', caseSpec: '', 'Pcs': { price: '14.82', quantity: 0 }, 'Cs': { price: '352.29', quantity: 0 } }
         };
 
         // Note: clientInfo is no longer explicitly used for display but kept for potential future use or debugging
@@ -2153,6 +2153,7 @@
     </script>
 </body>
 </html>
+
 
 
 
