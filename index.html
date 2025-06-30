@@ -1014,13 +1014,6 @@
                 margin-top: 10px;
             }
 
-            .order-item-actions .order-item-price-display,
-            .order-item-actions .remove-quantity-control {
-                width: 100%;
-                justify-content: flex-start;
-                box-sizing: border-box;
-            }
-
             .remove-quantity-control {
                 flex-direction: row;
                 justify-content: flex-start;
@@ -1127,6 +1120,7 @@
                 <div class="product-info-left">
                     <div class="product-code-display" id="productCode1Display">10001</div>
                     <div class="input-group">
+                        <!-- Product name is now visible again -->
                         <textarea id="productName1" placeholder="Product Name" rows="2" readonly></textarea>
                     </div>
                 </div>
@@ -1592,9 +1586,10 @@
                         }
                     });
                     productData[productId].productName = parsedData[productId].productName || defaultProduct.productName;
-                    // Add back pcSpec and caseSpec when loading if they exist in defaultProduct
-                    productData[productId].pcSpec = parsedData[productId].pcSpec || defaultProduct.pcSpec;
-                    productData[productId].caseSpec = parsedData[productId].caseSpec || defaultProduct.caseSpec;
+                    // pcSpec and caseSpec are not used for display here, so we don't need to explicitly assign them from parsedData
+                    // They remain in productData for internal use (e.g., search or if re-enabled later)
+                    productData[productId].pcSpec = defaultProduct.pcSpec; // Ensure default value is kept if not in parsedData
+                    productData[productId].caseSpec = defaultProduct.caseSpec; // Ensure default value is kept if not in parsedData
                 }
                 initializeProductUI();
                 checkOrderValidity();
@@ -1620,9 +1615,12 @@
                 if (productCard) {
                     const product = productData[i];
                     const productNameInput = productCard.querySelector(`#productName${i}`);
-                    // Ensure productName is not undefined
-                    productNameInput.value = product.productName || '';
-                    productNameInput.title = product.productName || '';
+                    // Display the product name
+                    if (productNameInput) {
+                        productNameInput.style.display = ''; // Make it visible
+                        productNameInput.value = product.productName || ''; // Set value
+                        productNameInput.title = product.productName || ''; // Set title for tooltip
+                    }
 
                     const productCodeDisplay = productCard.querySelector(`#productCode${i}Display`);
                     if (productCodeDisplay) {
@@ -1630,14 +1628,14 @@
                     }
 
                     const pcUnitLabel = productCard.querySelector(`#productCard${i} .unit-section:first-child .unit-label`);
-                    // Ensure pcSpec is not undefined
-                    if (pcUnitLabel) pcUnitLabel.innerHTML = `PC. ${product.pcSpec || ''}`;
+                    // Display only "PC."
+                    if (pcUnitLabel) pcUnitLabel.innerHTML = `PC.`;
                     productCard.querySelector(`#productQuantity${i}PC`).value = product['Pcs'].quantity > 0 ? product['Pcs'].quantity : '';
                     productCard.querySelector(`#productPrice${i}PC`).textContent = `PHP ${parseFloat(product['Pcs'].price || 0).toFixed(2)}`;
 
                     const caseUnitLabel = productCard.querySelector(`#productCard${i} .unit-section:last-child .unit-label`);
-                    // Ensure caseSpec is not undefined
-                    if (caseUnitLabel) caseUnitLabel.innerHTML = `CS. ${product.caseSpec || ''}`;
+                    // Display only "CS."
+                    if (caseUnitLabel) caseUnitLabel.innerHTML = `CS.`;
                     productCard.querySelector(`#productQuantity${i}CASE`).value = product['Cs'].quantity > 0 ? product['Cs'].quantity : '';
                     productCard.querySelector(`#productPrice${i}CASE`).textContent = `PHP ${parseFloat(product['Cs'].price || 0).toFixed(2)}`;
                 }
@@ -1713,7 +1711,7 @@
                     const quantity = parseInt(unitDetails?.quantity || 0);
                     const unitPrice = parseFloat(unitDetails?.price || '0');
                     const unitPrefix = (unit === 'Pcs' ? 'PC.' : 'CS.'); // Get 'PC.' or 'CS.'
-                    const unitSpec = (unit === 'Pcs' ? product.pcSpec : product.caseSpec); // Get spec
+                    // unitSpec is removed from display
 
                     const removeQuantityInputId = `removeQuantityInput_${productId}_${unit}`;
 
@@ -1725,8 +1723,8 @@
                         orderItemDiv.classList.add('order-item');
                         orderItemDiv.innerHTML = `
                             <div class="order-item-details">
-                                <strong>${product.productName || ''}</strong><br> <!-- Display product name -->
-                                <span>Code: ${product.productCode || ''} | Qty: ${quantity} ${unitPrefix} ${unitSpec || ''}</span>
+                                <strong>${product.productName || ''}</strong><br> <!-- Display product name here -->
+                                <span>Code: ${product.productCode || ''} | Qty: ${quantity} ${unitPrefix}</span>
                             </div>
                             <div class="order-item-actions">
                                 <div class="order-item-price-display">PHP ${itemTotalPrice.toFixed(2)}</div>
@@ -1860,7 +1858,7 @@
                     const quantity = parseInt(unitDetails?.quantity || 0);
                     const unitPrice = parseFloat(unitDetails?.price || '0');
                     const unitPrefix = (unit === 'Pcs' ? 'PC.' : 'CS.'); // Get 'PC.' or 'CS.'
-                    const unitSpec = (unit === 'Pcs' ? product.pcSpec : product.caseSpec); // Get spec
+                    // unitSpec is removed from display in receipt
 
 
                     if (quantity > 0 && !isNaN(unitPrice)) {
@@ -1868,10 +1866,10 @@
                         totalReceiptPrice += itemTotalPrice;
 
                         currentOrderItems.push({
-                            productName: product.productName, // Keep product name in the array for filter and internal data management
+                            productName: product.productName, // Keep product name for display in receipt table
                             productCode: product.productCode,
                             quantity: quantity,
-                            unit: `${unitPrefix} ${unitSpec}`, // Store unit with spec
+                            unit: `${unitPrefix}`, // Store unit without spec
                             pricePerUnit: unitPrice.toFixed(2),
                             totalPrice: itemTotalPrice.toFixed(2)
                         });
@@ -1892,8 +1890,8 @@
                 const row = receiptItemsBody.insertRow();
                 row.innerHTML = `
                     <td>${item.productCode || ''}</td>
-                    <td>${item.productName || ''}</td> <!-- Display product name -->
-                    <td>${item.quantity} ${item.unit || ''}</td> <!-- Combined quantity and unit prefix with spec-->
+                    <td>${item.productName || ''}</td> <!-- Product Name column now displays product name -->
+                    <td>${item.quantity} ${item.unit || ''}</td> <!-- Combined quantity and unit prefix without spec-->
                     <td>PHP ${item.pricePerUnit || ''}</td>
                     <td>PHP ${item.totalPrice || ''}</td>
                 `;
@@ -1999,7 +1997,8 @@
                 const product = productData[productId];
 
                 if (product) {
-                    const productName = product.productName ? product.productName.toLowerCase() : ''; // Handle undefined
+                    // product name is still used for search, as requested.
+                    const productName = product.productName ? product.productName.toLowerCase() : '';
                     const productCode = product.productCode ? product.productCode.toLowerCase() : '';
                     const pcSpecText = product.pcSpec ? product.pcSpec.toLowerCase() : '';
                     const caseSpecText = product.caseSpec ? product.caseSpec.toLowerCase() : '';
@@ -2216,6 +2215,9 @@
     </script>
 </body>
 </html>
+
+
+   
 
 
 
