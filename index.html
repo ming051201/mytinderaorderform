@@ -1620,23 +1620,26 @@
                 if (productCard) {
                     const product = productData[i];
                     const productNameInput = productCard.querySelector(`#productName${i}`);
-                    productNameInput.value = product.productName; // Set to actual product name
-                    productNameInput.title = product.productName; // Keep title for tooltip on hover
+                    // Ensure productName is not undefined
+                    productNameInput.value = product.productName || '';
+                    productNameInput.title = product.productName || '';
 
                     const productCodeDisplay = productCard.querySelector(`#productCode${i}Display`);
                     if (productCodeDisplay) {
-                        productCodeDisplay.textContent = product.productCode;
+                        productCodeDisplay.textContent = product.productCode || '';
                     }
 
                     const pcUnitLabel = productCard.querySelector(`#productCard${i} .unit-section:first-child .unit-label`);
-                    if (pcUnitLabel) pcUnitLabel.innerHTML = `PC. ${product.pcSpec}`; // Include pcSpec
+                    // Ensure pcSpec is not undefined
+                    if (pcUnitLabel) pcUnitLabel.innerHTML = `PC. ${product.pcSpec || ''}`;
                     productCard.querySelector(`#productQuantity${i}PC`).value = product['Pcs'].quantity > 0 ? product['Pcs'].quantity : '';
-                    productCard.querySelector(`#productPrice${i}PC`).textContent = `PHP ${parseFloat(product['Pcs'].price).toFixed(2)}`;
+                    productCard.querySelector(`#productPrice${i}PC`).textContent = `PHP ${parseFloat(product['Pcs'].price || 0).toFixed(2)}`;
 
                     const caseUnitLabel = productCard.querySelector(`#productCard${i} .unit-section:last-child .unit-label`);
-                    if (caseUnitLabel) caseUnitLabel.innerHTML = `CS. ${product.caseSpec}`; // Include caseSpec
+                    // Ensure caseSpec is not undefined
+                    if (caseUnitLabel) caseUnitLabel.innerHTML = `CS. ${product.caseSpec || ''}`;
                     productCard.querySelector(`#productQuantity${i}CASE`).value = product['Cs'].quantity > 0 ? product['Cs'].quantity : '';
-                    productCard.querySelector(`#productPrice${i}CASE`).textContent = `PHP ${parseFloat(product['Cs'].price).toFixed(2)}`;
+                    productCard.querySelector(`#productPrice${i}CASE`).textContent = `PHP ${parseFloat(product['Cs'].price || 0).toFixed(2)}`;
                 }
             }
         }
@@ -1722,8 +1725,8 @@
                         orderItemDiv.classList.add('order-item');
                         orderItemDiv.innerHTML = `
                             <div class="order-item-details">
-                                <strong>${product.productName}</strong><br> <!-- Display product name -->
-                                <span>Code: ${product.productCode} | Qty: ${quantity} ${unitPrefix} ${unitSpec}</span>
+                                <strong>${product.productName || ''}</strong><br> <!-- Display product name -->
+                                <span>Code: ${product.productCode || ''} | Qty: ${quantity} ${unitPrefix} ${unitSpec || ''}</span>
                             </div>
                             <div class="order-item-actions">
                                 <div class="order-item-price-display">PHP ${itemTotalPrice.toFixed(2)}</div>
@@ -1830,7 +1833,7 @@
 
             // Client info is now hardcoded as 'N/A' as the input fields were removed.
             receiptClientInfoElement.innerHTML = `
-                <p><strong>Store Name:</strong> ${clientInfo.storeName || 'N/A'}</p>
+                <p><strong>Store Name:</b> ${clientInfo.storeName || 'N/A'}</p>
                 <p><strong>Full Name:</strong> ${clientInfo.fullName || 'N/A'}</p>
                 <p><strong>Full Address:</strong> ${clientInfo.address || 'N/A'}</p>
                 <p><strong>Phone Number:</strong> ${clientInfo.phoneNumber || 'N/A'}</p>
@@ -1888,11 +1891,11 @@
             currentOrderItems.forEach(item => {
                 const row = receiptItemsBody.insertRow();
                 row.innerHTML = `
-                    <td>${item.productCode}</td>
-                    <td>${item.productName}</td> <!-- Display product name -->
-                    <td>${item.quantity} ${item.unit}</td> <!-- Combined quantity and unit prefix with spec-->
-                    <td>PHP ${item.pricePerUnit}</td>
-                    <td>PHP ${item.totalPrice}</td>
+                    <td>${item.productCode || ''}</td>
+                    <td>${item.productName || ''}</td> <!-- Display product name -->
+                    <td>${item.quantity} ${item.unit || ''}</td> <!-- Combined quantity and unit prefix with spec-->
+                    <td>PHP ${item.pricePerUnit || ''}</td>
+                    <td>PHP ${item.totalPrice || ''}</td>
                 `;
             });
 
@@ -1996,10 +1999,10 @@
                 const product = productData[productId];
 
                 if (product) {
-                    const productName = product.productName.toLowerCase(); // Still use for searching
-                    const productCode = product.productCode.toLowerCase();
-                    const pcSpecText = product.pcSpec ? product.pcSpec.toLowerCase() : ''; // Re-add for search
-                    const caseSpecText = product.caseSpec ? product.caseSpec.toLowerCase() : ''; // Re-add for search
+                    const productName = product.productName ? product.productName.toLowerCase() : ''; // Handle undefined
+                    const productCode = product.productCode ? product.productCode.toLowerCase() : '';
+                    const pcSpecText = product.pcSpec ? product.pcSpec.toLowerCase() : '';
+                    const caseSpecText = product.caseSpec ? product.caseSpec.toLowerCase() : '';
 
 
                     const searchableText = `${productName} ${productCode} ${pcSpecText} ${caseSpecText}`; // Include specs in search
@@ -2213,6 +2216,7 @@
     </script>
 </body>
 </html>
+
 
 
 
