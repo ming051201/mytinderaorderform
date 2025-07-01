@@ -46,16 +46,16 @@
 
         /* Logo Styling */
         .login-logo {
-            max-width: 280px; /* Made bigger */
+            max-width: 80%; /* Adjusted to be larger relative to its container */
             height: auto; /* Maintains aspect ratio */
             display: block; /* Important for centering */
             margin: 0 auto; /* Centers the image horizontally */
             padding: 0; /* Keep no internal padding on the image itself */
-            object-fit: contain; /* This is crucial: scales the image down to fit entirely within the 220x220px frame, preserving aspect ratio. It might leave small empty spaces if the logo's aspect ratio doesn't match the frame, but the entire logo will always be visible. */
+            object-fit: contain; /* Scales the image down to fit entirely within the frame, preserving aspect ratio. */
         }
 
-        /* Form Title (for logo container - now outside login frame) */
-        .form-title { /* Removed .login-register-container prefix as it's now outside */
+        /* Form Title (for logo container - now inside login frame) */
+        .login-register-container .form-title { /* Re-added .login-register-container prefix as it's now inside */
             font-family: 'Inter', sans-serif;
             font-size: 0; /* Hide font size for logo container */
             font-weight: 700;
@@ -63,7 +63,13 @@
             text-align: center;
             padding: 0rem; /* Reduced padding to enlarge logo */
             margin-bottom: 20px; /* Added margin to separate from login frame */
-            /* Removed fixed width, height, and flex properties as it's no longer a fixed frame */
+            /* Re-added flex properties for centering the logo within this div */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Removed fixed width/height to allow it to be responsive within the login container */
+            width: 100%; /* Ensure it takes full width of its parent */
+            height: auto; /* Allow height to adjust */
         }
 
         /* Input Fields (Sign-in box white) */
@@ -103,7 +109,7 @@
         /* Sign Up/Sign In Buttons (White text on blue background) */
         #signUpButton, #signInButton {
             color: #ffffff; /* White color */
-            border: 1px solid #ffffff; /* White border */
+            border: none; /* Removed border */
             background-color: transparent; /* Transparent background */
             font-size: 1rem;
             font-weight: 600;
@@ -115,6 +121,7 @@
             color: #ffffff; /* Keep white on hover */
             background-color: rgba(255, 255, 255, 0.1); /* Slight white overlay on hover */
             transform: translateY(-1px);
+            border-color: transparent; /* Ensure no border on hover */
         }
 
         /* Main Sign In/Sign Up Buttons (White background, blue text) */
@@ -212,7 +219,7 @@
             margin-top:1.5rem;
             margin-bottom:1.5rem;
             text-align:center;
-            color: #8e8e93;
+            color: #ffffff; /* Changed to white for visibility on blue background */
         }
         .login-register-container .links{
             display:flex;
@@ -226,7 +233,7 @@
         .login-register-container .links p {
             margin: 0;
             font-weight: 400;
-            color: #555;
+            color: #ffffff; /* Changed to white for visibility on blue background */
         }
         .messageDiv{
             background-color:#e6f7ff;
@@ -368,12 +375,12 @@
             justify-content: flex-start;
             flex-grow: 1;
             box-sizing: border-box;
-            margin-top: 20px;
+            margin-top: 180px; /* Adjusted to lower the white background and clear the header */
             margin-bottom: 20px;
             pointer-events: none;
         }
         .order-page-container.visible {
-            margin-top: 200px;
+            margin-top: 180px; /* Adjusted to lower the white background and clear the header */
         }
 
         .order-page-container.visible, .receipt-page-container.visible {
@@ -1074,30 +1081,30 @@
         </div>
     </header>
 
-    <!-- Logo outside the sign-in frame -->
-    <div class="form-title">
-        <img src="MyTidndera_Logo.png" alt="Your Company Logo" class="login-logo">
-    </div>
-
     <!-- Login/Register Forms -->
     <div class="login-register-container" id="signIn">
+        <!-- Logo moved inside the sign-in frame -->
+        <div class="form-title">
+            <img src="MyTidndera_Logo.png" alt="Your Company Logo" class="login-logo">
+        </div>
         <form method="post" action="">
           <div id="signInMessage" class="messageDiv" style="display:none;"></div>
 
           <div class="input-group">
               <input type="email"  id="email" placeholder="Email" required>
           </div>
+     
           <div class="input-group">
             <input type="password" id="password"  placeholder="Password" required>
           </div>
           <p class="recover">
             <a href="#">Recover Password</a>
           </p>
+          <p class="or">
+          --------------------------------
+        </p>
          <button  class="btn"  id="submitSignIn">Sign In</button>
         </form>
-        <p class="or">
-          ----------or--------
-        </p>
         <div class="links">
           <p>Don't have account yet?</p>
           <button id="signUpButton">Sign Up</button>
@@ -1105,7 +1112,11 @@
       </div>
 
     <div class="login-register-container" id="signup" style="display:none;">
-      <h1 class="form-title">Register</h1>
+      <!-- Logo moved inside the sign-up frame -->
+      <div class="form-title">
+          <img src="MyTidndera_Logo.png" alt="Your Company Logo" class="login-logo">
+      </div>
+      <h1 class="form-title" style="display:none;">Register</h1> <!-- Kept for original title but hidden -->
       <form method="post" action="">
         <div id="signUpMessage" class="messageDiv" style="display:none;"></div>
         <div class="input-group">
@@ -1120,11 +1131,11 @@
         <div class="input-group">
             <input type="password" id="rPassword"  placeholder="Password" required>
         </div>
+        <p class="or">
+          --------------------------------
+        </p>
        <button class="btn" id="submitSignUp" >Sign Up</button>
       </form>
-      <p class="or">
-          ----------or--------
-        </p>
         <div class="links">
           <p>Already Have Account ?</p>
           <button id="signInButton">Sign In</button>
@@ -2196,6 +2207,7 @@
     </script>
 </body>
 </html>
+
 
 
 
