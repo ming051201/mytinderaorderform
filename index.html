@@ -28,9 +28,9 @@
 
         /* Semi-transparent Sign-in Frame (login-register-container) */
         .login-register-container {
-            background: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
-            backdrop-filter: blur(8px); /* Frosted glass effect */
-            -webkit-backdrop-filter: blur(8px); /* For Safari support */
+            background: linear-gradient(145deg, #0050A0, #003a7a); /* Blue gradient similar to header */
+            backdrop-filter: blur(0px); /* Removed blur for solid blue background */
+            -webkit-backdrop-filter: blur(0px); /* For Safari support */
             max-width: 400px;
             width: 90%;
             padding: 2.0rem;
@@ -41,44 +41,37 @@
             margin: auto;
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border for transparency */
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border for transparency */
         }
 
         /* Logo Styling */
         .login-logo {
-            max-width: 100%; /* Ensure it doesn't exceed the width of its new 220px parent */
-            max-height: 100%; /* Ensure it doesn't exceed the height of its new 220px parent */
-            width: auto; /* Allow width to adjust based on max-height and aspect ratio */
-            height: auto; /* Allow height to adjust based on max-width and aspect ratio */
+            max-width: 280px; /* Made bigger */
+            height: auto; /* Maintains aspect ratio */
+            display: block; /* Important for centering */
+            margin: 0 auto; /* Centers the image horizontally */
             padding: 0; /* Keep no internal padding on the image itself */
             object-fit: contain; /* This is crucial: scales the image down to fit entirely within the 220x220px frame, preserving aspect ratio. It might leave small empty spaces if the logo's aspect ratio doesn't match the frame, but the entire logo will always be visible. */
         }
 
-        /* Form Title (for logo container) */
-        .login-register-container .form-title {
+        /* Form Title (for logo container - now outside login frame) */
+        .form-title { /* Removed .login-register-container prefix as it's now outside */
             font-family: 'Inter', sans-serif;
             font-size: 0; /* Hide font size for logo container */
             font-weight: 700;
             color: #333;
             text-align: center;
             padding: 0rem; /* Reduced padding to enlarge logo */
-            margin-bottom: 0.8rem;
-            /* --- NEW/MODIFIED PROPERTIES FOR THE LOGO FRAME --- */
-            width: 220px; /* Define the fixed width of your logo frame */
-            height: 220px; /* Define the fixed height of your logo frame (making it square) */
-            display: flex; /* Use flexbox to center its content */
-            justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
-            margin-left: auto; /* Center the .form-title itself within its parent */
-            margin-right: auto; /* Center the .form-title itself within its parent */
+            margin-bottom: 20px; /* Added margin to separate from login frame */
+            /* Removed fixed width, height, and flex properties as it's no longer a fixed frame */
         }
 
-        /* Input Fields (Sign-in box black) */
+        /* Input Fields (Sign-in box white) */
         .login-register-container input {
-            color: #ffffff; /* White text for black inputs */
+            color: #333333; /* Dark text for white inputs */
             width: 100%;
-            background-color: #333333; /* Black background for input */
-            border: 1px solid #555555; /* Darker border */
+            background-color: #ffffff; /* White background for input */
+            border: 1px solid #cccccc; /* Light gray border */
             border-radius: 8px;
             padding: 12px 15px;
             font-size: 1rem;
@@ -89,41 +82,42 @@
             outline: none;
             border-color: #007aff; /* Apple blue on focus */
             box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
-            background-color: #444444; /* Slightly lighter black on focus */
+            background-color: #ffffff; /* Keep white on focus */
         }
         .login-register-container input::placeholder {
-            color: #bbbbbb; /* Lighter placeholder for black inputs */
+            color: #888888; /* Darker placeholder for white inputs */
             opacity: 1;
         }
 
-        /* Recover Password Link (Black) */
+        /* Recover Password Link (White text on blue background) */
         .login-register-container .recover a {
             text-decoration: none;
-            color: #000000; /* Black color */
+            color: #ffffff; /* White color */
             transition: color 0.2s ease;
         }
         .login-register-container .recover a:hover {
-            color: #555555; /* Darker gray on hover */
+            color: #e0e0e0; /* Lighter white on hover */
             text-decoration: none;
         }
 
-        /* Sign Up/Sign In Buttons (Black) */
+        /* Sign Up/Sign In Buttons (White text on blue background) */
         #signUpButton, #signInButton {
-            color: #000000; /* Black color */
-            border: none;
-            background-color: transparent;
+            color: #ffffff; /* White color */
+            border: 1px solid #ffffff; /* White border */
+            background-color: transparent; /* Transparent background */
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: color 0.2s ease, transform 0.2s ease;
+            transition: color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
         }
         #signUpButton:hover, #signInButton:hover {
             text-decoration: none;
-            color: #555555; /* Darker gray on hover */
+            color: #ffffff; /* Keep white on hover */
+            background-color: rgba(255, 255, 255, 0.1); /* Slight white overlay on hover */
             transform: translateY(-1px);
         }
 
-        /* Main Sign In/Sign Up Buttons (kept blue gradient as primary action) */
+        /* Main Sign In/Sign Up Buttons (White background, blue text) */
         .login-register-container button.btn {
             font-size: 1.1rem;
             padding: 12px 0;
@@ -131,17 +125,21 @@
             outline: none;
             border: none;
             width: 100%;
-            background: linear-gradient(145deg, #007aff, #0060e6); /* Apple blue gradient */
-            color: white;
+            background: #ffffff; /* White background */
+            color: #003a7a; /* Dark blue text */
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Softer shadow for white button */
             font-weight: 600;
         }
         .login-register-container button.btn:hover {
-            background: linear-gradient(145deg, #0060e6, #007aff);
+            background: #f0f0f0; /* Slightly gray on hover */
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 122, 255, 0.3);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        .login-register-container button.btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         /* Welcome Message Modal Styles */
@@ -1076,11 +1074,13 @@
         </div>
     </header>
 
+    <!-- Logo outside the sign-in frame -->
+    <div class="form-title">
+        <img src="MyTidndera_Logo.png" alt="Your Company Logo" class="login-logo">
+    </div>
+
     <!-- Login/Register Forms -->
     <div class="login-register-container" id="signIn">
-        <div class="form-title">
-            <img src="MyTidndera_Logo.png" alt="Your Company Logo" class="login-logo">
-        </div>
         <form method="post" action="">
           <div id="signInMessage" class="messageDiv" style="display:none;"></div>
 
@@ -2196,6 +2196,7 @@
     </script>
 </body>
 </html>
+
 
 
 
