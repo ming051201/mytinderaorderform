@@ -26,9 +26,18 @@
             box-sizing: border-box; /* Ensure padding and border are included in element's total width and height */
         }
 
+        /* Background image for login page only */
+        body.body-login-background {
+            background-image: url('bglogin.jpg'); /* Your specified background image file */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed; /* Keeps the background image fixed when scrolling */
+        }
+
         /* Semi-transparent Sign-in Frame (login-register-container) */
         .login-register-container {
-            background: linear-gradient(145deg, rgba(0, 80, 160, 0.8), rgba(0, 58, 122, 0.8));
+            background: linear-gradient(145deg, rgba(0, 80, 160, 0.8), rgba(0, 58, 122, 0.8)); /* Blue gradient similar to header */
             backdrop-filter: blur(0px); /* Removed blur for solid blue background */
             -webkit-backdrop-filter: blur(0px); /* For Safari support */
             max-width: 400px;
@@ -46,7 +55,7 @@
 
         /* Logo Styling */
         .login-logo {
-            max-width: 120%; /* Adjusted to be larger relative to its container */
+            max-width: 100%; /* Adjusted to be larger relative to its container */
             height: auto; /* Maintains aspect ratio */
             display: block; /* Important for centering */
             margin: 0 auto; /* Centers the image horizontally */
@@ -1696,6 +1705,7 @@
                 receiptPage.style.display = 'none';
                 mainHeader.style.display = 'none';
                 signInForm.style.display = 'block';
+                document.body.classList.add('body-login-background'); // Apply login background on sign out
 
                 clearLoginSignupFields();
 
@@ -2064,6 +2074,7 @@
                     mainHeader.style.display = 'flex';
                     loadProductData();
                     clearLoginSignupFields();
+                    document.body.classList.remove('body-login-background'); // Remove login background
                 }, 500); // Wait for welcome modal fade-out transition (0.5s)
             }, 1500); // Display welcome message for 1.5 seconds
         }
@@ -2076,6 +2087,7 @@
             receiptPage.style.display = 'none';
             mainHeader.style.display = 'none';
             welcomeModal.style.display = 'flex'; // Ensure welcome modal is flex for centering, but hidden by opacity/visibility
+            document.body.classList.add('body-login-background'); // Apply login background on initial load
 
             onAuthStateChanged(auth, (user) => {
                 if (user) {
@@ -2092,6 +2104,7 @@
                     }, 50);
                     mainHeader.style.display = 'flex';
                     loadProductData();
+                    document.body.classList.remove('body-login-background'); // Remove login background if already logged in
                 } else {
                     console.log("onAuthStateChanged: No user logged in.");
                     signInForm.style.display = 'block';
@@ -2099,6 +2112,7 @@
                     orderPage.style.display = 'none';
                     receiptPage.style.display = 'none';
                     mainHeader.style.display = 'none';
+                    document.body.classList.add('body-login-background'); // Apply login background
                 }
                 clearLoginSignupFields();
             });
@@ -2207,6 +2221,7 @@
     </script>
 </body>
 </html>
+
 
 
 
