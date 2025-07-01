@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,27 +9,177 @@
     <link href="https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700;900&display=swap" rel="stylesheet">
     <!-- Removed Font Awesome as icons are no longer used -->
     <style id="app-styles">
-        .login-logo {
-            max-width: 100%; /* Adjust this value (e.g., 100px, 200px) to make the logo smaller */
-            height: auto; /* Maintains aspect ratio */
-            display: block; /* Important for centering */
-            margin: 0 auto; /* Centers the image horizontally */
-            padding: 0; /* Add some vertical padding around the logo if needed */
-            object-fit: contain; /* Ensures the whole image is visible within its bounds */
-}
+        /* Apple-inspired Light Blue Gradient Background for Body */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif; /* Ensuring Inter font is applied */
+            line-height: 1.5;
+            background: linear-gradient(135deg, #e0f2f7, #c1e4ed); /* Light blue gradient */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            flex-wrap: wrap;
+            position: relative;
+            box-sizing: border-box; /* Ensure padding and border are included in element's total width and height */
+        }
 
-/* You might also want to adjust the padding/margin of .login-register-container .form-title */
-.login-register-container .form-title {
-    /* Keep existing properties like text-align: center; */
-    font-family: 'Inter', sans-serif; /* Keep Inter, but bold */
-    font-size: 0; /* Slightly larger for impact */
-    font-weight: 700; /* Bolder */
-    color: #333; /* Softer black */
-    text-align:center;
-    padding:0rem; /* <-- THIS IS THE KEY TO REDUCE */
-    margin-bottom:0.8rem; /* More space below title */
-}
-        /* Base styles and utilities */
+        /* Semi-transparent Sign-in Frame (login-register-container) */
+        .login-register-container {
+            background: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
+            backdrop-filter: blur(8px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(8px); /* For Safari support */
+            max-width: 400px;
+            width: 90%;
+            padding: 2.0rem;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); /* Softer shadow */
+            display: none;
+            flex-shrink: 0;
+            margin: auto;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border for transparency */
+        }
+
+        /* Logo Styling */
+        .login-logo {
+            max-width: 100%; /* Ensure it doesn't exceed the width of its new 220px parent */
+            max-height: 100%; /* Ensure it doesn't exceed the height of its new 220px parent */
+            width: auto; /* Allow width to adjust based on max-height and aspect ratio */
+            height: auto; /* Allow height to adjust based on max-width and aspect ratio */
+            padding: 0; /* Keep no internal padding on the image itself */
+            object-fit: contain; /* This is crucial: scales the image down to fit entirely within the 220x220px frame, preserving aspect ratio. It might leave small empty spaces if the logo's aspect ratio doesn't match the frame, but the entire logo will always be visible. */
+        }
+
+        /* Form Title (for logo container) */
+        .login-register-container .form-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 0; /* Hide font size for logo container */
+            font-weight: 700;
+            color: #333;
+            text-align: center;
+            padding: 0rem; /* Reduced padding to enlarge logo */
+            margin-bottom: 0.8rem;
+            /* --- NEW/MODIFIED PROPERTIES FOR THE LOGO FRAME --- */
+            width: 220px; /* Define the fixed width of your logo frame */
+            height: 220px; /* Define the fixed height of your logo frame (making it square) */
+            display: flex; /* Use flexbox to center its content */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            margin-left: auto; /* Center the .form-title itself within its parent */
+            margin-right: auto; /* Center the .form-title itself within its parent */
+        }
+
+        /* Input Fields (Sign-in box black) */
+        .login-register-container input {
+            color: #ffffff; /* White text for black inputs */
+            width: 100%;
+            background-color: #333333; /* Black background for input */
+            border: 1px solid #555555; /* Darker border */
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box;
+        }
+        .login-register-container input:focus {
+            outline: none;
+            border-color: #007aff; /* Apple blue on focus */
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+            background-color: #444444; /* Slightly lighter black on focus */
+        }
+        .login-register-container input::placeholder {
+            color: #bbbbbb; /* Lighter placeholder for black inputs */
+            opacity: 1;
+        }
+
+        /* Recover Password Link (Black) */
+        .login-register-container .recover a {
+            text-decoration: none;
+            color: #000000; /* Black color */
+            transition: color 0.2s ease;
+        }
+        .login-register-container .recover a:hover {
+            color: #555555; /* Darker gray on hover */
+            text-decoration: none;
+        }
+
+        /* Sign Up/Sign In Buttons (Black) */
+        #signUpButton, #signInButton {
+            color: #000000; /* Black color */
+            border: none;
+            background-color: transparent;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        #signUpButton:hover, #signInButton:hover {
+            text-decoration: none;
+            color: #555555; /* Darker gray on hover */
+            transform: translateY(-1px);
+        }
+
+        /* Main Sign In/Sign Up Buttons (kept blue gradient as primary action) */
+        .login-register-container button.btn {
+            font-size: 1.1rem;
+            padding: 12px 0;
+            border-radius: 10px;
+            outline: none;
+            border: none;
+            width: 100%;
+            background: linear-gradient(145deg, #007aff, #0060e6); /* Apple blue gradient */
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.2);
+            font-weight: 600;
+        }
+        .login-register-container button.btn:hover {
+            background: linear-gradient(145deg, #0060e6, #007aff);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 122, 255, 0.3);
+        }
+
+        /* Welcome Message Modal Styles */
+        .welcome-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Dark overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 101; /* Above other modals */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .welcome-modal.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .welcome-message {
+            font-family: 'Inter', sans-serif;
+            font-size: 3rem; /* Large font size */
+            font-weight: 700;
+            color: #ffffff; /* White text */
+            text-align: center;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+        .welcome-modal.visible .welcome-message {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Base styles and utilities (kept from original) */
         html {
             line-height: 1.5;
             -webkit-text-size-adjust: 100%;
@@ -41,166 +192,61 @@
         *, ::before, ::after {
             box-sizing: inherit;
         }
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: inherit;
-            line-height: inherit;
-            background:linear-gradient(to right,#e2e2e2,#c9d6ff); /* Soft gradient background */
-            display: flex;
-            flex-direction: column; /* Allows centering single large block or multiple smaller ones */
-            align-items: center; /* Horizontally center children */
-            justify-content: center; /* Vertically center children */
-            min-height: 100vh; /* Ensure body takes full viewport height */
-            flex-wrap: wrap; /* Ensure content wraps on smaller screens */
-            position: relative; /* For fixed elements */
-        }
-
-        /* --- Login/Register Specific Styles --- */
-        .login-register-container {
-            background: linear-gradient(135deg, #ffffff, #f8f8f8); /* Apple-like subtle gradient */
-            max-width: 400px; /* Slightly adjusted max-width for a sleeker look */
-            width: 90%; /* Ensure it's responsive */
-            padding: 2.0rem; /* Increased padding */
-            border-radius: 18px; /* More rounded corners */
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); /* Softer, wider shadow */
-            display: none; /* Hidden by default, controlled by JS */
-            flex-shrink: 0; /* Prevent container from shrinking unnecessarily */
-            margin: auto; /* To help with centering when not a direct flex child of body */
-            position: relative; /* For stacking context if needed */
-            overflow: hidden; /* Ensure inner elements respect border-radius */
-        }
-        /* Removed .active CSS rule as display is now controlled by JS directly */
 
         .login-register-container form{
-            margin:0 1.5rem; /* Adjusted margin for forms inside container */
-        }
-        .login-register-container .form-title{
-            font-family: 'Inter', sans-serif; /* Keep Inter, but bold */
-            font-size: 2rem; /* Slightly larger for impact */
-            font-weight: 700; /* Bolder */
-            color: #333; /* Softer black */
-            text-align:center;
-            padding:1.3rem;
-            margin-bottom:0.8rem; /* More space below title */
-        }
-        .login-register-container input{
-            color: #333; /* Darker text color */
-            width:100%;
-            background-color:#f9f9f9; /* Light background for input */
-            border:1px solid #e0e0e0; /* Subtle border */
-            border-radius: 8px; /* Rounded input fields */
-            padding: 12px 15px; /* Ample padding */
-            font-size: 1rem; /* Standard font size */
-            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
-            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            margin:0 1.5rem;
         }
         .login-register-container .input-group{
-            padding:0.7rem 0; /* Adjusted padding */
+            padding:0.7rem 0;
             position:relative;
         }
-        /* Removed .input-group i styles as icons are removed */
-        .login-register-container input:focus{
-            outline:none;
-            border-color:#007aff; /* Apple blue on focus */
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2); /* Soft blue glow on focus */
-            background-color: #ffffff; /* White background on focus */
-        }
-        /* Placeholder styling */
-        .login-register-container input::placeholder{
-            color:#a0a0a0; /* Visible, subtle placeholder */
-            opacity: 1; /* Ensure placeholder is always visible */
-        }
         .login-register-container label{
-            display: none; /* Labels are hidden as placeholders are used instead */
+            display: none;
         }
         .login-register-container .recover{
             text-align:right;
-            font-size:0.9rem; /* Slightly smaller */
+            font-size:0.9rem;
             margin-top: 0.5rem;
-            margin-bottom:1.5rem; /* More space below */
-        }
-        .login-register-container .recover a{
-            text-decoration:none;
-            color:#007aff; /* Apple blue */
-            transition: color 0.2s ease;
-        }
-        .login-register-container .recover a:hover{
-            color:#0056b3; /* Darker blue on hover */
-            text-decoration: none; /* No underline for Apple feel */
-        }
-        .login-register-container button.btn{ /* Specific for login/register buttons */
-            font-size:1.1rem;
-            padding:12px 0; /* Taller button */
-            border-radius:10px; /* More rounded */
-            outline:none;
-            border:none;
-            width:100%;
-            background:linear-gradient(145deg, #007aff, #0060e6); /* Apple blue gradient */
-            color:white;
-            cursor:pointer;
-            transition:all 0.3s ease; /* Smooth transitions for hover effects */
-            box-shadow:0 4px 15px rgba(0, 122, 255, 0.2); /* Subtle shadow */
-            font-weight: 600; /* Bolder text */
-        }
-        .login-register-container button.btn:hover{
-            background:linear-gradient(145deg, #0060e6, #007aff);
-            transform: translateY(-2px); /* Slight lift effect */
-            box-shadow:0 6px 20px rgba(0, 122, 255, 0.3); /* Enhanced shadow on hover */
+            margin-bottom:1.5rem;
         }
         .login-register-container .or{
-            font-size:1rem; /* Slightly smaller 'or' text */
-            margin-top:1.5rem; /* More space above */
-            margin-bottom:1.5rem; /* More space below */
+            font-size:1rem;
+            margin-top:1.5rem;
+            margin-bottom:1.5rem;
             text-align:center;
-            color: #8e8e93; /* Apple gray */
+            color: #8e8e93;
         }
         .login-register-container .links{
             display:flex;
-            justify-content:center; /* Center align these links */
-            padding:0 1rem; /* Adjusted padding */
+            justify-content:center;
+            padding:0 1rem;
             margin-top:0.9rem;
             font-weight:bold;
-            flex-wrap: wrap; /* Allow wrapping on small screens */
-            gap: 5px; /* Space between items if they wrap */
+            flex-wrap: wrap;
+            gap: 5px;
         }
         .login-register-container .links p {
-            margin: 0; /* Remove default paragraph margin */
-            font-weight: 400; /* Lighter font weight for text */
+            margin: 0;
+            font-weight: 400;
             color: #555;
         }
-        #signUpButton, #signInButton{ /* For switching forms */
-            color:#007aff; /* Apple blue */
-            border:none;
-            background-color:transparent;
-            font-size:1rem;
-            font-weight:600; /* Bolder for buttons */
-            cursor: pointer;
-            transition: color 0.2s ease, transform 0.2s ease;
-        }
-        #signUpButton:hover, #signInButton:hover {
-            text-decoration:none; /* Remove underline */
-            color:#0056b3; /* Darker blue on hover */
-            transform: translateY(-1px); /* Slight lift */
-        }
         .messageDiv{
-            background-color:#e6f7ff; /* Light blue for info messages */
-            color:#007bff; /* Darker blue text */
+            background-color:#e6f7ff;
+            color:#007bff;
             padding:10px 20px;
-            margin:10px auto; /* Center the message div */
-            border-radius: 8px; /* More rounded */
-            border: 1px solid #b3dfff; /* Subtle border */
-            font-size:0.9rem; /* Slightly smaller font */
+            margin:10px auto;
+            border-radius: 8px;
+            border: 1px solid #b3dfff;
+            font-size:0.9rem;
             opacity:0;
             animation:fadeOut 7s forwards;
             text-align: center;
-            max-width: 80%; /* Ensure it's responsive */
+            max-width: 80%;
         }
-        /* Keyframes for the fadeOut animation */
         @keyframes fadeOut {
             0% { opacity: 1; }
-            80% { opacity: 1; } /* Keep it visible for a while */
-            100% { opacity: 0; display: none; } /* Fade out and hide completely */
+            80% { opacity: 1; }
+            100% { opacity: 0; display: none; }
         }
 
         /* --- MyTindahan Specific Styles (merged and adapted) --- */
@@ -220,33 +266,31 @@
             flex-wrap: nowrap;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             box-sizing: border-box;
-            display: none; /* Initially hidden, shown after login */
+            display: none;
             gap: 15px;
         }
-
-        /* Styles for header buttons to fit dark background */
-        .main-fixed-header .sign-out-button { /* Changed from .back-button */
+        .main-fixed-header .sign-out-button {
             background: none;
-            border: 2px solid white; /* Added a subtle border for visibility */
+            border: 2px solid white;
             color: white;
             padding: 8px 15px;
-            border-radius: 8px; /* Slightly rounded corners */
+            border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 80px; /* Wider for "Sign Out" text */
+            min-width: 80px;
             min-height: 40px;
             font-weight: 600;
             font-size: 0.9rem;
         }
         .main-fixed-header .sign-out-button:hover {
             background-color: rgba(255, 255, 255, 0.1);
-            border-color: #a0c4ff; /* Lighter border on hover */
-            transform: scale(1.02); /* Slight scale effect */
+            border-color: #a0c4ff;
+            transform: scale(1.02);
         }
-        .main-fixed-header .sign-out-button svg { /* Removed as text button now */
+        .main-fixed-header .sign-out-button svg {
             display: none;
         }
 
@@ -316,11 +360,11 @@
             text-align: center;
             max-width: 900px;
             width: 100%;
-            opacity: 0; /* Initially hidden by opacity */
+            opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.7s ease, transform 0.7s ease;
             position: relative;
-            display: none; /* Controlled by JS for full show/hide */
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
@@ -328,9 +372,8 @@
             box-sizing: border-box;
             margin-top: 20px;
             margin-bottom: 20px;
-            pointer-events: none; /* Make non-interactive when hidden */
+            pointer-events: none;
         }
-        /* Specific margin for order page to clear fixed header */
         .order-page-container.visible {
             margin-top: 200px;
         }
@@ -338,9 +381,8 @@
         .order-page-container.visible, .receipt-page-container.visible {
             opacity: 1;
             transform: translateY(0);
-            pointer-events: auto; /* Make interactive when visible */
+            pointer-events: auto;
         }
-        /* Hidden class only controls opacity and pointer-events, not display */
         .order-page-container.hidden, .receipt-page-container.hidden {
             opacity: 0;
             pointer-events: none;
@@ -379,7 +421,6 @@
             opacity: 0.7;
         }
 
-        /* Search Bar Specific Styles (now inside fixed header) */
         .search-bar-container {
             width: 100%;
             max-width: none;
@@ -452,7 +493,6 @@
             color: #5C6F78;
             margin-bottom: 3px;
         }
-        /* Adjusted input-group for product cards, not impacting login form */
         .product-card .input-group {
             width: 100%;
             text-align: left;
@@ -525,7 +565,7 @@
         }
         .spec-text {
             font-weight: 400;
-            color: #5C6F78; /* This is the color for the text inside spec-text span */
+            color: #5C6F78;
             font-size: 0.7rem;
         }
 
@@ -1039,18 +1079,16 @@
     <!-- Login/Register Forms -->
     <div class="login-register-container" id="signIn">
         <div class="form-title">
-    <img src="MyTidndera_Logo.png" alt="Your Company Logo" class="login-logo">
-</div>
+            <img src="MyTidndera_Logo.png" alt="Your Company Logo" class="login-logo">
+        </div>
         <form method="post" action="">
           <div id="signInMessage" class="messageDiv" style="display:none;"></div>
 
           <div class="input-group">
               <input type="email"  id="email" placeholder="Email" required>
-              <!-- Label removed as placeholder is used -->
           </div>
           <div class="input-group">
             <input type="password" id="password"  placeholder="Password" required>
-            <!-- Label removed as placeholder is used -->
           </div>
           <p class="recover">
             <a href="#">Recover Password</a>
@@ -1072,19 +1110,15 @@
         <div id="signUpMessage" class="messageDiv" style="display:none;"></div>
         <div class="input-group">
            <input type="text"  id="fName" placeholder="First Name" required>
-           <!-- Label removed as placeholder is used -->
         </div>
         <div class="input-group">
             <input type="text"  id="lName" placeholder="Last Name" required>
-            <!-- Label removed as placeholder is used -->
         </div>
         <div class="input-group">
             <input type="email"  id="rEmail" placeholder="Email" required>
-            <!-- Label removed as placeholder is used -->
         </div>
         <div class="input-group">
             <input type="password" id="rPassword"  placeholder="Password" required>
-            <!-- Label removed as placeholder is used -->
         </div>
        <button class="btn" id="submitSignUp" >Sign Up</button>
       </form>
@@ -1432,6 +1466,11 @@
         </div>
     </div>
 
+    <!-- Welcome Message Modal -->
+    <div id="welcomeModal" class="welcome-modal">
+        <div class="welcome-message">Welcome!</div>
+    </div>
+
     <!-- Return to Top Button (Hidden by default) -->
     <button onclick="scrollToTop()" id="returnToTopBtn" title="Return to Top">
         Return to Top
@@ -1475,7 +1514,6 @@
             10: { productCode: '10010', productName: 'ABSOLUTE DISTILLED WATER 500ML', pcSpec: '1', caseSpec: '25', 'Pcs': { price: '14.82', quantity: 0 }, 'Cs': { price: '352.29', quantity: 0 } }
         };
 
-        // Note: clientInfo is no longer explicitly used for display but kept for potential future use or debugging
         let clientInfo = {
             storeName: 'N/A',
             fullName: 'N/A',
@@ -1489,7 +1527,8 @@
         const orderPage = document.getElementById('orderPage');
         const receiptPage = document.getElementById('receiptPage');
         const mainHeader = document.getElementById('mainHeader');
-        const returnToTopBtn = document.getElementById('returnToTopBtn'); // Get reference here
+        const returnToTopBtn = document.getElementById('returnToTopBtn');
+        const welcomeModal = document.getElementById('welcomeModal'); // New: Welcome Modal
 
         // Form input fields
         const emailInput = document.getElementById('email');
@@ -1506,16 +1545,14 @@
             messageDiv.style.display = "block";
             messageDiv.innerHTML = message;
             messageDiv.style.opacity = 1;
-            // Clear previous animation and apply new one
             messageDiv.style.animation = 'none';
-            void messageDiv.offsetWidth; // Trigger reflow
+            void messageDiv.offsetWidth;
             messageDiv.style.animation = 'fadeOut 7s forwards';
 
-            // Ensure display:none after a shorter duration even if animation is interrupted
             setTimeout(() => {
                 messageDiv.style.display = "none";
                 messageDiv.style.opacity = 0;
-            }, 6000); // Hide completely after 6 seconds
+            }, 6000);
         }
 
         // Debounce function
@@ -1530,7 +1567,6 @@
 
         const saveProductData = debounce((productId, unitType) => {
             const product = productData[productId];
-            // Use correct unit names 'Pcs' and 'Cs' here for element ID reference, HTML uses PC/CASE
             const quantityInput = document.getElementById(`productQuantity${productId}${unitType === 'Pcs' ? 'PC' : 'CASE'}`);
             if (product && product[unitType]) {
                 product[unitType].quantity = parseInt(quantityInput.value) || 0;
@@ -1558,19 +1594,16 @@
                         parsedData[productId] = {};
                     }
 
-                    ['Pcs', 'Cs'].forEach(unit => { // Use 'Pcs' and 'Cs' for internal data model
+                    ['Pcs', 'Cs'].forEach(unit => {
                         if (!parsedData[productId][unit]) {
                             parsedData[productId][unit] = {};
                         }
-                        // Check if the property exists in productData for the new unit names
                         if (productData[productId][unit]) {
                             productData[productId][unit].quantity = (parsedData[productId][unit] && parsedData[productId][unit].quantity !== undefined) ? parseInt(parsedData[productId][unit].quantity) : 0;
                             productData[productId][unit].price = (parsedData[productId][unit] && parsedData[productId][unit].price !== undefined) ? parsedData[productId][unit].price : defaultProduct[unit].price;
                         }
                     });
-                    // Only update productName from parsedData if it exists, otherwise use default full name
                     productData[productId].productName = parsedData[productId].productName || defaultProduct.productName;
-                    // Update pcSpec and caseSpec from the parsedData if present, otherwise use default
                     productData[productId].pcSpec = (parsedData[productId].pcSpec !== undefined && parsedData[productId].pcSpec !== null) ? parsedData[productId].pcSpec : defaultProduct.pcSpec;
                     productData[productId].caseSpec = (parsedData[productId].caseSpec !== undefined && parsedData[productId].caseSpec !== null) ? parsedData[productId].caseSpec : defaultProduct.caseSpec;
                 }
@@ -1578,13 +1611,12 @@
                 checkOrderValidity();
                 filterProducts();
                 console.log("Product data loaded and UI initialized.");
-                console.log("Current productData after load:", JSON.parse(JSON.stringify(productData))); // Deep copy for logging
+                console.log("Current productData after load:", JSON.parse(JSON.stringify(productData)));
             } catch (e) {
                 console.error("Error loading or parsing product data from localStorage:", e);
-                // Reset to default quantities if loading fails
                 for (const productId in productData) {
-                    productData[productId]['Pcs'].quantity = 0; // Use 'Pcs'
-                    productData[productId]['Cs'].quantity = 0;   // Use 'Cs'
+                    productData[productId]['Pcs'].quantity = 0;
+                    productData[productId]['Cs'].quantity = 0;
                 }
                 initializeProductUI();
                 checkOrderValidity();
@@ -1599,7 +1631,7 @@
                     const product = productData[i];
                     const productNameInput = productCard.querySelector(`#productName${i}`);
                     productNameInput.value = product.productName;
-                    productNameInput.title = product.productName; // Set title for tooltip
+                    productNameInput.title = product.productName;
 
                     const productCodeDisplay = productCard.querySelector(`#productCode${i}Display`);
                     if (productCodeDisplay) {
@@ -1607,18 +1639,14 @@
                     }
 
                     const pcUnitLabel = productCard.querySelector(`#productCard${i} .unit-section:first-child .unit-label`);
-                    // Changed 'Pcs' to 'PC.'
-                    if (pcUnitLabel) pcUnitLabel.innerHTML = `PC. <span id="pcSpec${i}" class="spec-text">${product.pcSpec}</span>`; // Use 'Pcs' and new spec
-                    // Ensure input value is correctly set, showing empty string for 0
-                    productCard.querySelector(`#productQuantity${i}PC`).value = product['Pcs'].quantity > 0 ? product['Pcs'].quantity : ''; // Use 'Pcs'
-                    productCard.querySelector(`#productPrice${i}PC`).textContent = `PHP ${parseFloat(product['Pcs'].price).toFixed(2)}`; // Use 'Pcs'
+                    if (pcUnitLabel) pcUnitLabel.innerHTML = `PC. <span id="pcSpec${i}" class="spec-text">${product.pcSpec}</span>`;
+                    productCard.querySelector(`#productQuantity${i}PC`).value = product['Pcs'].quantity > 0 ? product['Pcs'].quantity : '';
+                    productCard.querySelector(`#productPrice${i}PC`).textContent = `PHP ${parseFloat(product['Pcs'].price).toFixed(2)}`;
 
                     const caseUnitLabel = productCard.querySelector(`#productCard${i} .unit-section:last-child .unit-label`);
-                    // Changed 'Cs' to 'CS.'
-                    if (caseUnitLabel) caseUnitLabel.innerHTML = `CS. <span id="caseSpec${i}" class="spec-text">${product.caseSpec}</span>`; // Use 'Cs' and new spec
-                     // Ensure input value is correctly set, showing empty string for 0
-                    productCard.querySelector(`#productQuantity${i}CASE`).value = product['Cs'].quantity > 0 ? product['Cs'].quantity : ''; // Use 'Cs'
-                    productCard.querySelector(`#productPrice${i}CASE`).textContent = `PHP ${parseFloat(product['Cs'].price).toFixed(2)}`; // Use 'Cs'
+                    if (caseUnitLabel) caseUnitLabel.innerHTML = `CS. <span id="caseSpec${i}" class="spec-text">${product.caseSpec}</span>`;
+                    productCard.querySelector(`#productQuantity${i}CASE`).value = product['Cs'].quantity > 0 ? product['Cs'].quantity : '';
+                    productCard.querySelector(`#productPrice${i}CASE`).textContent = `PHP ${parseFloat(product['Cs'].price).toFixed(2)}`;
                 }
             }
         }
@@ -1627,7 +1655,6 @@
             let hasItems = false;
             for (const productId in productData) {
                 const product = productData[productId];
-                // Use 'Pcs' and 'Cs' for checking quantities
                 if ((product['Pcs'] && parseInt(product['Pcs'].quantity) > 0) ||
                     (product['Cs'] && parseInt(product['Cs'].quantity) > 0)) {
                     hasItems = true;
@@ -1636,7 +1663,6 @@
             }
             const finalizeButton = document.getElementById('finalizeOrderButton');
             if (finalizeButton) {
-                // The button should be enabled if any item has a quantity greater than 0
                 finalizeButton.disabled = !hasItems;
             }
         }
@@ -1653,16 +1679,16 @@
         window.handleSignOutClick = async function() {
             const returnToTopBtn = document.getElementById('returnToTopBtn');
             try {
-                await signOut(auth); // Firebase sign out
+                await signOut(auth);
                 console.log("User signed out successfully.");
                 orderPage.style.display = 'none';
                 receiptPage.style.display = 'none';
                 mainHeader.style.display = 'none';
-                signInForm.style.display = 'block'; // Show sign-in form
+                signInForm.style.display = 'block';
 
-                clearLoginSignupFields(); // Clear all fields on sign out
+                clearLoginSignupFields();
 
-                signUpForm.style.display = 'none'; // Ensure sign-up is hidden
+                signUpForm.style.display = 'none';
                 returnToTopBtn.style.display = 'none';
             } catch (error) {
                 console.error("Error signing out:", error);
@@ -1680,20 +1706,18 @@
 
             for (const productId in productData) {
                 const product = productData[productId];
-                // Synchronize quantities from UI inputs before showing summary to ensure data is fresh
                 const quantityInputPC = document.getElementById(`productQuantity${productId}PC`);
                 const quantityInputCASE = document.getElementById(`productQuantity${productId}CASE`);
 
-                if (quantityInputPC) product['Pcs'].quantity = parseInt(quantityInputPC.value) || 0; // Use 'Pcs'
-                if (quantityInputCASE) product['Cs'].quantity = parseInt(quantityInputCASE.value) || 0;   // Use 'Cs'
+                if (quantityInputPC) product['Pcs'].quantity = parseInt(quantityInputPC.value) || 0;
+                if (quantityInputCASE) product['Cs'].quantity = parseInt(quantityInputCASE.value) || 0;
 
-                ['Pcs', 'Cs'].forEach(unit => { // Iterate using 'Pcs' and 'Cs'
+                ['Pcs', 'Cs'].forEach(unit => {
                     const unitDetails = product[unit];
                     const quantity = parseInt(unitDetails?.quantity || 0);
                     const unitPrice = parseFloat(unitDetails?.price || '0');
-                    // Changed 'Pcs' to 'PC.' and 'Cs' to 'CS.'
-                    const unitLabel = (unit === 'Pcs' ? 'PC.' : 'CS.'); // Corrected unitLabel
-                    const spec = (unit === 'Pcs' ? product.pcSpec : product.caseSpec); // Use the correct spec
+                    const unitLabel = (unit === 'Pcs' ? 'PC.' : 'CS.');
+                    const spec = (unit === 'Pcs' ? product.pcSpec : product.caseSpec);
 
                     const removeQuantityInputId = `removeQuantityInput_${productId}_${unit}`;
 
@@ -1703,7 +1727,6 @@
 
                         const orderItemDiv = document.createElement('div');
                         orderItemDiv.classList.add('order-item');
-                        // Display product name with its size from productData, and include unit spec in the quantity line
                         const displayName = product.productName;
                         orderItemDiv.innerHTML = `
                             <div class="order-item-details">
@@ -1745,10 +1768,9 @@
         window.clearAllOrders = function() {
             for (const productId in productData) {
                 const product = productData[productId];
-                ['Pcs', 'Cs'].forEach(unit => { // Use 'Pcs' and 'Cs'
+                ['Pcs', 'Cs'].forEach(unit => {
                     if (product[unit]) {
                         product[unit].quantity = 0;
-                        // Adjust ID to match HTML (PC or CASE)
                         const quantityInput = document.getElementById(`productQuantity${productId}${unit === 'Pcs' ? 'PC' : 'CASE'}`);
                         if (quantityInput) {
                             quantityInput.value = '';
@@ -1781,7 +1803,6 @@
                 }
                 product[unit].quantity = newQuantity;
 
-                // Adjust ID to match HTML structure ('PC' or 'CASE')
                 const quantityInputOnMainPage = document.getElementById(`productQuantity${productId}${unit === 'Pcs' ? 'PC' : 'CASE'}`);
                 if (quantityInputOnMainPage) {
                     quantityInputOnMainPage.value = newQuantity > 0 ? newQuantity : '';
@@ -1813,7 +1834,6 @@
             let totalReceiptPrice = 0;
             const currentOrderItems = [];
 
-            // Client info is now hardcoded as 'N/A' as the input fields were removed.
             receiptClientInfoElement.innerHTML = `
                 <p><strong>Store Name:</strong> ${clientInfo.storeName || 'N/A'}</p>
                 <p><strong>Full Name:</strong> ${clientInfo.fullName || 'N/A'}</p>
@@ -1824,12 +1844,11 @@
             console.log("Synchronizing product quantities from UI to productData before finalization.");
             for (const productId in productData) {
                 const product = productData[productId];
-                // Explicitly synchronize quantities from UI inputs before proceeding
                 const quantityInputPC = document.getElementById(`productQuantity${productId}PC`);
                 const quantityInputCASE = document.getElementById(`productQuantity${productId}CASE`);
 
-                if (quantityInputPC) product['Pcs'].quantity = parseInt(quantityInputPC.value) || 0; // Use 'Pcs'
-                if (quantityInputCASE) product['Cs'].quantity = parseInt(quantityInputCASE.value) || 0;   // Use 'Cs'
+                if (quantityInputPC) product['Pcs'].quantity = parseInt(quantityInputPC.value) || 0;
+                if (quantityInputCASE) product['Cs'].quantity = parseInt(quantityInputCASE.value) || 0;
             }
             console.log("ProductData after UI synchronization:", JSON.parse(JSON.stringify(productData)));
 
@@ -1837,26 +1856,24 @@
             for (const productId in productData) {
                 const product = productData[productId];
 
-                ['Pcs', 'Cs'].forEach(unit => { // Use 'Pcs' and 'Cs'
+                ['Pcs', 'Cs'].forEach(unit => {
                     const unitDetails = product[unit];
                     const quantity = parseInt(unitDetails?.quantity || 0);
                     const unitPrice = parseFloat(unitDetails?.price || '0');
-                    // Changed 'Pcs' to 'PC.' and 'Cs' to 'CS.'
-                    const unitLabel = (unit === 'Pcs' ? 'PC.' : 'CS.'); // Corrected unitLabel
+                    const unitLabel = (unit === 'Pcs' ? 'PC.' : 'CS.');
                     const spec = (unit === 'Pcs' ? product.pcSpec : product.caseSpec);
 
                     if (quantity > 0 && !isNaN(unitPrice)) {
                         const itemTotalPrice = unitPrice * quantity;
                         totalReceiptPrice += itemTotalPrice;
 
-                        // Use the full product name and include the spec in the quantity display for the receipt
                         const productNameForReceipt = product.productName;
 
                         currentOrderItems.push({
                             productName: productNameForReceipt,
                             productCode: product.productCode,
                             quantity: quantity,
-                            unit: `${unitLabel} ${spec}`, // Display unit and its spec
+                            unit: `${unitLabel} ${spec}`,
                             pricePerUnit: unitPrice.toFixed(2),
                             totalPrice: itemTotalPrice.toFixed(2)
                         });
@@ -1899,10 +1916,8 @@
                 receiptPage.classList.add('visible');
                 console.log("Receipt page should now be visible.");
 
-                // Hide the "Return to Top" button on the receipt page
                 returnToTopBtn.style.display = 'none';
 
-                // We no longer reset quantities here. They persist unless 'Clear Order' or 'Order Again' is clicked.
                 try {
                     localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
                     console.log("Order finalized and saved to localStorage.");
@@ -1915,15 +1930,14 @@
         }
 
         window.orderAgain = function() {
-            // Reset quantities in productData for a new order session
             for (const productId in productData) {
                 const product = productData[productId];
-                ['Pcs', 'Cs'].forEach(unit => { // Use 'Pcs' and 'Cs'
+                ['Pcs', 'Cs'].forEach(unit => {
                     if (product[unit]) {
                         product[unit].quantity = 0;
-                        const quantityInput = document.getElementById(`productQuantity${productId}${unit === 'Pcs' ? 'PC' : 'CASE'}`); // Adjust ID
+                        const quantityInput = document.getElementById(`productQuantity${productId}${unit === 'Pcs' ? 'PC' : 'CASE'}`);
                         if (quantityInput) {
-                            quantityInput.value = ''; // Set to empty string to show placeholder
+                            quantityInput.value = '';
                         }
                     }
                 });
@@ -1935,8 +1949,6 @@
             catch (e) {
                 console.error("Error resetting orders in localStorage via 'Order Again':", e);
             }
-            // No client info to clear from inputs, as they are removed.
-            // clientInfo remains its default values.
             const orderPage = document.getElementById('orderPage');
             const receiptPage = document.getElementById('receiptPage');
             const mainHeader = document.getElementById('mainHeader');
@@ -1950,7 +1962,7 @@
             orderPage.classList.add('visible');
             mainHeader.style.display = 'flex';
             loadProductData();
-            window.scrollTo(0, 0); // Scroll to top of order page
+            window.scrollTo(0, 0);
         }
 
         window.filterProducts = function() {
@@ -1966,13 +1978,11 @@
                 const product = productData[productId];
 
                 if (product) {
-                    // Use the full product name for search
                     const productName = product.productName.toLowerCase();
                     const productCode = product.productCode.toLowerCase();
                     const pcSpec = product.pcSpec.toLowerCase();
                     const caseSpec = product.caseSpec.toLowerCase();
 
-                    // Include specs in searchable text
                     const searchableText = `${productName} ${productCode} ${pcSpec} ${caseSpec}`;
 
                     let matchesAllTerms = true;
@@ -2005,7 +2015,6 @@
             }
         }
 
-        // Function to scroll to the top of the page smoothly
         window.scrollToTop = function() {
             window.scrollTo({
                 top: 0,
@@ -2013,10 +2022,6 @@
             });
         }
 
-        /**
-         * Opens the image modal with the specified image source.
-         * @param {string} imgSrc - The source URL of the image to display.
-         */
         window.openImageModal = function(imgSrc) {
             const imageModal = document.getElementById('imageModal');
             const imageModalImg = document.getElementById('imageModalImg');
@@ -2024,9 +2029,6 @@
             imageModal.classList.add('visible');
         }
 
-        /**
-         * Closes the image enlargement modal.
-         */
         window.closeImageModal = function() {
             const imageModal = document.getElementById('imageModal');
             imageModal.classList.remove('visible');
@@ -2034,45 +2036,62 @@
             imageModalImg.src = '';
         }
 
+        // Function to show the "Welcome!" modal and then transition to the order list
+        function showWelcomeAndTransition() {
+            signInForm.style.display = 'none';
+            signUpForm.style.display = 'none';
+            welcomeModal.classList.add('visible'); // Show welcome modal
+
+            setTimeout(() => {
+                welcomeModal.classList.remove('visible'); // Hide welcome modal
+                // After welcome message fades out, transition to order page
+                setTimeout(() => {
+                    receiptPage.style.display = 'none';
+                    orderPage.style.display = 'flex';
+                    orderPage.classList.remove('hidden');
+                    orderPage.classList.add('visible');
+                    mainHeader.style.display = 'flex';
+                    loadProductData();
+                    clearLoginSignupFields();
+                }, 500); // Wait for welcome modal fade-out transition (0.5s)
+            }, 1500); // Display welcome message for 1.5 seconds
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             console.log("DOMContentLoaded fired.");
-            // Initial state: Set display for all main containers explicitly
-            signInForm.style.display = 'block'; // Sign In visible
-            signUpForm.style.display = 'none';  // Sign Up hidden
-            orderPage.style.display = 'none';   // Order Page hidden
-            receiptPage.style.display = 'none'; // Receipt Page hidden
-            mainHeader.style.display = 'none';  // Header hidden
+            signInForm.style.display = 'block';
+            signUpForm.style.display = 'none';
+            orderPage.style.display = 'none';
+            receiptPage.style.display = 'none';
+            mainHeader.style.display = 'none';
+            welcomeModal.style.display = 'flex'; // Ensure welcome modal is flex for centering, but hidden by opacity/visibility
 
-            // Firebase authentication listener to handle initial load and reloads
             onAuthStateChanged(auth, (user) => {
                 if (user) {
-                    // User is signed in
                     console.log("onAuthStateChanged: User is logged in, UID:", user.uid);
+                    // If user is already logged in on page load, directly show order page
+                    // No welcome transition needed here as it's not a fresh login action
                     signInForm.style.display = 'none';
                     signUpForm.style.display = 'none';
-                    receiptPage.style.display = 'none'; // Ensure receipt is hidden if user navigates back
-                    orderPage.style.display = 'flex'; // Show product page
-                    // Add .visible class for transition if you want the fade-in effect on login
+                    receiptPage.style.display = 'none';
+                    orderPage.style.display = 'flex';
                     setTimeout(() => {
                         orderPage.classList.remove('hidden');
                         orderPage.classList.add('visible');
-                    }, 50); // Small delay for display:flex to apply before transition
-
-                    mainHeader.style.display = 'flex'; // Show the main header
-                    loadProductData(); // Load product data and initialize UI
+                    }, 50);
+                    mainHeader.style.display = 'flex';
+                    loadProductData();
                 } else {
-                    // No user is signed in
                     console.log("onAuthStateChanged: No user logged in.");
-                    signInForm.style.display = 'block'; // Show sign-in form
+                    signInForm.style.display = 'block';
                     signUpForm.style.display = 'none';
                     orderPage.style.display = 'none';
                     receiptPage.style.display = 'none';
                     mainHeader.style.display = 'none';
                 }
-                clearLoginSignupFields(); // Always clear fields on auth state change
+                clearLoginSignupFields();
             });
 
-            // Event listeners for login/register form switching
             const signUpButton = document.getElementById('signUpButton');
             const signInButtonInSignUpForm = signUpForm.querySelector('#signInButton');
 
@@ -2080,7 +2099,7 @@
                 console.log("Sign Up button clicked.");
                 signInForm.style.display = 'none';
                 signUpForm.style.display = 'block';
-                clearLoginSignupFields(); // Clear fields when switching to signup
+                clearLoginSignupFields();
             });
 
             if (signInButtonInSignUpForm) {
@@ -2088,11 +2107,10 @@
                     console.log("Sign In button (from Sign Up form) clicked.");
                     signInForm.style.display = 'block';
                     signUpForm.style.display = 'none';
-                    clearLoginSignupFields(); // Clear fields when switching to signin
+                    clearLoginSignupFields();
                 });
             }
 
-            // Event listener for Sign Up submission
             const signUpSubmit = document.getElementById('submitSignUp');
             signUpSubmit.addEventListener('click', async (event) => {
                 event.preventDefault();
@@ -2111,9 +2129,8 @@
                         lastName: lastName
                     };
                     await setDoc(doc(db, "users", user.uid), userData);
-                    showMessage('Account Created Successfully. Redirecting to Product List...', 'signUpMessage');
-                    clearLoginSignupFields(); // Clear fields after successful signup
-                    // onAuthStateChanged listener will handle transition to order page upon successful sign-up
+                    showMessage('Account Created Successfully!', 'signUpMessage');
+                    showWelcomeAndTransition(); // Call welcome transition after successful signup
                 } catch (error) {
                     const errorCode = error.code;
                     if (errorCode === 'auth/email-already-in-use') {
@@ -2127,7 +2144,6 @@
                 }
             });
 
-            // Event listener for Sign In submission
             const signInSubmit = document.getElementById('submitSignIn');
             signInSubmit.addEventListener('click', async (event) => {
                 event.preventDefault();
@@ -2136,10 +2152,9 @@
 
                 try {
                     console.log("Attempting to sign in with email:", email);
-                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                    // onAuthStateChanged listener will handle transition to order page upon successful sign-in
-                    showMessage('Login successful. Redirecting to Product List...', 'signInMessage');
-                    clearLoginSignupFields(); // Clear fields after successful signin
+                    await signInWithEmailAndPassword(auth, email, password);
+                    showMessage('Login successful!', 'signInMessage');
+                    showWelcomeAndTransition(); // Call welcome transition after successful signin
                 } catch (error) {
                     const errorCode = error.code;
                     if (errorCode === 'auth/invalid-credential' || errorCode === 'auth/wrong-password' || errorCode === 'auth/user-not-found') {
@@ -2151,29 +2166,26 @@
                 }
             });
 
-            // Event listeners for product quantity inputs
             for (let i = 1; i <= 10; i++) {
                 const quantityInputPC = document.getElementById(`productQuantity${i}PC`);
                 const quantityInputCASE = document.getElementById(`productQuantity${i}CASE`);
 
                 if (quantityInputPC) {
                     quantityInputPC.addEventListener('input', () => {
-                        productData[i]['Pcs'].quantity = parseInt(quantityInputPC.value) || 0; // Use 'Pcs'
-                        saveProductData(i, 'Pcs'); // Pass 'Pcs'
+                        productData[i]['Pcs'].quantity = parseInt(quantityInputPC.value) || 0;
+                        saveProductData(i, 'Pcs');
                     });
                 }
                 if (quantityInputCASE) {
                     quantityInputCASE.addEventListener('input', () => {
-                        productData[i]['Cs'].quantity = parseInt(quantityInputCASE.value) || 0;   // Use 'Cs'
-                        saveProductData(i, 'Cs'); // Pass 'Cs'
+                        productData[i]['Cs'].quantity = parseInt(quantityInputCASE.value) || 0;
+                        saveProductData(i, 'Cs');
                     });
                 }
             }
 
-            // Scroll to top button visibility
             window.onscroll = function() {
                 const returnToTopBtn = document.getElementById('returnToTopBtn');
-                // Ensure the orderPage is actually visible (not just display:flex in CSS but hidden by opacity)
                 if (orderPage.style.display === 'flex' && orderPage.classList.contains('visible') && window.scrollY > 200) {
                     returnToTopBtn.style.display = 'flex';
                 } else {
@@ -2184,6 +2196,7 @@
     </script>
 </body>
 </html>
+
 
 
 
