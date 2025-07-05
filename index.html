@@ -288,7 +288,9 @@
 
         .main-fixed-header .finalize-order-button,
         .main-fixed-header .order-list-button,
-        .main-fixed-header .clear-order-button {
+        .main-fixed-header .clear-order-button,
+        .main-fixed-header .offers-button, /* Added offers-button */
+        .main-fixed-header .favorites-button { /* Added favorites-button to this group */
             background: none;
             color: white;
             padding: 8px 10px;
@@ -312,14 +314,18 @@
         }
         .main-fixed-header .finalize-order-button:hover:not(:disabled),
         .main-fixed-header .order-list-button:hover,
-        .main-fixed-header .clear-order-button:hover {
+        .main-fixed-header .clear-order-button:hover,
+        .main-fixed-header .offers-button:hover, /* Added offers-button */
+        .main-fixed-header .favorites-button:hover { /* Added favorites-button */
             background-color: rgba(255, 255, 255, 0.2);
             transform: none;
             box-shadow: none;
         }
         .main-fixed-header .finalize-order-button:active:not(:disabled),
         .main-fixed-header .order-list-button:active,
-        .main-fixed-header .clear-order-button:active {
+        .main-fixed-header .clear-order-button:active,
+        .main-fixed-header .offers-button:active, /* Added offers-button */
+        .main-fixed-header .favorites-button:active { /* Added favorites-button */
             transform: none;
             box-shadow: none;
         }
@@ -1409,10 +1415,10 @@
             <input type="text" id="productSearch" placeholder="Search products..." oninput="filterProducts()">
         </div>
         <div class="header-action-buttons">
+            <button class="offers-button" onclick="showOrderPage()">Offers</button>
+            <button class="favorites-button" onclick="showFavoritesPage()">Favorites</button> <!-- Moved Favorites Button -->
             <button class="clear-order-button" onclick="clearAllOrders()">Clear</button>
             <button class="order-list-button" onclick="showOrderSummary()">List</button>
-            <!-- New Favorites Button -->
-            <button class="favorites-button" onclick="showFavoritesPage()">Favorites</button>
             <button id="finalizeOrderButton" class="finalize-order-button" onclick="finalizeOrder()" disabled>Finalize</button>
         </div>
     </header>
@@ -2225,10 +2231,36 @@
             }
         }
 
+        // New function to show the order page and hide others
+        window.showOrderPage = function() {
+            // Hide all other pages first
+            receiptPage.classList.remove('visible');
+            receiptPage.classList.add('hidden');
+            receiptPage.style.display = 'none';
+
+            profilePage.classList.remove('visible');
+            profilePage.classList.add('hidden');
+            profilePage.style.display = 'none';
+
+            favoritesPage.classList.remove('visible');
+            favoritesPage.classList.add('hidden');
+            favoritesPage.style.display = 'none';
+
+            // Then show the order page with a slight delay to allow transitions
+            orderPage.style.display = 'flex';
+            setTimeout(() => {
+                orderPage.classList.remove('hidden');
+                orderPage.classList.add('visible');
+            }, 50);
+
+            window.scrollTo(0, 0); // Scroll to top of order page
+        };
+
         window.showProfilePageFromDropdown = function() {
             // Close the dropdown first
             profileDropdown.classList.remove('visible');
 
+            // Hide all other pages
             orderPage.classList.remove('visible');
             orderPage.classList.add('hidden');
             orderPage.style.display = 'none';
@@ -2241,6 +2273,7 @@
             favoritesPage.classList.add('hidden');
             favoritesPage.style.display = 'none';
 
+            // Show profile page
             profilePage.style.display = 'flex';
             setTimeout(() => {
                 profilePage.classList.remove('hidden');
@@ -2252,13 +2285,7 @@
         }
 
         window.closeProfilePage = function() {
-            profilePage.classList.remove('visible');
-            profilePage.classList.add('hidden');
-            profilePage.style.display = 'none';
-
-            orderPage.style.display = 'flex';
-            orderPage.classList.remove('hidden');
-            orderPage.classList.add('visible');
+            showOrderPage(); // Use the new generic function
         }
 
         window.editProfile = function() {
@@ -2443,14 +2470,7 @@
         };
 
         window.closeFavoritesPage = function() {
-            favoritesPage.classList.remove('visible');
-            favoritesPage.classList.add('hidden');
-            favoritesPage.style.display = 'none';
-
-            // Return to order page
-            orderPage.style.display = 'flex';
-            orderPage.classList.remove('hidden');
-            orderPage.classList.add('visible');
+            showOrderPage(); // Use the new generic function
         };
 
         function renderFavoritesPage() {
@@ -2835,17 +2855,8 @@
             catch (e) {
                 console.error("Error resetting orders in localStorage via 'Order Again':", e);
             }
-            const orderPage = document.getElementById('orderPage');
-            const receiptPage = document.getElementById('receiptPage');
-            const mainHeader = document.getElementById('mainHeader');
-
-            receiptPage.classList.remove('visible');
-            receiptPage.classList.add('hidden');
-            receiptPage.style.display = 'none';
-
-            orderPage.style.display = 'flex';
-            orderPage.classList.remove('hidden');
-            orderPage.classList.add('visible');
+            // Use the new generic function to show the order page
+            showOrderPage();
             mainHeader.style.display = 'flex';
             loadProductData();
             window.scrollTo(0, 0);
@@ -2855,15 +2866,23 @@
             const searchInput = document.getElementById('productSearch').value.toLowerCase().trim();
             const searchTerms = searchInput.split(/\s+/).filter(term => term.length > 0);
 
-            const productCards = document.querySelectorAll('.product-grid .product-card');
+            // Select product cards from BOTH the main order page and the favorites page
+            const productCards = document.querySelectorAll(
+                '#orderPage .product-grid .product-card, ' +
+                '#favoritesPage .favorite-products-grid .product-card'
+            );
+
             const noStockMessage = document.getElementById('noStockMessage');
             let anyProductVisible = false;
 
             productCards.forEach(productCard => {
-                const productId = parseInt(productCard.id.replace('productCard', ''));
-                const product = productData[productId];
+                // Extract productId correctly, considering it might be from the main list or favorites
+                // The ID for favorite cards is 'favoriteProductCardX', main is 'productCardX'
+                const idMatch = productCard.id.match(/productCard(\d+)/) || productCard.id.match(/favoriteProductCard(\d+)/);
+                const productId = idMatch ? parseInt(idMatch[1]) : null;
 
-                if (product) {
+                if (productId && productData[productId]) {
+                    const product = productData[productId];
                     const productName = product.productName.toLowerCase();
                     const productCode = product.productCode.toLowerCase();
                     const pcSpec = product.pcSpec.toLowerCase();
@@ -2894,13 +2913,28 @@
                 }
             });
 
-            if (anyProductVisible) {
-                noStockMessage.style.display = 'none';
-            } else {
-                noStockMessage.style.display = 'block';
+            // This message is specific to the main order page, so it should only affect that page's visibility logic.
+            // If you want a similar message for the favorites page, you'd need a separate element and logic for it.
+            if (document.getElementById('orderPage').classList.contains('visible')) {
+                if (anyProductVisible) {
+                    noStockMessage.style.display = 'none';
+                } else {
+                    noStockMessage.style.display = 'block';
+                }
+            } else if (document.getElementById('favoritesPage').classList.contains('visible')) {
+                // Add specific logic for favorites page's "no favorites" message if needed
+                const noFavoritesMessage = document.getElementById('noFavoritesMessage');
+                if (noFavoritesMessage) {
+                    if (anyProductVisible) {
+                        noFavoritesMessage.style.display = 'none';
+                    } else {
+                        noFavoritesMessage.style.display = 'block';
+                    }
+                }
             }
+
             updateAllHeartIcons(); // Update heart icons after filtering
-        }
+        };
 
         window.scrollToTop = function() {
             window.scrollTo({
@@ -2927,25 +2961,26 @@
         function showWelcomeAndTransition() {
             signInForm.style.display = 'none';
             signUpForm.style.display = 'none';
-            welcomeModal.classList.add('visible'); // Show welcome modal
+
+            // Ensure welcome modal is visible for its transition
+            welcomeModal.style.display = 'flex'; // Set display to flex to make it part of layout
+            setTimeout(() => {
+                welcomeModal.classList.add('visible'); // Trigger opacity/visibility transition
+            }, 10); // Small delay to ensure display:flex takes effect before transition
 
             setTimeout(() => {
-                welcomeModal.classList.remove('visible'); // Hide welcome modal
+                welcomeModal.classList.remove('visible'); // Start fade out
                 // After welcome message fades out, transition to order page
                 setTimeout(() => {
-                    receiptPage.style.display = 'none';
-                    profilePage.style.display = 'none'; // Ensure profile page is hidden
-                    favoritesPage.style.display = 'none'; // Hide favorites page
-                    orderPage.style.display = 'flex';
-                    orderPage.classList.remove('hidden');
-                    orderPage.classList.add('visible');
+                    welcomeModal.style.display = 'none'; // Hide completely after transition
+                    showOrderPage(); // Use the new generic function
                     mainHeader.style.display = 'flex';
                     loadProductData();
                     loadClientInfo(); // Load client info after login
                     clearLoginSignupFields();
                     document.body.classList.remove('body-login-background'); // Remove login background
                 }, 500); // Wait for welcome modal fade-out transition (0.5s)
-            }, 1500); // Display welcome message for 1.5 seconds
+            }, 500); // Display welcome message for 0.5 seconds
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -2957,7 +2992,7 @@
             profilePage.style.display = 'none'; // Hide profile page on initial load
             favoritesPage.style.display = 'none'; // Hide favorites page on initial load
             mainHeader.style.display = 'none';
-            welcomeModal.style.display = 'flex'; // Ensure welcome modal is flex for centering, but hidden by opacity/visibility
+            welcomeModal.style.display = 'none'; // Ensure welcome modal is hidden by default
             document.body.classList.add('body-login-background'); // Apply login background on initial load
 
             onAuthStateChanged(auth, async (user) => {
@@ -2966,16 +3001,7 @@
                     currentUserId = user.uid; // Set current user ID
                     // If user is already logged in on page load, directly show order page
                     // No welcome transition needed here as it's not a fresh login action
-                    signInForm.style.display = 'none';
-                    signUpForm.style.display = 'none';
-                    receiptPage.style.display = 'none';
-                    profilePage.style.display = 'none'; // Ensure profile page is hidden
-                    favoritesPage.style.display = 'none'; // Hide favorites page
-                    orderPage.style.display = 'flex';
-                    setTimeout(() => {
-                        orderPage.classList.remove('hidden');
-                        orderPage.classList.add('visible');
-                    }, 50);
+                    showOrderPage(); // Use the new generic function
                     mainHeader.style.display = 'flex';
                     loadProductData();
                     await loadClientInfo(); // Load client info if already logged in
@@ -3043,7 +3069,7 @@
                     await setDoc(doc(db, "users", user.uid), initialProfileData); // Store directly in user's document
                     await loadFavorites(); // Load favorites (will be empty) for the new user
 
-                    showMessage('Account Created Successfully!', 'signUpMessage');
+                    // Removed showMessage call here for smoother transition
                     showWelcomeAndTransition(); // Call welcome transition after successful signup
                 } catch (error) {
                     const errorCode = error.code;
@@ -3071,7 +3097,7 @@
                     currentUserId = user.uid; // Set current user ID after signin
                     await loadFavorites(); // Load favorites for the logged-in user
 
-                    showMessage('Login successful!', 'signInMessage');
+                    // Removed showMessage call here for smoother transition
                     showWelcomeAndTransition(); // Call welcome transition after successful signin
                 } catch (error) {
                     const errorCode = error.code;
@@ -3113,6 +3139,7 @@
     </script>
 </body>
 </html>
+
 
 
 
