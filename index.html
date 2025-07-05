@@ -7,7 +7,8 @@
     <title>MyTindahan Offline Order</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700;900&display=swap" rel="stylesheet">
-    <!-- Removed Font Awesome as icons are no longer used -->
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style id="app-styles">
         /* Apple-inspired Light Blue Gradient Background for Body */
         body {
@@ -350,7 +351,7 @@
             order: 1;
             width: 100%;
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* To push profile icon to the right */
             align-items: center;
         }
 
@@ -366,7 +367,27 @@
             flex-wrap: wrap;
         }
 
-        .order-page-container, .receipt-page-container {
+        /* Profile Icon Button */
+        .profile-icon-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem; /* Larger icon */
+            cursor: pointer;
+            transition: color 0.2s ease, transform 0.2s ease;
+            padding: 5px; /* Add some padding around the icon */
+            min-width: 44px; /* Ensure good touch target */
+            min-height: 44px; /* Ensure good touch target */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .profile-icon-button:hover {
+            color: #a0c4ff; /* Lighter blue on hover */
+            transform: scale(1.1);
+        }
+
+        .order-page-container, .receipt-page-container, .profile-page-container {
             background-color: #ffffff;
             padding: 20px;
             border-radius: 20px;
@@ -388,18 +409,20 @@
             margin-bottom: 20px;
             pointer-events: none;
         }
-        .order-page-container.visible {
+        .order-page-container.visible, .profile-page-container.visible {
             margin-top: 200px; /* Adjusted to lower the white background and clear the header */
         }
 
-        .order-page-container.visible, .receipt-page-container.visible {
+        .order-page-container.visible, .receipt-page-container.visible, .profile-page-container.visible {
             opacity: 1;
             transform: translateY(0);
             pointer-events: auto;
+            display: flex; /* Ensure it's flex when visible */
         }
-        .order-page-container.hidden, .receipt-page-container.hidden {
+        .order-page-container.hidden, .receipt-page-container.hidden, .profile-page-container.hidden {
             opacity: 0;
             pointer-events: none;
+            display: none; /* Ensure it's hidden when not visible */
         }
 
         .order-again-button {
@@ -660,7 +683,7 @@
         }
 
         /* Modals and their content */
-        .order-summary-modal, .receipt-modal, .image-modal {
+        .order-summary-modal, .receipt-modal, .image-modal, .profile-message-modal {
             position: fixed;
             top: 0;
             left: 0;
@@ -675,11 +698,11 @@
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
-        .order-summary-modal.visible, .receipt-modal.visible, .image-modal.visible {
+        .order-summary-modal.visible, .receipt-modal.visible, .image-modal.visible, .profile-message-modal.visible {
             opacity: 1;
             visibility: visible;
         }
-        .order-summary-content, .receipt-modal .receipt-content, .image-modal-content {
+        .order-summary-content, .receipt-modal .receipt-content, .image-modal-content, .profile-message-content {
             background-color: #ffffff;
             padding: 30px;
             border-radius: 15px;
@@ -693,10 +716,10 @@
             flex-direction: column;
             max-height: 90vh;
         }
-        .order-summary-modal.visible .order-summary-content, .receipt-modal.visible .receipt-content, .image-modal.visible .image-modal-content {
+        .order-summary-modal.visible .order-summary-content, .receipt-modal.visible .receipt-content, .image-modal.visible .image-modal-content, .profile-message-modal.visible .profile-message-content {
             transform: translateY(0);
         }
-        .order-summary-content h3, .receipt-page-container h3, .receipt-modal .receipt-content h3 {
+        .order-summary-content h3, .receipt-page-container h3, .receipt-modal .receipt-content h3, .profile-page-container h3 {
             font-size: 1.5rem;
             font-weight: 700;
             color: #0050A0;
@@ -1021,6 +1044,138 @@
             color: #EE3524;
         }
 
+        /* Profile Page Specific Styles */
+        .profile-page-container .profile-input-group {
+            margin-bottom: 15px;
+            text-align: left;
+            width: 100%;
+            max-width: 400px; /* Constrain width for better readability */
+        }
+
+        .profile-page-container .profile-input-group label {
+            display: block;
+            font-size: 0.9rem;
+            color: #5C6F78;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .profile-page-container .profile-input-group input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+
+        .profile-page-container .profile-input-group input:focus:not([readonly]) {
+            outline: none;
+            border-color: #007aff;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+        }
+
+        .profile-page-container .profile-input-group input[readonly] {
+            background-color: #f9f9f9;
+            cursor: default;
+            color: #666;
+            border-color: #eee;
+        }
+
+        .profile-page-container .profile-action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .profile-page-container .profile-action-buttons button {
+            flex: 1;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            min-height: 48px;
+        }
+
+        .profile-page-container .profile-action-buttons .save-button {
+            background: linear-gradient(145deg, #0050A0, #003a7a);
+            color: white;
+        }
+        .profile-page-container .profile-action-buttons .save-button:hover:not(:disabled) {
+            background: linear-gradient(145deg, #003a7a, #0050A0);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+        .profile-page-container .profile-action-buttons .save-button:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .profile-page-container .profile-action-buttons .save-button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            opacity: 0.7;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .profile-page-container .profile-action-buttons .edit-button {
+            background: #f0f0f0;
+            color: #0050A0;
+            border: 1px solid #ddd;
+        }
+        .profile-page-container .profile-action-buttons .edit-button:hover:not(:disabled) {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        .profile-page-container .profile-action-buttons .edit-button:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .profile-page-container .profile-action-buttons .edit-button:disabled {
+            background: #f9f9f9;
+            color: #999;
+            cursor: not-allowed;
+            opacity: 0.7;
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* Profile Message Modal */
+        .profile-message-content {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0050A0;
+            padding: 20px;
+        }
+        .profile-message-content .close-modal-button {
+            position: static; /* Remove absolute positioning */
+            margin-top: 15px; /* Add margin for spacing */
+            background: linear-gradient(145deg, #0050A0, #003a7a);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 1rem;
+            min-width: 80px;
+            min-height: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .profile-message-content .close-modal-button:hover {
+            background: linear-gradient(145deg, #003a7a, #0050A0);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+
         /* Mobile specific styles for order summary modal */
         @media (max-width: 768px) {
             .order-item {
@@ -1071,6 +1226,18 @@
             .remove-order-button {
                 min-height: 36px;
             }
+
+            .main-fixed-header .header-left-group {
+                flex-direction: row; /* Keep row for sign out and profile */
+                justify-content: space-between;
+                width: 100%;
+            }
+            .main-fixed-header .sign-out-button {
+                margin-right: auto; /* Push sign-out to left */
+            }
+            .profile-icon-button {
+                margin-left: auto; /* Push profile to right */
+            }
         }
     </style>
 </head>
@@ -1079,6 +1246,10 @@
     <header id="mainHeader" class="main-fixed-header">
         <div class="header-left-group">
             <button class="sign-out-button" onclick="handleSignOutClick()">Sign Out</button>
+            <!-- Profile Icon Button -->
+            <button class="profile-icon-button" onclick="showProfilePage()">
+                <i class="fas fa-user-circle"></i>
+            </button>
         </div>
         <div class="search-bar-container">
             <input type="text" id="productSearch" placeholder="Search products..." oninput="filterProducts()">
@@ -1102,7 +1273,7 @@
           <div class="input-group">
               <input type="email"  id="email" placeholder="Email" required>
           </div>
-     
+
           <div class="input-group">
             <input type="password" id="password"  placeholder="Password" required>
           </div>
@@ -1478,6 +1649,40 @@
         <button class="order-again-button mt-8" onclick="orderAgain()">Order Again</button>
     </div>
 
+    <!-- Client Profile Page (New) -->
+    <div id="profilePage" class="profile-page-container hidden">
+        <button class="close-modal-button" onclick="closeProfilePage()">&times;</button>
+        <h3>Client Profile</h3>
+        <div class="profile-input-group">
+            <label for="profileFirstName">First Name:</label>
+            <input type="text" id="profileFirstName" placeholder="First Name" readonly>
+        </div>
+        <div class="profile-input-group">
+            <label for="profileMiddleName">Middle Name:</label>
+            <input type="text" id="profileMiddleName" placeholder="Middle Name" readonly>
+        </div>
+        <div class="profile-input-group">
+            <label for="profileLastName">Last Name:</label>
+            <input type="text" id="profileLastName" placeholder="Last Name" readonly>
+        </div>
+        <div class="profile-input-group">
+            <label for="profileStoreName">Store Name:</label>
+            <input type="text" id="profileStoreName" placeholder="Store Name" readonly>
+        </div>
+        <div class="profile-input-group">
+            <label for="profileContactNumber">Contact Number:</label>
+            <input type="text" id="profileContactNumber" placeholder="Contact Number" readonly>
+        </div>
+        <div class="profile-input-group">
+            <label for="profileFullAddress">Full Address:</label>
+            <input type="text" id="profileFullAddress" placeholder="Full Address" readonly>
+        </div>
+        <div class="profile-action-buttons">
+            <button class="save-button" id="saveProfileButton" onclick="saveProfile()" disabled>Save</button>
+            <button class="edit-button" id="editProfileButton" onclick="editProfile()">Edit</button>
+        </div>
+    </div>
+
     <!-- Image Enlargement Modal -->
     <div id="imageModal" class="image-modal">
         <div class="image-modal-content">
@@ -1489,6 +1694,14 @@
     <!-- Welcome Message Modal -->
     <div id="welcomeModal" class="welcome-modal">
         <div class="welcome-message">Welcome!</div>
+    </div>
+
+    <!-- Profile Message Modal (for save/edit messages) -->
+    <div id="profileMessageModal" class="profile-message-modal">
+        <div class="profile-message-content">
+            <p id="profileMessageText"></p>
+            <button class="close-modal-button" onclick="closeProfileMessageModal()">OK</button>
+        </div>
     </div>
 
     <!-- Return to Top Button (Hidden by default) -->
@@ -1503,7 +1716,7 @@
         // Firebase imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
-        import { getFirestore, setDoc, doc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js"
+        import { getFirestore, setDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js"
 
         // Firebase Configuration (ensure this is configured if you're deploying this)
         const firebaseConfig = {
@@ -1535,10 +1748,12 @@
         };
 
         let clientInfo = {
-            storeName: 'N/A',
-            fullName: 'N/A',
-            address: 'N/A',
-            phoneNumber: 'N/A'
+            firstName: '',
+            middleName: '',
+            lastName: '',
+            storeName: '',
+            contactNumber: '',
+            fullAddress: ''
         };
 
         // DOM elements for page transitions
@@ -1546,9 +1761,11 @@
         const signUpForm = document.getElementById('signup');
         const orderPage = document.getElementById('orderPage');
         const receiptPage = document.getElementById('receiptPage');
+        const profilePage = document.getElementById('profilePage'); // New: Profile Page
         const mainHeader = document.getElementById('mainHeader');
         const returnToTopBtn = document.getElementById('returnToTopBtn');
-        const welcomeModal = document.getElementById('welcomeModal'); // New: Welcome Modal
+        const welcomeModal = document.getElementById('welcomeModal');
+        const profileMessageModal = document.getElementById('profileMessageModal'); // New: Profile Message Modal
 
         // Form input fields
         const emailInput = document.getElementById('email');
@@ -1558,6 +1775,17 @@
         const fNameInput = document.getElementById('fName');
         const lNameInput = document.getElementById('lName');
 
+        // Profile input fields
+        const profileInputs = {
+            firstName: document.getElementById('profileFirstName'),
+            middleName: document.getElementById('profileMiddleName'),
+            lastName: document.getElementById('profileLastName'),
+            storeName: document.getElementById('profileStoreName'),
+            contactNumber: document.getElementById('profileContactNumber'),
+            fullAddress: document.getElementById('profileFullAddress')
+        };
+        const saveProfileButton = document.getElementById('saveProfileButton');
+        const editProfileButton = document.getElementById('editProfileButton');
 
         // Function to show messages (for login/register)
         function showMessage(message, divId){
@@ -1573,6 +1801,16 @@
                 messageDiv.style.display = "none";
                 messageDiv.style.opacity = 0;
             }, 6000);
+        }
+
+        // Function to show profile messages
+        function showProfileMessage(message) {
+            document.getElementById('profileMessageText').textContent = message;
+            profileMessageModal.classList.add('visible');
+        }
+
+        window.closeProfileMessageModal = function() {
+            profileMessageModal.classList.remove('visible');
         }
 
         // Debounce function
@@ -1696,6 +1934,145 @@
             lNameInput.value = '';
         }
 
+        // --- Profile Management Functions ---
+        async function loadClientInfo() {
+            const user = auth.currentUser;
+            if (!user) {
+                console.log("No user logged in, cannot load client info from Firestore.");
+                // Clear local clientInfo if no user is logged in
+                clientInfo = { firstName: '', middleName: '', lastName: '', storeName: '', contactNumber: '', fullAddress: '' };
+                for (const key in profileInputs) {
+                    if (profileInputs[key]) {
+                        profileInputs[key].value = '';
+                        profileInputs[key].readOnly = true;
+                    }
+                }
+                saveProfileButton.disabled = true;
+                editProfileButton.disabled = false;
+                return;
+            }
+
+            try {
+                // Reference to the user's profile document in Firestore
+                const profileDocRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(profileDocRef);
+
+                if (docSnap.exists()) {
+                    clientInfo = docSnap.data();
+                    console.log("Client info loaded from Firestore:", clientInfo);
+                } else {
+                    console.log("No client profile found in Firestore for this user. Initializing empty.");
+                    clientInfo = { firstName: '', middleName: '', lastName: '', storeName: '', contactNumber: '', fullAddress: '' };
+                }
+
+                // Populate profile page inputs
+                for (const key in profileInputs) {
+                    if (profileInputs[key]) {
+                        profileInputs[key].value = clientInfo[key] || '';
+                        profileInputs[key].readOnly = true; // Set to read-only by default
+                    }
+                }
+                saveProfileButton.disabled = true;
+                editProfileButton.disabled = false;
+
+            } catch (e) {
+                console.error("Error loading client info from Firestore:", e);
+                showProfileMessage("Error loading profile. Please try again.");
+                // Fallback to empty if Firestore load fails
+                clientInfo = { firstName: '', middleName: '', lastName: '', storeName: '', contactNumber: '', fullAddress: '' };
+                for (const key in profileInputs) {
+                    if (profileInputs[key]) {
+                        profileInputs[key].value = '';
+                        profileInputs[key].readOnly = true;
+                    }
+                }
+                saveProfileButton.disabled = true;
+                editProfileButton.disabled = false;
+            }
+        }
+
+        window.showProfilePage = function() {
+            orderPage.classList.remove('visible');
+            orderPage.classList.add('hidden');
+            orderPage.style.display = 'none';
+
+            receiptPage.classList.remove('visible');
+            receiptPage.classList.add('hidden');
+            receiptPage.style.display = 'none';
+
+            profilePage.style.display = 'flex';
+            setTimeout(() => {
+                profilePage.classList.remove('hidden');
+                profilePage.classList.add('visible');
+            }, 50);
+
+            loadClientInfo(); // Load current info when showing page
+            window.scrollTo(0, 0); // Scroll to top of profile page
+        }
+
+        window.closeProfilePage = function() {
+            profilePage.classList.remove('visible');
+            profilePage.classList.add('hidden');
+            profilePage.style.display = 'none';
+
+            orderPage.style.display = 'flex';
+            orderPage.classList.remove('hidden');
+            orderPage.classList.add('visible');
+        }
+
+        window.editProfile = function() {
+            for (const key in profileInputs) {
+                if (profileInputs[key]) {
+                    profileInputs[key].readOnly = false;
+                }
+            }
+            saveProfileButton.disabled = false;
+            editProfileButton.disabled = true;
+            showProfileMessage("You can now edit your profile.");
+        }
+
+        window.saveProfile = async function() {
+            const user = auth.currentUser;
+            if (!user) {
+                showProfileMessage("You must be logged in to save your profile.");
+                return;
+            }
+
+            let allFieldsFilled = true;
+            for (const key in profileInputs) {
+                if (profileInputs[key] && !profileInputs[key].value.trim()) {
+                    allFieldsFilled = false;
+                    break;
+                }
+            }
+
+            if (!allFieldsFilled) {
+                showProfileMessage("Please fill in all profile fields before saving.");
+                return;
+            }
+
+            for (const key in profileInputs) {
+                if (profileInputs[key]) {
+                    clientInfo[key] = profileInputs[key].value.trim();
+                    profileInputs[key].readOnly = true;
+                }
+            }
+
+            try {
+                // Save clientInfo to Firestore
+                const profileDocRef = doc(db, "users", user.uid);
+                await setDoc(profileDocRef, clientInfo, { merge: true }); // merge: true will update fields or create if doc doesn't exist
+                console.log("Client info saved to Firestore:", clientInfo);
+                showProfileMessage("Profile saved successfully!");
+            } catch (e) {
+                console.error("Error saving client info to Firestore:", e);
+                showProfileMessage("Error saving profile. Please try again.");
+            }
+            saveProfileButton.disabled = true;
+            editProfileButton.disabled = false;
+        }
+        // --- End Profile Management Functions ---
+
         window.handleSignOutClick = async function() {
             const returnToTopBtn = document.getElementById('returnToTopBtn');
             try {
@@ -1703,6 +2080,7 @@
                 console.log("User signed out successfully.");
                 orderPage.style.display = 'none';
                 receiptPage.style.display = 'none';
+                profilePage.style.display = 'none'; // Hide profile page on sign out
                 mainHeader.style.display = 'none';
                 signInForm.style.display = 'block';
                 document.body.classList.add('body-login-background'); // Apply login background on sign out
@@ -1850,16 +2228,16 @@
             const mainHeader = document.getElementById('mainHeader');
             const returnToTopBtn = document.getElementById('returnToTopBtn');
 
-
             receiptItemsBody.innerHTML = '';
             let totalReceiptPrice = 0;
             const currentOrderItems = [];
 
+            // Populate client info for receipt from the loaded clientInfo object
             receiptClientInfoElement.innerHTML = `
                 <p><strong>Store Name:</strong> ${clientInfo.storeName || 'N/A'}</p>
-                <p><strong>Full Name:</strong> ${clientInfo.fullName || 'N/A'}</p>
-                <p><strong>Full Address:</strong> ${clientInfo.address || 'N/A'}</p>
-                <p><strong>Phone Number:</strong> ${clientInfo.phoneNumber || 'N/A'}</p>
+                <p><strong>Full Name:</strong> ${clientInfo.firstName || 'N/A'} ${clientInfo.middleName || ''} ${clientInfo.lastName || 'N/A'}</p>
+                <p><strong>Full Address:</strong> ${clientInfo.fullAddress || 'N/A'}</p>
+                <p><strong>Phone Number:</strong> ${clientInfo.contactNumber || 'N/A'}</p>
             `;
 
             console.log("Synchronizing product quantities from UI to productData before finalization.");
@@ -1929,6 +2307,9 @@
             orderPage.classList.add('hidden');
             orderPage.style.display = 'none';
             mainHeader.style.display = 'flex';
+            profilePage.classList.remove('visible'); // Ensure profile page is hidden
+            profilePage.classList.add('hidden');
+            profilePage.style.display = 'none';
 
 
             receiptPage.style.display = 'flex';
@@ -2068,11 +2449,13 @@
                 // After welcome message fades out, transition to order page
                 setTimeout(() => {
                     receiptPage.style.display = 'none';
+                    profilePage.style.display = 'none'; // Ensure profile page is hidden
                     orderPage.style.display = 'flex';
                     orderPage.classList.remove('hidden');
                     orderPage.classList.add('visible');
                     mainHeader.style.display = 'flex';
                     loadProductData();
+                    loadClientInfo(); // Load client info after login
                     clearLoginSignupFields();
                     document.body.classList.remove('body-login-background'); // Remove login background
                 }, 500); // Wait for welcome modal fade-out transition (0.5s)
@@ -2085,6 +2468,7 @@
             signUpForm.style.display = 'none';
             orderPage.style.display = 'none';
             receiptPage.style.display = 'none';
+            profilePage.style.display = 'none'; // Hide profile page on initial load
             mainHeader.style.display = 'none';
             welcomeModal.style.display = 'flex'; // Ensure welcome modal is flex for centering, but hidden by opacity/visibility
             document.body.classList.add('body-login-background'); // Apply login background on initial load
@@ -2097,6 +2481,7 @@
                     signInForm.style.display = 'none';
                     signUpForm.style.display = 'none';
                     receiptPage.style.display = 'none';
+                    profilePage.style.display = 'none'; // Ensure profile page is hidden
                     orderPage.style.display = 'flex';
                     setTimeout(() => {
                         orderPage.classList.remove('hidden');
@@ -2104,6 +2489,7 @@
                     }, 50);
                     mainHeader.style.display = 'flex';
                     loadProductData();
+                    loadClientInfo(); // Load client info if already logged in
                     document.body.classList.remove('body-login-background'); // Remove login background if already logged in
                 } else {
                     console.log("onAuthStateChanged: No user logged in.");
@@ -2111,6 +2497,7 @@
                     signUpForm.style.display = 'none';
                     orderPage.style.display = 'none';
                     receiptPage.style.display = 'none';
+                    profilePage.style.display = 'none'; // Ensure profile page is hidden
                     mainHeader.style.display = 'none';
                     document.body.classList.add('body-login-background'); // Apply login background
                 }
@@ -2148,12 +2535,18 @@
                     console.log("Attempting to sign up with email:", email);
                     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                     const user = userCredential.user;
-                    const userData = {
-                        email: email,
+
+                    // Initialize profile data in Firestore for new user
+                    const initialProfileData = {
                         firstName: firstName,
-                        lastName: lastName
+                        lastName: lastName,
+                        middleName: '', // Initialize other fields as empty for new user
+                        storeName: '',
+                        contactNumber: '',
+                        fullAddress: ''
                     };
-                    await setDoc(doc(db, "users", user.uid), userData);
+                    await setDoc(doc(db, "users", user.uid), initialProfileData); // Store directly in user's document
+
                     showMessage('Account Created Successfully!', 'signUpMessage');
                     showWelcomeAndTransition(); // Call welcome transition after successful signup
                 } catch (error) {
@@ -2221,6 +2614,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
