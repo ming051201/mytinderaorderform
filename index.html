@@ -1416,7 +1416,8 @@
         </div>
         <div class="header-action-buttons">
             <button class="offers-button" onclick="showOrderPage()">Offers</button>
-            <button class="favorites-button" onclick="showFavoritesPage()">Favorites</button> <!-- Moved Favorites Button -->
+            <!-- Moved Favorites Button to be between Offers and Clear -->
+            <button class="favorites-button" onclick="showFavoritesPage()">Favorites</button>
             <button class="clear-order-button" onclick="clearAllOrders()">Clear</button>
             <button class="order-list-button" onclick="showOrderSummary()">List</button>
             <button id="finalizeOrderButton" class="finalize-order-button" onclick="finalizeOrder()" disabled>Finalize</button>
@@ -2254,6 +2255,7 @@
             }, 50);
 
             window.scrollTo(0, 0); // Scroll to top of order page
+            filterProducts(); // Re-apply filter when navigating to offers page
         };
 
         window.showProfilePageFromDropdown = function() {
@@ -2467,10 +2469,19 @@
 
             renderFavoritesPage();
             window.scrollTo(0, 0);
+            filterProducts(); // Re-apply filter when navigating to favorites page
         };
 
         window.closeFavoritesPage = function() {
-            showOrderPage(); // Use the new generic function
+            favoritesPage.classList.remove('visible');
+            favoritesPage.classList.add('hidden');
+            favoritesPage.style.display = 'none';
+
+            // Return to order page
+            orderPage.style.display = 'flex';
+            orderPage.classList.remove('hidden');
+            orderPage.classList.add('visible');
+            filterProducts(); // Re-apply filter when returning to offers page
         };
 
         function renderFavoritesPage() {
@@ -2855,11 +2866,21 @@
             catch (e) {
                 console.error("Error resetting orders in localStorage via 'Order Again':", e);
             }
-            // Use the new generic function to show the order page
-            showOrderPage();
+            const orderPage = document.getElementById('orderPage');
+            const receiptPage = document.getElementById('receiptPage');
+            const mainHeader = document.getElementById('mainHeader');
+
+            receiptPage.classList.remove('visible');
+            receiptPage.classList.add('hidden');
+            receiptPage.style.display = 'none';
+
+            orderPage.style.display = 'flex';
+            orderPage.classList.remove('hidden');
+            orderPage.classList.add('visible');
             mainHeader.style.display = 'flex';
             loadProductData();
             window.scrollTo(0, 0);
+            filterProducts(); // Re-apply filter after ordering again
         }
 
         window.filterProducts = function() {
@@ -2873,11 +2894,12 @@
             );
 
             const noStockMessage = document.getElementById('noStockMessage');
-            let anyProductVisible = false;
+            const noFavoritesMessage = document.getElementById('noFavoritesMessage'); // Get the favorites message element
+
+            let anyProductVisibleOnOrderPage = false;
+            let anyProductVisibleOnFavoritesPage = false;
 
             productCards.forEach(productCard => {
-                // Extract productId correctly, considering it might be from the main list or favorites
-                // The ID for favorite cards is 'favoriteProductCardX', main is 'productCardX'
                 const idMatch = productCard.id.match(/productCard(\d+)/) || productCard.id.match(/favoriteProductCard(\d+)/);
                 const productId = idMatch ? parseInt(idMatch[1]) : null;
 
@@ -2902,9 +2924,14 @@
                         matchesAllTerms = true;
                     }
 
+                    // Determine if the card belongs to the currently active page
+                    const isOnOrderPage = productCard.closest('#orderPage');
+                    const isOnFavoritesPage = productCard.closest('#favoritesPage');
+
                     if (matchesAllTerms) {
                         productCard.style.display = 'grid';
-                        anyProductVisible = true;
+                        if (isOnOrderPage) anyProductVisibleOnOrderPage = true;
+                        if (isOnFavoritesPage) anyProductVisibleOnFavoritesPage = true;
                     } else {
                         productCard.style.display = 'none';
                     }
@@ -2913,28 +2940,21 @@
                 }
             });
 
-            // This message is specific to the main order page, so it should only affect that page's visibility logic.
-            // If you want a similar message for the favorites page, you'd need a separate element and logic for it.
-            if (document.getElementById('orderPage').classList.contains('visible')) {
-                if (anyProductVisible) {
-                    noStockMessage.style.display = 'none';
-                } else {
-                    noStockMessage.style.display = 'block';
-                }
-            } else if (document.getElementById('favoritesPage').classList.contains('visible')) {
-                // Add specific logic for favorites page's "no favorites" message if needed
-                const noFavoritesMessage = document.getElementById('noFavoritesMessage');
-                if (noFavoritesMessage) {
-                    if (anyProductVisible) {
-                        noFavoritesMessage.style.display = 'none';
-                    } else {
-                        noFavoritesMessage.style.display = 'block';
-                    }
-                }
+            // Update messages based on which page is currently visible
+            if (orderPage.classList.contains('visible')) {
+                noStockMessage.style.display = anyProductVisibleOnOrderPage ? 'none' : 'block';
+            } else {
+                noStockMessage.style.display = 'none'; // Hide if not on order page
+            }
+
+            if (favoritesPage.classList.contains('visible')) {
+                noFavoritesMessage.style.display = anyProductVisibleOnFavoritesPage ? 'none' : 'block';
+            } else {
+                noFavoritesMessage.style.display = 'none'; // Hide if not on favorites page
             }
 
             updateAllHeartIcons(); // Update heart icons after filtering
-        };
+        }
 
         window.scrollToTop = function() {
             window.scrollTo({
@@ -2959,28 +2979,34 @@
 
         // Function to show the "Welcome!" modal and then transition to the order list
         function showWelcomeAndTransition() {
+            // Immediately hide login/signup forms and remove login background
             signInForm.style.display = 'none';
             signUpForm.style.display = 'none';
+            document.body.classList.remove('body-login-background');
 
-            // Ensure welcome modal is visible for its transition
-            welcomeModal.style.display = 'flex'; // Set display to flex to make it part of layout
-            setTimeout(() => {
-                welcomeModal.classList.add('visible'); // Trigger opacity/visibility transition
-            }, 10); // Small delay to ensure display:flex takes effect before transition
+            // Show welcome modal instantly
+            welcomeModal.style.display = 'flex';
+            welcomeModal.classList.add('visible');
 
+            // After a brief display, fade out the welcome modal and then show the order page
             setTimeout(() => {
                 welcomeModal.classList.remove('visible'); // Start fade out
-                // After welcome message fades out, transition to order page
                 setTimeout(() => {
                     welcomeModal.style.display = 'none'; // Hide completely after transition
-                    showOrderPage(); // Use the new generic function
+                    // Ensure all other content pages are hidden before showing the order page
+                    receiptPage.style.display = 'none';
+                    profilePage.style.display = 'none';
+                    favoritesPage.style.display = 'none';
+
+                    orderPage.style.display = 'flex';
+                    orderPage.classList.remove('hidden');
+                    orderPage.classList.add('visible');
                     mainHeader.style.display = 'flex';
                     loadProductData();
-                    loadClientInfo(); // Load client info after login
+                    loadClientInfo();
                     clearLoginSignupFields();
-                    document.body.classList.remove('body-login-background'); // Remove login background
                 }, 500); // Wait for welcome modal fade-out transition (0.5s)
-            }, 500); // Display welcome message for 0.5 seconds
+            }, 100); // Welcome message visible for 0.1 seconds (quick flash)
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -2992,7 +3018,7 @@
             profilePage.style.display = 'none'; // Hide profile page on initial load
             favoritesPage.style.display = 'none'; // Hide favorites page on initial load
             mainHeader.style.display = 'none';
-            welcomeModal.style.display = 'none'; // Ensure welcome modal is hidden by default
+            welcomeModal.style.display = 'flex'; // Ensure welcome modal is flex for centering, but hidden by opacity/visibility
             document.body.classList.add('body-login-background'); // Apply login background on initial load
 
             onAuthStateChanged(auth, async (user) => {
@@ -3000,25 +3026,34 @@
                     console.log("onAuthStateChanged: User is logged in, UID:", user.uid);
                     currentUserId = user.uid; // Set current user ID
                     // If user is already logged in on page load, directly show order page
-                    // No welcome transition needed here as it's not a fresh login action
-                    showOrderPage(); // Use the new generic function
+                    signInForm.style.display = 'none';
+                    signUpForm.style.display = 'none';
+                    receiptPage.style.display = 'none';
+                    profilePage.style.display = 'none';
+                    favoritesPage.style.display = 'none';
+
+                    orderPage.style.display = 'flex';
+                    setTimeout(() => {
+                        orderPage.classList.remove('hidden');
+                        orderPage.classList.add('visible');
+                    }, 50);
                     mainHeader.style.display = 'flex';
                     loadProductData();
-                    await loadClientInfo(); // Load client info if already logged in
-                    await loadFavorites(); // Load favorites for the logged-in user
-                    document.body.classList.remove('body-login-background'); // Remove login background if already logged in
+                    await loadClientInfo();
+                    await loadFavorites();
+                    document.body.classList.remove('body-login-background');
                 } else {
                     console.log("onAuthStateChanged: No user logged in.");
-                    currentUserId = null; // Clear current user ID
-                    userFavorites = []; // Clear favorites data
+                    currentUserId = null;
+                    userFavorites = [];
                     signInForm.style.display = 'block';
                     signUpForm.style.display = 'none';
                     orderPage.style.display = 'none';
                     receiptPage.style.display = 'none';
-                    profilePage.style.display = 'none'; // Ensure profile page is hidden
-                    favoritesPage.style.display = 'none'; // Hide favorites page
+                    profilePage.style.display = 'none';
+                    favoritesPage.style.display = 'none';
                     mainHeader.style.display = 'none';
-                    document.body.classList.add('body-login-background'); // Apply login background
+                    document.body.classList.add('body-login-background');
                 }
                 clearLoginSignupFields();
             });
@@ -3054,23 +3089,22 @@
                     console.log("Attempting to sign up with email:", email);
                     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                     const user = userCredential.user;
-                    currentUserId = user.uid; // Set current user ID after signup
+                    currentUserId = user.uid;
 
-                    // Initialize profile data in Firestore for new user
                     const initialProfileData = {
                         firstName: firstName,
                         lastName: lastName,
-                        middleName: '', // Initialize other fields as empty for new user
+                        middleName: '',
                         storeName: '',
                         contactNumber: '',
                         fullAddress: '',
-                        favorites: [] // ADD THIS LINE to initialize an empty favorites array
+                        favorites: []
                     };
-                    await setDoc(doc(db, "users", user.uid), initialProfileData); // Store directly in user's document
-                    await loadFavorites(); // Load favorites (will be empty) for the new user
+                    await setDoc(doc(db, "users", user.uid), initialProfileData);
+                    await loadFavorites();
 
-                    // Removed showMessage call here for smoother transition
-                    showWelcomeAndTransition(); // Call welcome transition after successful signup
+                    showMessage('Account Created Successfully!', 'signUpMessage');
+                    showWelcomeAndTransition();
                 } catch (error) {
                     const errorCode = error.code;
                     if (errorCode === 'auth/email-already-in-use') {
@@ -3078,7 +3112,7 @@
                     } else if (errorCode === 'auth/weak-password') {
                         showMessage('Password is too weak. Must be at least 6 characters.', 'signUpMessage');
                     } else {
-                        console.error("Error signing up:", error.code, error.message, error); // Added detailed error logging
+                        console.error("Error signing up:", error.code, error.message, error);
                         showMessage('Unable to create User. Please try again.', 'signUpMessage');
                     }
                 }
@@ -3094,17 +3128,17 @@
                     console.log("Attempting to sign in with email:", email);
                     const userCredential = await signInWithEmailAndPassword(auth, email, password);
                     const user = userCredential.user;
-                    currentUserId = user.uid; // Set current user ID after signin
-                    await loadFavorites(); // Load favorites for the logged-in user
+                    currentUserId = user.uid;
+                    await loadFavorites();
 
-                    // Removed showMessage call here for smoother transition
-                    showWelcomeAndTransition(); // Call welcome transition after successful signin
+                    showMessage('Login successful!', 'signInMessage');
+                    showWelcomeAndTransition();
                 } catch (error) {
                     const errorCode = error.code;
                     if (errorCode === 'auth/invalid-credential' || errorCode === 'auth/wrong-password' || errorCode === 'auth/user-not-found') {
                         showMessage('Incorrect Email or Password', 'signInMessage');
                     } else {
-                        console.error("Error signing in:", error.code, error.message, error); // Added detailed error logging
+                        console.error("Error signing in:", error.code, error.message, error);
                         showMessage('Account does not Exist or another error occurred.', 'signInMessage');
                     }
                 }
@@ -3139,6 +3173,7 @@
     </script>
 </body>
 </html>
+
 
 
 
