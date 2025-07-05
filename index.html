@@ -284,30 +284,7 @@
             display: none;
             gap: 15px;
         }
-        .main-fixed-header .sign-out-button {
-            background: none;
-            border: 2px solid white;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 80px;
-            min-height: 40px;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-        .main-fixed-header .sign-out-button:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-color: #a0c4ff;
-            transform: scale(1.02);
-        }
-        .main-fixed-header .sign-out-button svg {
-            display: none;
-        }
+        /* Removed the old .main-fixed-header .sign-out-button rule */
 
         .main-fixed-header .finalize-order-button,
         .main-fixed-header .order-list-button,
@@ -351,8 +328,12 @@
             order: 1;
             width: 100%;
             display: flex;
-            justify-content: space-between; /* To push profile icon to the right */
+            justify-content: flex-end; /* Push profile menu to the right */
             align-items: center;
+        }
+        /* Hide the original sign-out button from header */
+        .main-fixed-header .header-left-group .sign-out-button {
+            display: none;
         }
 
         .main-fixed-header .header-action-buttons {
@@ -365,6 +346,13 @@
             flex-direction: row;
             justify-content: center;
             flex-wrap: wrap;
+        }
+
+        /* Profile Icon and Dropdown Container */
+        .profile-menu-container {
+            position: relative;
+            display: inline-block; /* Allows dropdown to position relative to it */
+            margin-left: auto; /* Pushes it to the right */
         }
 
         /* Profile Icon Button */
@@ -386,6 +374,56 @@
             color: #a0c4ff; /* Lighter blue on hover */
             transform: scale(1.1);
         }
+
+        /* Profile Dropdown Menu */
+        .profile-dropdown {
+            position: absolute;
+            top: 100%; /* Position below the icon */
+            right: 0; /* Align to the right of the icon */
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            min-width: 180px;
+            z-index: 101; /* Above other content */
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            padding: 8px 0;
+            overflow: hidden; /* Ensures rounded corners apply to content */
+        }
+
+        .profile-dropdown.visible {
+            display: flex; /* Show when active */
+        }
+
+        .profile-dropdown button {
+            background: none;
+            border: none;
+            color: #333;
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .profile-dropdown button:hover {
+            background-color: #f0f0f0;
+            color: #0050A0;
+        }
+
+        .profile-dropdown button:active {
+            background-color: #e0e0e0;
+        }
+
+        /* Specific style for the Sign Out button inside the dropdown */
+        .profile-dropdown .sign-out-button {
+            display: block !important; /* Ensure it's always visible */
+            color: #333; /* Ensure text is visible on white background */
+            /* You can add specific hover/active states if different from general dropdown buttons */
+        }
+
 
         .order-page-container, .receipt-page-container, .profile-page-container {
             background-color: #ffffff;
@@ -1229,14 +1267,11 @@
 
             .main-fixed-header .header-left-group {
                 flex-direction: row; /* Keep row for sign out and profile */
-                justify-content: space-between;
+                justify-content: flex-end; /* Push profile menu to right */
                 width: 100%;
             }
-            .main-fixed-header .sign-out-button {
-                margin-right: auto; /* Push sign-out to left */
-            }
-            .profile-icon-button {
-                margin-left: auto; /* Push profile to right */
+            .profile-menu-container {
+                margin-right: 0; /* Align to right */
             }
         }
     </style>
@@ -1245,19 +1280,24 @@
     <!-- Main Fixed Header for MyTindahan -->
     <header id="mainHeader" class="main-fixed-header">
         <div class="header-left-group">
-            <button class="sign-out-button" onclick="handleSignOutClick()">Sign Out</button>
-            <!-- Profile Icon Button -->
-            <button class="profile-icon-button" onclick="showProfilePage()">
-                <i class="fas fa-user-circle"></i>
-            </button>
+            <!-- Profile Icon and Dropdown Container -->
+            <div class="profile-menu-container">
+                <button class="profile-icon-button" onclick="toggleProfileDropdown()">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+                <div id="profileDropdown" class="profile-dropdown">
+                    <button onclick="showProfilePageFromDropdown()">Client Profile</button>
+                    <button class="sign-out-button" onclick="handleSignOutClick()">Sign Out</button>
+                </div>
+            </div>
         </div>
         <div class="search-bar-container">
             <input type="text" id="productSearch" placeholder="Search products..." oninput="filterProducts()">
         </div>
         <div class="header-action-buttons">
-            <button class="clear-order-button" onclick="clearAllOrders()">Clear Order</button>
-            <button class="order-list-button" onclick="showOrderSummary()">List of Orders</button>
-            <button id="finalizeOrderButton" class="finalize-order-button" onclick="finalizeOrder()" disabled>Finalize Order</button>
+            <button class="clear-order-button" onclick="clearAllOrders()">Clear</button>
+            <button class="order-list-button" onclick="showOrderSummary()">List</button>
+            <button id="finalizeOrderButton" class="finalize-order-button" onclick="finalizeOrder()" disabled>Finalize</button>
         </div>
     </header>
 
@@ -1766,6 +1806,7 @@
         const returnToTopBtn = document.getElementById('returnToTopBtn');
         const welcomeModal = document.getElementById('welcomeModal');
         const profileMessageModal = document.getElementById('profileMessageModal'); // New: Profile Message Modal
+        const profileDropdown = document.getElementById('profileDropdown'); // New: Profile Dropdown
 
         // Form input fields
         const emailInput = document.getElementById('email');
@@ -1991,7 +2032,10 @@
             }
         }
 
-        window.showProfilePage = function() {
+        window.showProfilePageFromDropdown = function() {
+            // Close the dropdown first
+            profileDropdown.classList.remove('visible');
+
             orderPage.classList.remove('visible');
             orderPage.classList.add('hidden');
             orderPage.style.display = 'none';
@@ -2073,6 +2117,19 @@
         }
         // --- End Profile Management Functions ---
 
+        window.toggleProfileDropdown = function() {
+            profileDropdown.classList.toggle('visible');
+        }
+
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function(event) {
+            const profileMenuContainer = document.querySelector('.profile-menu-container');
+            // Check if the click was outside the profile menu container AND the dropdown is currently visible
+            if (profileDropdown.classList.contains('visible') && !profileMenuContainer.contains(event.target)) {
+                profileDropdown.classList.remove('visible');
+            }
+        }
+
         window.handleSignOutClick = async function() {
             const returnToTopBtn = document.getElementById('returnToTopBtn');
             try {
@@ -2089,6 +2146,7 @@
 
                 signUpForm.style.display = 'none';
                 returnToTopBtn.style.display = 'none';
+                profileDropdown.classList.remove('visible'); // Ensure dropdown is closed on sign out
             } catch (error) {
                 console.error("Error signing out:", error);
                 showMessage('Error signing out. Please try again.', 'signInMessage');
@@ -2614,6 +2672,7 @@
     </script>
 </body>
 </html>
+
 
 
 
