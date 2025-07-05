@@ -425,7 +425,7 @@
         }
 
 
-        .order-page-container, .receipt-page-container, .profile-page-container {
+        .order-page-container, .receipt-page-container, .profile-page-container, .favorites-page-container {
             background-color: #ffffff;
             padding: 20px;
             border-radius: 20px;
@@ -447,17 +447,17 @@
             margin-bottom: 20px;
             pointer-events: none;
         }
-        .order-page-container.visible, .profile-page-container.visible {
+        .order-page-container.visible, .profile-page-container.visible, .favorites-page-container.visible {
             margin-top: 200px; /* Adjusted to lower the white background and clear the header */
         }
 
-        .order-page-container.visible, .receipt-page-container.visible, .profile-page-container.visible {
+        .order-page-container.visible, .receipt-page-container.visible, .profile-page-container.visible, .favorites-page-container.visible {
             opacity: 1;
             transform: translateY(0);
             pointer-events: auto;
             display: flex; /* Ensure it's flex when visible */
         }
-        .order-page-container.hidden, .receipt-page-container.hidden, .profile-page-container.hidden {
+        .order-page-container.hidden, .receipt-page-container.hidden, .profile-page-container.hidden, .favorites-page-container.hidden {
             opacity: 0;
             pointer-events: none;
             display: none; /* Ensure it's hidden when not visible */
@@ -757,7 +757,7 @@
         .order-summary-modal.visible .order-summary-content, .receipt-modal.visible .receipt-content, .image-modal.visible .image-modal-content, .profile-message-modal.visible .profile-message-content {
             transform: translateY(0);
         }
-        .order-summary-content h3, .receipt-page-container h3, .receipt-modal .receipt-content h3, .profile-page-container h3 {
+        .order-summary-content h3, .receipt-page-container h3, .receipt-modal .receipt-content h3, .profile-page-container h3, .favorites-page-container h3 {
             font-size: 1.5rem;
             font-weight: 700;
             color: #0050A0;
@@ -1213,6 +1213,120 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         }
 
+        /* Favorites Button */
+        .main-fixed-header .favorites-button {
+            background: none;
+            color: white;
+            padding: 8px 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: none;
+            min-height: 38px;
+            white-space: nowrap;
+            width: auto;
+        }
+        .main-fixed-header .favorites-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Heart Icon */
+        .favorite-icon-button {
+            background: none;
+            border: none;
+            color: #EE3524; /* Red for heart */
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0;
+            margin-left: 5px;
+            transition: transform 0.2s ease, color 0.2s ease;
+            align-self: center; /* Vertically align with product code */
+        }
+        .favorite-icon-button:hover {
+            transform: scale(1.2);
+            color: #C02C1F; /* Darker red on hover */
+        }
+        /* Adjust product-info-left to accommodate the heart icon */
+        .product-info-left {
+            grid-column: 1 / 2;
+            grid-row: 1 / span 2;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            flex-basis: 0;
+            min-width: 150px;
+            text-align: left;
+            align-items: flex-start;
+        }
+        /* Adjust product-code-display to be inline with heart icon */
+        .product-info-left > div:first-child { /* Targets product-code-display */
+            display: flex;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between; /* Space out code and heart */
+        }
+        .product-code-display {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #5C6F78;
+            margin-bottom: 3px;
+        }
+
+        /* Favorites Page Container */
+        .favorites-page-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+            position: relative;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            flex-grow: 1;
+            box-sizing: border-box;
+            margin-top: 200px; /* Adjusted to lower the white background and clear the header */
+            margin-bottom: 20px;
+            pointer-events: none;
+        }
+        .favorites-page-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            display: flex;
+        }
+        .favorites-page-container.hidden {
+            opacity: 0;
+            pointer-events: none;
+            display: none;
+        }
+
+        .favorite-products-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Always 1 column for consistency with main product list */
+            gap: 20px;
+            justify-content: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        /* Removed the media query that made it two columns */
+        /* @media (min-width: 600px) {
+            .favorite-products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        } */
 
         /* Mobile specific styles for order summary modal */
         @media (max-width: 768px) {
@@ -1297,6 +1411,8 @@
         <div class="header-action-buttons">
             <button class="clear-order-button" onclick="clearAllOrders()">Clear</button>
             <button class="order-list-button" onclick="showOrderSummary()">List</button>
+            <!-- New Favorites Button -->
+            <button class="favorites-button" onclick="showFavoritesPage()">Favorites</button>
             <button id="finalizeOrderButton" class="finalize-order-button" onclick="finalizeOrder()" disabled>Finalize</button>
         </div>
     </header>
@@ -1373,7 +1489,12 @@
             <div class="product-card" id="productCard1">
                 <img src="10001.jpg" alt="555 SARDINES IN TOMATO SAUCE EOE" class="product-image" onclick="openImageModal('10001.jpg')">
                 <div class="product-info-left">
-                    <div class="product-code-display" id="productCode1Display">10001</div>
+                    <div class="product-code-display" id="productCode1Display">
+                        10001
+                        <button class="favorite-icon-button" data-product-id="1" onclick="toggleFavorite(1)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
                     <div class="input-group">
                         <textarea id="productName1" placeholder="Product Name" rows="2" readonly></textarea>
                     </div>
@@ -1400,7 +1521,12 @@
             <div class="product-card" id="productCard2">
                 <img src="10002.jpg" alt="555 SARDINES IN TOMATO SAUCE WITH CHILI" class="product-image" onclick="openImageModal('10002.jpg')">
                 <div class="product-info-left">
-                    <div class="product-code-display" id="productCode2Display">10002</div>
+                    <div class="product-code-display" id="productCode2Display">
+                        10002
+                        <button class="favorite-icon-button" data-product-id="2" onclick="toggleFavorite(2)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
                     <div class="input-group">
                         <textarea id="productName2" placeholder="Product Name" rows="2" readonly></textarea>
                     </div>
@@ -1427,7 +1553,12 @@
             <div class="product-card" id="productCard3">
                 <img src="10003.jpg" alt="555 TUNA FLAKES ADOBO EOE" class="product-image" onclick="openImageModal('10003.jpg')">
                 <div class="product-info-left">
-                    <div class="product-code-display" id="productCode3Display">10003</div>
+                    <div class="product-code-display" id="productCode3Display">
+                        10003
+                        <button class="favorite-icon-button" data-product-id="3" onclick="toggleFavorite(3)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
                     <div class="input-group">
                         <textarea id="productName3" placeholder="Product Name" rows="2" readonly></textarea>
                     </div>
@@ -1454,7 +1585,12 @@
             <div class="product-card" id="productCard4">
                 <img src="10004.jpg" alt="555 TUNA FLAKES AFRITADA EOE" class="product-image" onclick="openImageModal('10004.jpg')">
                 <div class="product-info-left">
-                    <div class="product-code-display" id="productCode4Display">10004</div>
+                    <div class="product-code-display" id="productCode4Display">
+                        10004
+                        <button class="favorite-icon-button" data-product-id="4" onclick="toggleFavorite(4)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
                     <div class="input-group">
                         <textarea id="productName4" placeholder="Product Name" rows="2" readonly></textarea>
                     </div>
@@ -1481,7 +1617,12 @@
             <div class="product-card" id="productCard5">
                 <img src="10005.jpg" alt="555 TUNA FLAKES CALDERETA EOE" class="product-image" onclick="openImageModal('10005.jpg')">
                 <div class="product-info-left">
-                    <div class="product-code-display" id="productCode5Display">10005</div>
+                    <div class="product-code-display" id="productCode5Display">
+                        10005
+                        <button class="favorite-icon-button" data-product-id="5" onclick="toggleFavorite(5)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
                     <div class="input-group">
                         <textarea id="productName5" placeholder="Product Name" rows="2" readonly></textarea>
                     </div>
@@ -1508,7 +1649,12 @@
             <div class="product-card" id="productCard6">
                 <img src="10006.jpg" alt="555 TUNA FLAKES IN OIL EOE" class="product-image" onclick="openImageModal('10006.jpg')">
                 <div class="product-info-left">
-                    <div class="product-code-display" id="productCode6Display">10006</div>
+                    <div class="product-code-display" id="productCode6Display">
+                        10006
+                        <button class="favorite-icon-button" data-product-id="6" onclick="toggleFavorite(6)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
                     <div class="input-group">
                         <textarea id="productName6" placeholder="Product Name" rows="2" readonly></textarea>
                     </div>
@@ -1535,7 +1681,12 @@
             <div class="product-card" id="productCard7">
                 <img src="10007.jpg" alt="555 TUNA FLAKES MECHADO EOE" class="product-image" onclick="openImageModal('10007.jpg')">
                 <div class="product-info-left">
-                    <div class="product-code-display" id="productCode7Display">10007</div>
+                    <div class="product-code-display" id="productCode7Display">
+                        10007
+                        <button class="favorite-icon-button" data-product-id="7" onclick="toggleFavorite(7)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
                     <div class="input-group">
                         <textarea id="productName7" placeholder="Product Name" rows="2" readonly></textarea>
                     </div>
@@ -1562,7 +1713,12 @@
             <div class="product-card" id="productCard8">
                 <img src="10008.jpg" alt="ABSOLUTE DISTILLED WATER" class="product-image" onclick="openImageModal('10008.jpg')">
                 <div class="product-info-left">
-                    <div class="product-code-display" id="productCode8Display">10008</div>
+                    <div class="product-code-display" id="productCode8Display">
+                        10008
+                        <button class="favorite-icon-button" data-product-id="8" onclick="toggleFavorite(8)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
                     <div class="input-group">
                         <textarea id="productName8" placeholder="Product Name" rows="2" readonly></textarea>
                     </div>
@@ -1589,7 +1745,12 @@
             <div class="product-card" id="productCard9">
                 <img src="10009.jpg" alt="ABSOLUTE DISTILLED WATER" class="product-image" onclick="openImageModal('10009.jpg')">
                 <div class="product-info-left">
-                    <div class="product-code-display" id="productCode9Display">10009</div>
+                    <div class="product-code-display" id="productCode9Display">
+                        10009
+                        <button class="favorite-icon-button" data-product-id="9" onclick="toggleFavorite(9)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
                     <div class="input-group">
                         <textarea id="productName9" placeholder="Product Name" rows="2" readonly></textarea>
                     </div>
@@ -1616,7 +1777,12 @@
             <div class="product-card" id="productCard10">
                 <img src="10010.jpg" alt="ABSOLUTE DISTILLED WATER" class="product-image" onclick="openImageModal('10010.jpg')">
                 <div class="product-info-left">
-                    <div class="product-code-display" id="productCode10Display">10010</div>
+                    <div class="product-code-display" id="productCode10Display">
+                        10010
+                        <button class="favorite-icon-button" data-product-id="10" onclick="toggleFavorite(10)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
                     <div class="input-group">
                         <textarea id="productName10" placeholder="Product Name" rows="2" readonly></textarea>
                     </div>
@@ -1723,6 +1889,16 @@
         </div>
     </div>
 
+    <!-- MyTindahan Favorites Page (New) -->
+    <div id="favoritesPage" class="favorites-page-container hidden">
+        <button class="close-modal-button" onclick="closeFavoritesPage()">&times;</button>
+        <h3>Your Favorite Products</h3>
+        <div id="favoriteProductsContainer" class="favorite-products-grid">
+            <!-- Favorite product cards will be injected here -->
+        </div>
+        <p id="noFavoritesMessage" class="no-stock-message" style="display: none;">No favorite products added yet.</p>
+    </div>
+
     <!-- Image Enlargement Modal -->
     <div id="imageModal" class="image-modal">
         <div class="image-modal-content">
@@ -1756,14 +1932,14 @@
         // Firebase imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
-        import { getFirestore, setDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js"
+        import { getFirestore, setDoc, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js"
 
         // Firebase Configuration (ensure this is configured if you're deploying this)
         const firebaseConfig = {
             apiKey: "AIzaSyBUumZtqlbc57zld5Hvehs-3m5lF_83pq0",
             authDomain: "loginol-c22e0.firebaseapp.com",
             projectId: "loginol-c22e0",
-            storageBucket: "loginol-c22e0.firebasestorage.app",
+            storageBucket: "loginol-c22e0.firebaseapp.com",
             messagingSenderId: "961489698727",
             appId: "1:961489698727:web:553dbf73b574c439bac082"
         };
@@ -1796,12 +1972,16 @@
             fullAddress: ''
         };
 
+        let userFavorites = []; // Stores product IDs of favorite items
+        let currentUserId = null; // To store the authenticated user's UID
+
         // DOM elements for page transitions
         const signInForm = document.getElementById('signIn');
         const signUpForm = document.getElementById('signup');
         const orderPage = document.getElementById('orderPage');
         const receiptPage = document.getElementById('receiptPage');
         const profilePage = document.getElementById('profilePage'); // New: Profile Page
+        const favoritesPage = document.getElementById('favoritesPage'); // New: Favorites Page
         const mainHeader = document.getElementById('mainHeader');
         const returnToTopBtn = document.getElementById('returnToTopBtn');
         const welcomeModal = document.getElementById('welcomeModal');
@@ -1864,20 +2044,37 @@
             };
         }
 
-        const saveProductData = debounce((productId, unitType) => {
+        // Modified saveProductData to accept the input element that triggered the change
+        const saveProductData = debounce((inputElement, productId, unitType) => {
             const product = productData[productId];
-            const quantityInput = document.getElementById(`productQuantity${productId}${unitType === 'Pcs' ? 'PC' : 'CASE'}`);
+            const newQuantity = parseInt(inputElement.value) || 0;
+
             if (product && product[unitType]) {
-                product[unitType].quantity = parseInt(quantityInput.value) || 0;
+                product[unitType].quantity = newQuantity;
+
+                // Update ALL quantity inputs for this product and unit type, regardless of page
+                // Select inputs on both the main order page and the favorites page
+                const allQuantityInputs = document.querySelectorAll(
+                    `#orderPage #productQuantity${productId}${unitType === 'Pcs' ? 'PC' : 'CASE'}, ` +
+                    `#favoritesPage #productQuantity${productId}${unitType === 'Pcs' ? 'PC' : 'CASE'}`
+                );
+
+                allQuantityInputs.forEach(input => {
+                    // Only update if the value is different to avoid unnecessary DOM manipulation
+                    if (input.value !== (newQuantity > 0 ? newQuantity.toString() : '')) {
+                        input.value = newQuantity > 0 ? newQuantity : '';
+                    }
+                });
             }
             try {
                 localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
-                console.log(`Product ${productId} (${unitType}) data saved to localStorage. Current quantity: ${product[unitType].quantity}`);
+                console.log(`Product ${productId} (${unitType}) data saved to localStorage. Current quantity: ${newQuantity}`);
                 checkOrderValidity();
             } catch (e) {
                 console.error("Error saving product data to localStorage:", e);
             }
         }, 500);
+
 
         function loadProductData() {
             try {
@@ -1932,11 +2129,6 @@
                     productNameInput.value = product.productName;
                     productNameInput.title = product.productName;
 
-                    const productCodeDisplay = productCard.querySelector(`#productCode${i}Display`);
-                    if (productCodeDisplay) {
-                        productCodeDisplay.textContent = product.productCode;
-                    }
-
                     const pcUnitLabel = productCard.querySelector(`#productCard${i} .unit-section:first-child .unit-label`);
                     if (pcUnitLabel) pcUnitLabel.innerHTML = `PC. <span id="pcSpec${i}" class="spec-text">${product.pcSpec}</span>`;
                     productCard.querySelector(`#productQuantity${i}PC`).value = product['Pcs'].quantity > 0 ? product['Pcs'].quantity : '';
@@ -1948,6 +2140,7 @@
                     productCard.querySelector(`#productPrice${i}CASE`).textContent = `PHP ${parseFloat(product['Cs'].price).toFixed(2)}`;
                 }
             }
+            updateAllHeartIcons(); // Ensure heart icons are correct after UI initialization
         }
 
         function checkOrderValidity() {
@@ -2017,7 +2210,7 @@
                 editProfileButton.disabled = false;
 
             } catch (e) {
-                console.error("Error loading client info from Firestore:", e);
+                console.error("Error loading client info from Firestore:", e.code, e.message, e); // Added detailed error logging
                 showProfileMessage("Error loading profile. Please try again.");
                 // Fallback to empty if Firestore load fails
                 clientInfo = { firstName: '', middleName: '', lastName: '', storeName: '', contactNumber: '', fullAddress: '' };
@@ -2043,6 +2236,10 @@
             receiptPage.classList.remove('visible');
             receiptPage.classList.add('hidden');
             receiptPage.style.display = 'none';
+
+            favoritesPage.classList.remove('visible'); // Hide favorites page
+            favoritesPage.classList.add('hidden');
+            favoritesPage.style.display = 'none';
 
             profilePage.style.display = 'flex';
             setTimeout(() => {
@@ -2109,13 +2306,226 @@
                 console.log("Client info saved to Firestore:", clientInfo);
                 showProfileMessage("Profile saved successfully!");
             } catch (e) {
-                console.error("Error saving client info to Firestore:", e);
+                console.error("Error saving client info to Firestore:", e.code, e.message, e); // Added detailed error logging
                 showProfileMessage("Error saving profile. Please try again.");
             }
             saveProfileButton.disabled = true;
             editProfileButton.disabled = false;
         }
         // --- End Profile Management Functions ---
+
+        // --- Favorites Management Functions ---
+        async function loadFavorites() {
+            if (currentUserId) {
+                try {
+                    const userDocRef = doc(db, "users", currentUserId);
+                    const docSnap = await getDoc(userDocRef);
+
+                    if (docSnap.exists() && Array.isArray(docSnap.data().favorites)) { // Check if it's an array
+                        userFavorites = docSnap.data().favorites;
+                        console.log("Favorites loaded from Firestore for user:", currentUserId, userFavorites);
+                    } else {
+                        userFavorites = []; // No favorites found or not an array, initialize empty
+                        console.log("No favorites found in Firestore for user or data is not an array, initializing empty.");
+                    }
+                } catch (e) {
+                    console.error("Error loading favorites from Firestore:", e.code, e.message, e); // Added detailed error logging
+                    userFavorites = []; // Fallback to empty if there's an error
+                }
+            } else {
+                userFavorites = []; // Clear favorites if no user is logged in
+            }
+            updateAllHeartIcons(); // Always update UI after loading favorites
+        }
+
+        window.toggleFavorite = async function(productId) {
+            console.log("toggleFavorite called. currentUserId:", currentUserId); // Added for debugging
+            if (!currentUserId) {
+                showProfileMessage("Please log in to manage your favorites.");
+                return;
+            }
+
+            const userDocRef = doc(db, "users", currentUserId);
+            const docSnap = await getDoc(userDocRef); // Fetch document to check its current state
+            let currentFavorites = [];
+
+            if (docSnap.exists() && Array.isArray(docSnap.data().favorites)) {
+                currentFavorites = docSnap.data().favorites;
+            }
+
+            const index = currentFavorites.indexOf(productId);
+
+            try {
+                if (index > -1) {
+                    // Product is currently a favorite, remove it
+                    userFavorites.splice(userFavorites.indexOf(productId), 1); // Update local state
+                    await updateDoc(userDocRef, {
+                        favorites: arrayRemove(productId)
+                    });
+                    console.log(`Removed product ${productId} from favorites in Firestore.`);
+                } else {
+                    // Product is not a favorite, add it
+                    userFavorites.push(productId); // Update local state
+                    if (docSnap.exists()) {
+                        // If document exists, use updateDoc with arrayUnion
+                        await updateDoc(userDocRef, {
+                            favorites: arrayUnion(productId)
+                        });
+                    } else {
+                        // If document does not exist, create it with setDoc and merge:true
+                        await setDoc(userDocRef, {
+                            favorites: [productId]
+                        }, { merge: true });
+                    }
+                    console.log(`Added product ${productId} to favorites in Firestore.`);
+                }
+                updateHeartIcon(productId); // Update specific heart icon on the main page
+                if (favoritesPage.classList.contains('visible')) {
+                    renderFavoritesPage(); // Re-render if favorites page is open
+                }
+            } catch (e) {
+                console.error("Error updating favorites in Firestore:", e.code, e.message, e); // Added detailed error logging
+                showProfileMessage("Error updating favorites. Please try again.");
+                // Revert local state if Firestore update fails
+                if (index > -1) {
+                    userFavorites.push(productId); // Add back if removal failed
+                } else {
+                    userFavorites.splice(userFavorites.length - 1, 1); // Remove last added if addition failed
+                }
+                updateHeartIcon(productId); // Revert heart icon
+            }
+        }
+
+        function updateHeartIcon(productId) {
+            // Select heart icons on both order page and favorites page
+            const heartButtons = document.querySelectorAll(`.favorite-icon-button[data-product-id="${productId}"] i`);
+            heartButtons.forEach(heartButton => {
+                if (userFavorites.includes(productId)) {
+                    heartButton.classList.remove('far');
+                    heartButton.classList.add('fas');
+                } else {
+                    heartButton.classList.remove('fas');
+                    heartButton.classList.add('far');
+                }
+            });
+        }
+
+        function updateAllHeartIcons() {
+            document.querySelectorAll('.favorite-icon-button').forEach(button => {
+                const productId = parseInt(button.dataset.productId);
+                updateHeartIcon(productId);
+            });
+        }
+
+        window.showFavoritesPage = function() {
+            // Hide other pages
+            orderPage.classList.remove('visible');
+            orderPage.classList.add('hidden');
+            orderPage.style.display = 'none';
+
+            receiptPage.classList.remove('visible');
+            receiptPage.classList.add('hidden');
+            receiptPage.style.display = 'none';
+
+            profilePage.classList.remove('visible');
+            profilePage.classList.add('hidden');
+            profilePage.style.display = 'none';
+
+            // Show favorites page
+            favoritesPage.style.display = 'flex';
+            setTimeout(() => {
+                favoritesPage.classList.remove('hidden');
+                favoritesPage.classList.add('visible');
+            }, 50);
+
+            renderFavoritesPage();
+            window.scrollTo(0, 0);
+        };
+
+        window.closeFavoritesPage = function() {
+            favoritesPage.classList.remove('visible');
+            favoritesPage.classList.add('hidden');
+            favoritesPage.style.display = 'none';
+
+            // Return to order page
+            orderPage.style.display = 'flex';
+            orderPage.classList.remove('hidden');
+            orderPage.classList.add('visible');
+        };
+
+        function renderFavoritesPage() {
+            const favoriteProductsContainer = document.getElementById('favoriteProductsContainer');
+            const noFavoritesMessage = document.getElementById('noFavoritesMessage');
+            favoriteProductsContainer.innerHTML = '';
+
+            if (userFavorites.length === 0) {
+                noFavoritesMessage.style.display = 'block';
+                return;
+            } else {
+                noFavoritesMessage.style.display = 'none';
+            }
+
+            userFavorites.forEach(productId => {
+                const product = productData[productId];
+                if (product) {
+                    const favoriteCard = document.createElement('div');
+                    favoriteCard.classList.add('product-card'); // Reuse product-card styling
+                    favoriteCard.id = `favoriteProductCard${productId}`; // Assign a unique ID for favorites page card
+
+                    favoriteCard.innerHTML = `
+                        <img src="${product.productCode}.jpg" alt="${product.productName}" class="product-image" onclick="openImageModal('${product.productCode}.jpg')">
+                        <div class="product-info-left">
+                            <div class="product-code-display">
+                                ${product.productCode}
+                                <button class="favorite-icon-button" data-product-id="${productId}" onclick="toggleFavorite(${productId})">
+                                    <i class="fas fa-heart"></i> <!-- Always filled in favorites view -->
+                                </button>
+                            </div>
+                            <div class="input-group">
+                                <textarea id="productName${productId}Fav" placeholder="Product Name" rows="2" readonly>${product.productName}</textarea>
+                            </div>
+                        </div>
+                        <div class="unit-sections-container">
+                            <div class="unit-section">
+                                <div class="unit-label">PC. <span class="spec-text">${product.pcSpec}</span></div>
+                                <div class="input-container">
+                                    <input type="number" id="productQuantity${productId}PC" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*" value="${product['Pcs'].quantity > 0 ? product['Pcs'].quantity : ''}">
+                                </div>
+                                <div class="unit-price">PHP ${parseFloat(product['Pcs'].price).toFixed(2)}</div>
+                            </div>
+                            <div class="unit-section">
+                                <div class="unit-label">CS. <span class="spec-text">${product.caseSpec}</span></div>
+                                <div class="input-container">
+                                    <input type="number" id="productQuantity${productId}CASE" placeholder="Qty" min="0" inputmode="numeric" pattern="[0-9]*" value="${product['Cs'].quantity > 0 ? product['Cs'].quantity : ''}">
+                                </div>
+                                <div class="unit-price">PHP ${parseFloat(product['Cs'].price).toFixed(2)}</div>
+                            </div>
+                        </div>
+                    `;
+                    favoriteProductsContainer.appendChild(favoriteCard);
+
+                    // Add event listeners to the newly created input fields
+                    const quantityInputPC = favoriteCard.querySelector(`#productQuantity${productId}PC`);
+                    const quantityInputCASE = favoriteCard.querySelector(`#productQuantity${productId}CASE`);
+
+                    if (quantityInputPC) {
+                        quantityInputPC.addEventListener('input', function() {
+                            // Pass the input element itself to saveProductData
+                            saveProductData(this, productId, 'Pcs');
+                        });
+                    }
+                    if (quantityInputCASE) {
+                        quantityInputCASE.addEventListener('input', function() {
+                            // Pass the input element itself to saveProductData
+                            saveProductData(this, productId, 'Cs');
+                        });
+                    }
+                }
+            });
+            updateAllHeartIcons(); // Ensure heart icons are correct on this page too
+        }
+        // --- End Favorites Management Functions ---
+
 
         window.toggleProfileDropdown = function() {
             profileDropdown.classList.toggle('visible');
@@ -2138,17 +2548,20 @@
                 orderPage.style.display = 'none';
                 receiptPage.style.display = 'none';
                 profilePage.style.display = 'none'; // Hide profile page on sign out
+                favoritesPage.style.display = 'none'; // Hide favorites page on sign out
                 mainHeader.style.display = 'none';
                 signInForm.style.display = 'block';
                 document.body.classList.add('body-login-background'); // Apply login background on sign out
 
                 clearLoginSignupFields();
+                userFavorites = []; // Clear favorites data on sign out
+                currentUserId = null; // Clear current user ID
 
                 signUpForm.style.display = 'none';
                 returnToTopBtn.style.display = 'none';
                 profileDropdown.classList.remove('visible'); // Ensure dropdown is closed on sign out
             } catch (error) {
-                console.error("Error signing out:", error);
+                console.error("Error signing out:", error.code, error.message, error); // Added detailed error logging
                 showMessage('Error signing out. Please try again.', 'signInMessage');
             }
         }
@@ -2163,11 +2576,11 @@
 
             for (const productId in productData) {
                 const product = productData[productId];
-                const quantityInputPC = document.getElementById(`productQuantity${productId}PC`);
-                const quantityInputCASE = document.getElementById(`productQuantity${productId}CASE`);
+                // The productData object should already be up-to-date due to `saveProductData`
+                // No need to read from UI here, just use the productData directly.
+                product['Pcs'].quantity = parseInt(product['Pcs'].quantity) || 0;
+                product['Cs'].quantity = parseInt(product['Cs'].quantity) || 0;
 
-                if (quantityInputPC) product['Pcs'].quantity = parseInt(quantityInputPC.value) || 0;
-                if (quantityInputCASE) product['Cs'].quantity = parseInt(quantityInputCASE.value) || 0;
 
                 ['Pcs', 'Cs'].forEach(unit => {
                     const unitDetails = product[unit];
@@ -2228,10 +2641,14 @@
                 ['Pcs', 'Cs'].forEach(unit => {
                     if (product[unit]) {
                         product[unit].quantity = 0;
-                        const quantityInput = document.getElementById(`productQuantity${productId}${unit === 'Pcs' ? 'PC' : 'CASE'}`);
-                        if (quantityInput) {
-                            quantityInput.value = '';
-                        }
+                        // Update ALL quantity inputs for this product and unit type
+                        const allQuantityInputs = document.querySelectorAll(
+                            `#orderPage #productQuantity${productId}${unit === 'Pcs' ? 'PC' : 'CASE'}, ` +
+                            `#favoritesPage #productQuantity${productId}${unit === 'Pcs' ? 'PC' : 'CASE'}`
+                        );
+                        allQuantityInputs.forEach(input => {
+                            input.value = '';
+                        });
                     }
                 });
             }
@@ -2260,10 +2677,14 @@
                 }
                 product[unit].quantity = newQuantity;
 
-                const quantityInputOnMainPage = document.getElementById(`productQuantity${productId}${unit === 'Pcs' ? 'PC' : 'CASE'}`);
-                if (quantityInputOnMainPage) {
-                    quantityInputOnMainPage.value = newQuantity > 0 ? newQuantity : '';
-                }
+                // Update ALL quantity inputs for this product and unit type
+                const allQuantityInputs = document.querySelectorAll(
+                    `#orderPage #productQuantity${productId}${unit === 'Pcs' ? 'PC' : 'CASE'}, ` +
+                    `#favoritesPage #productQuantity${productId}${unit === 'Pcs' ? 'PC' : 'CASE'}`
+                );
+                allQuantityInputs.forEach(input => {
+                    input.value = newQuantity > 0 ? newQuantity : '';
+                });
 
                 try {
                     localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
@@ -2301,11 +2722,10 @@
             console.log("Synchronizing product quantities from UI to productData before finalization.");
             for (const productId in productData) {
                 const product = productData[productId];
-                const quantityInputPC = document.getElementById(`productQuantity${productId}PC`);
-                const quantityInputCASE = document.getElementById(`productQuantity${productId}CASE`);
-
-                if (quantityInputPC) product['Pcs'].quantity = parseInt(quantityInputPC.value) || 0;
-                if (quantityInputCASE) product['Cs'].quantity = parseInt(quantityInputCASE.value) || 0;
+                // No need to read from UI here, productData should already be up-to-date due to saveProductData
+                // This loop just ensures the productData structure is consistent
+                product['Pcs'].quantity = parseInt(product['Pcs'].quantity) || 0;
+                product['Cs'].quantity = parseInt(product['Cs'].quantity) || 0;
             }
             console.log("ProductData after UI synchronization:", JSON.parse(JSON.stringify(productData)));
 
@@ -2368,6 +2788,9 @@
             profilePage.classList.remove('visible'); // Ensure profile page is hidden
             profilePage.classList.add('hidden');
             profilePage.style.display = 'none';
+            favoritesPage.classList.remove('visible'); // Hide favorites page
+            favoritesPage.classList.add('hidden');
+            favoritesPage.style.display = 'none';
 
 
             receiptPage.style.display = 'flex';
@@ -2395,16 +2818,19 @@
                 ['Pcs', 'Cs'].forEach(unit => {
                     if (product[unit]) {
                         product[unit].quantity = 0;
-                        const quantityInput = document.getElementById(`productQuantity${productId}${unit === 'Pcs' ? 'PC' : 'CASE'}`);
-                        if (quantityInput) {
-                            quantityInput.value = '';
-                        }
+                        // Update ALL quantity inputs for this product and unit type
+                        const allQuantityInputs = document.querySelectorAll(
+                            `#orderPage #productQuantity${productId}${unit === 'Pcs' ? 'PC' : 'CASE'}, ` +
+                            `#favoritesPage #productQuantity${productId}${unit === 'Pcs' ? 'PC' : 'CASE'}`
+                        );
+                        allQuantityInputs.forEach(input => {
+                            input.value = '';
+                        });
                     }
                 });
             }
             try {
                 localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
-                console.log("Orders reset in localStorage for new order session via 'Order Again'.");
             }
             catch (e) {
                 console.error("Error resetting orders in localStorage via 'Order Again':", e);
@@ -2473,6 +2899,7 @@
             } else {
                 noStockMessage.style.display = 'block';
             }
+            updateAllHeartIcons(); // Update heart icons after filtering
         }
 
         window.scrollToTop = function() {
@@ -2508,6 +2935,7 @@
                 setTimeout(() => {
                     receiptPage.style.display = 'none';
                     profilePage.style.display = 'none'; // Ensure profile page is hidden
+                    favoritesPage.style.display = 'none'; // Hide favorites page
                     orderPage.style.display = 'flex';
                     orderPage.classList.remove('hidden');
                     orderPage.classList.add('visible');
@@ -2527,19 +2955,22 @@
             orderPage.style.display = 'none';
             receiptPage.style.display = 'none';
             profilePage.style.display = 'none'; // Hide profile page on initial load
+            favoritesPage.style.display = 'none'; // Hide favorites page on initial load
             mainHeader.style.display = 'none';
             welcomeModal.style.display = 'flex'; // Ensure welcome modal is flex for centering, but hidden by opacity/visibility
             document.body.classList.add('body-login-background'); // Apply login background on initial load
 
-            onAuthStateChanged(auth, (user) => {
+            onAuthStateChanged(auth, async (user) => {
                 if (user) {
                     console.log("onAuthStateChanged: User is logged in, UID:", user.uid);
+                    currentUserId = user.uid; // Set current user ID
                     // If user is already logged in on page load, directly show order page
                     // No welcome transition needed here as it's not a fresh login action
                     signInForm.style.display = 'none';
                     signUpForm.style.display = 'none';
                     receiptPage.style.display = 'none';
                     profilePage.style.display = 'none'; // Ensure profile page is hidden
+                    favoritesPage.style.display = 'none'; // Hide favorites page
                     orderPage.style.display = 'flex';
                     setTimeout(() => {
                         orderPage.classList.remove('hidden');
@@ -2547,15 +2978,19 @@
                     }, 50);
                     mainHeader.style.display = 'flex';
                     loadProductData();
-                    loadClientInfo(); // Load client info if already logged in
+                    await loadClientInfo(); // Load client info if already logged in
+                    await loadFavorites(); // Load favorites for the logged-in user
                     document.body.classList.remove('body-login-background'); // Remove login background if already logged in
                 } else {
                     console.log("onAuthStateChanged: No user logged in.");
+                    currentUserId = null; // Clear current user ID
+                    userFavorites = []; // Clear favorites data
                     signInForm.style.display = 'block';
                     signUpForm.style.display = 'none';
                     orderPage.style.display = 'none';
                     receiptPage.style.display = 'none';
                     profilePage.style.display = 'none'; // Ensure profile page is hidden
+                    favoritesPage.style.display = 'none'; // Hide favorites page
                     mainHeader.style.display = 'none';
                     document.body.classList.add('body-login-background'); // Apply login background
                 }
@@ -2593,6 +3028,7 @@
                     console.log("Attempting to sign up with email:", email);
                     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                     const user = userCredential.user;
+                    currentUserId = user.uid; // Set current user ID after signup
 
                     // Initialize profile data in Firestore for new user
                     const initialProfileData = {
@@ -2601,9 +3037,11 @@
                         middleName: '', // Initialize other fields as empty for new user
                         storeName: '',
                         contactNumber: '',
-                        fullAddress: ''
+                        fullAddress: '',
+                        favorites: [] // ADD THIS LINE to initialize an empty favorites array
                     };
                     await setDoc(doc(db, "users", user.uid), initialProfileData); // Store directly in user's document
+                    await loadFavorites(); // Load favorites (will be empty) for the new user
 
                     showMessage('Account Created Successfully!', 'signUpMessage');
                     showWelcomeAndTransition(); // Call welcome transition after successful signup
@@ -2614,7 +3052,7 @@
                     } else if (errorCode === 'auth/weak-password') {
                         showMessage('Password is too weak. Must be at least 6 characters.', 'signUpMessage');
                     } else {
-                        console.error("Error signing up:", error);
+                        console.error("Error signing up:", error.code, error.message, error); // Added detailed error logging
                         showMessage('Unable to create User. Please try again.', 'signUpMessage');
                     }
                 }
@@ -2628,7 +3066,11 @@
 
                 try {
                     console.log("Attempting to sign in with email:", email);
-                    await signInWithEmailAndPassword(auth, email, password);
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+                    currentUserId = user.uid; // Set current user ID after signin
+                    await loadFavorites(); // Load favorites for the logged-in user
+
                     showMessage('Login successful!', 'signInMessage');
                     showWelcomeAndTransition(); // Call welcome transition after successful signin
                 } catch (error) {
@@ -2636,26 +3078,25 @@
                     if (errorCode === 'auth/invalid-credential' || errorCode === 'auth/wrong-password' || errorCode === 'auth/user-not-found') {
                         showMessage('Incorrect Email or Password', 'signInMessage');
                     } else {
-                        console.error("Error signing in:", error);
+                        console.error("Error signing in:", error.code, error.message, error); // Added detailed error logging
                         showMessage('Account does not Exist or another error occurred.', 'signInMessage');
                     }
                 }
             });
 
+            // Event listeners for quantity inputs on the main order page
             for (let i = 1; i <= 10; i++) {
                 const quantityInputPC = document.getElementById(`productQuantity${i}PC`);
                 const quantityInputCASE = document.getElementById(`productQuantity${i}CASE`);
 
                 if (quantityInputPC) {
-                    quantityInputPC.addEventListener('input', () => {
-                        productData[i]['Pcs'].quantity = parseInt(quantityInputPC.value) || 0;
-                        saveProductData(i, 'Pcs');
+                    quantityInputPC.addEventListener('input', function() {
+                        saveProductData(this, i, 'Pcs');
                     });
                 }
                 if (quantityInputCASE) {
-                    quantityInputCASE.addEventListener('input', () => {
-                        productData[i]['Cs'].quantity = parseInt(quantityInputCASE.value) || 0;
-                        saveProductData(i, 'Cs');
+                    quantityInputCASE.addEventListener('input', function() {
+                        saveProductData(this, i, 'Cs');
                     });
                 }
             }
@@ -2672,6 +3113,7 @@
     </script>
 </body>
 </html>
+
 
 
 
