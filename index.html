@@ -1859,7 +1859,7 @@
         <div class="flex justify-center mt-8 space-x-4">
             <!-- Removed the "Save Receipt (as HTML)" button -->
         </div>
-        <button class="order-again-button mt-8" onclick="orderAgain()">Order Again</button>
+        <button class="order-again-button mt-8" onclick="confirmOrder()">Confirm Order</button>
     </div>
 
     <!-- Client Profile Page (New) -->
@@ -1939,7 +1939,7 @@
         // Firebase imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
-        import { getFirestore, setDoc, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js"
+        import { getFirestore, setDoc, doc, getDoc, updateDoc, arrayUnion, arrayRemove, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js"
 
         // Firebase Configuration (ensure this is configured if you're deploying this)
         const firebaseConfig = {
@@ -2843,45 +2843,101 @@
             }, 50);
         }
 
-        window.orderAgain = function() {
+        // New function to confirm and save the order to Firestore
+        window.confirmOrder = async function() {
+            if (!currentUserId) {
+                showProfileMessage("Please log in to confirm your order.");
+                return;
+            }
+
+            const orderItems = [];
+            let totalOrderPrice = 0;
+
             for (const productId in productData) {
                 const product = productData[productId];
                 ['Pcs', 'Cs'].forEach(unit => {
-                    if (product[unit]) {
-                        product[unit].quantity = 0;
-                        // Update ALL quantity inputs for this product and unit type
-                        const allQuantityInputs = document.querySelectorAll(
-                            `#orderPage #productQuantity${productId}${unit === 'Pcs' ? 'PC' : 'CASE'}, ` +
-                            `#favoritesPage #productQuantity${productId}${unit === 'Pcs' ? 'PC' : 'CASE'}`
-                        );
-                        allQuantityInputs.forEach(input => {
-                            input.value = '';
+                    const quantity = parseInt(product[unit]?.quantity || 0);
+                    const unitPrice = parseFloat(product[unit]?.price || '0');
+                    const unitLabel = (unit === 'Pcs' ? 'PC.' : 'CS.');
+                    const spec = (unit === 'Pcs' ? product.pcSpec : product.caseSpec);
+
+                    if (quantity > 0 && !isNaN(unitPrice)) {
+                        const itemTotalPrice = unitPrice * quantity;
+                        totalOrderPrice += itemTotalPrice;
+
+                        orderItems.push({
+                            productCode: product.productCode,
+                            productName: product.productName,
+                            quantity: quantity,
+                            unit: `${unitLabel} ${spec}`,
+                            pricePerUnit: unitPrice,
+                            totalPrice: itemTotalPrice
                         });
                     }
                 });
             }
+
+            if (orderItems.length === 0) {
+                showProfileMessage("Your order is empty. Please add items before confirming.");
+                return;
+            }
+
             try {
-                localStorage.setItem('mytindahan_product_data', JSON.stringify(productData));
-            }
-            catch (e) {
-                console.error("Error resetting orders in localStorage via 'Order Again':", e);
-            }
-            const orderPage = document.getElementById('orderPage');
-            const receiptPage = document.getElementById('receiptPage');
-            const mainHeader = document.getElementById('mainHeader');
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                const ordersCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/orders`);
+                
+                const newOrder = {
+                    timestamp: new Date(),
+                    clientInfo: clientInfo, // Include client info in the order
+                    items: orderItems,
+                    totalAmount: totalOrderPrice.toFixed(2)
+                };
 
-            receiptPage.classList.remove('visible');
-            receiptPage.classList.add('hidden');
-            receiptPage.style.display = 'none';
+                await addDoc(ordersCollectionRef, newOrder);
+                console.log("Order confirmed and saved to Firestore:", newOrder);
+                showProfileMessage("Order confirmed and saved successfully!");
 
-            orderPage.style.display = 'flex';
-            orderPage.classList.remove('hidden');
-            orderPage.classList.add('visible');
-            mainHeader.style.display = 'flex';
-            loadProductData();
-            window.scrollTo(0, 0);
-            filterProducts(); // Re-apply filter after ordering again
+                // Clear current order after successful confirmation and saving
+                for (const productId in productData) {
+                    const product = productData[productId];
+                    ['Pcs', 'Cs'].forEach(unit => {
+                        if (product[unit]) {
+                            product[unit].quantity = 0;
+                            const allQuantityInputs = document.querySelectorAll(
+                                `#orderPage #productQuantity${productId}${unit === 'Pcs' ? 'PC' : 'CASE'}, ` +
+                                `#favoritesPage #productQuantity${productId}${unit === 'Pcs' ? 'PC' : 'CASE'}`
+                            );
+                            allQuantityInputs.forEach(input => {
+                                input.value = '';
+                            });
+                        }
+                    });
+                }
+                localStorage.setItem('mytindahan_product_data', JSON.stringify(productData)); // Clear local storage
+                checkOrderValidity(); // Update finalize button state
+
+                // Navigate back to the order page (offers page)
+                const receiptPage = document.getElementById('receiptPage');
+                const orderPage = document.getElementById('orderPage');
+                const mainHeader = document.getElementById('mainHeader');
+
+                receiptPage.classList.remove('visible');
+                receiptPage.classList.add('hidden');
+                receiptPage.style.display = 'none';
+
+                orderPage.style.display = 'flex';
+                orderPage.classList.remove('hidden');
+                orderPage.classList.add('visible');
+                mainHeader.style.display = 'flex';
+                loadProductData(); // Reload product data to refresh quantities
+                window.scrollTo(0, 0);
+                filterProducts(); // Re-apply filter after confirming order
+            } catch (e) {
+                console.error("Error saving order to Firestore:", e.code, e.message, e); // Added detailed error logging
+                showProfileMessage("Error confirming order. Please try again.");
+            }
         }
+
 
         window.filterProducts = function() {
             const searchInput = document.getElementById('productSearch').value.toLowerCase().trim();
@@ -3173,6 +3229,7 @@
     </script>
 </body>
 </html>
+
 
 
 
