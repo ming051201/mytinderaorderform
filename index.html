@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1859,7 +1858,7 @@
         <div class="flex justify-center mt-8 space-x-4">
             <!-- Removed the "Save Receipt (as HTML)" button -->
         </div>
-        <button class="order-again-button mt-8" onclick="confirmOrder()">Confirm Order</button>
+        <button class="order-again-button mt-8" id="confirmOrderButton" onclick="confirmOrder()">Confirm Order</button>
     </div>
 
     <!-- Client Profile Page (New) -->
@@ -1923,7 +1922,7 @@
     <div id="profileMessageModal" class="profile-message-modal">
         <div class="profile-message-content">
             <p id="profileMessageText"></p>
-            <button class="close-modal-button" onclick="closeProfileMessageModal()">OK</button>
+            <button class="close-modal-button" onclick="closeProfileMessageModal(true)">OK</button>
         </div>
     </div>
 
@@ -1994,6 +1993,7 @@
         const welcomeModal = document.getElementById('welcomeModal');
         const profileMessageModal = document.getElementById('profileMessageModal'); // New: Profile Message Modal
         const profileDropdown = document.getElementById('profileDropdown'); // New: Profile Dropdown
+        const confirmOrderButton = document.getElementById('confirmOrderButton'); // Get the confirm order button
 
         // Form input fields
         const emailInput = document.getElementById('email');
@@ -2037,8 +2037,13 @@
             profileMessageModal.classList.add('visible');
         }
 
-        window.closeProfileMessageModal = function() {
+        // Modified to accept a parameter indicating if it's a success message from confirmOrder
+        window.closeProfileMessageModal = function(isConfirmOrderSuccess = false) {
             profileMessageModal.classList.remove('visible');
+            if (isConfirmOrderSuccess) {
+                confirmOrderButton.disabled = false; // Re-enable button on success message dismissal
+                confirmOrderButton.textContent = 'Confirm Order'; // Reset button text
+            }
         }
 
         // Debounce function
@@ -2664,6 +2669,11 @@
         window.closeOrderSummary = function() {
             const orderSummaryModal = document.getElementById('orderSummaryModal');
             orderSummaryModal.classList.remove('visible');
+
+            // If the receipt page is currently visible, re-render it to reflect changes
+            if (receiptPage.classList.contains('visible')) {
+                finalizeOrder(); // Re-run finalizeOrder to refresh the receipt
+            }
         }
 
         window.clearAllOrders = function() {
@@ -2798,6 +2808,7 @@
                 return;
             }
 
+            receiptItemsBody.innerHTML = ''; // Clear previous items before adding new ones
             currentOrderItems.forEach(item => {
                 const row = receiptItemsBody.insertRow();
                 row.innerHTML = `
@@ -2845,8 +2856,14 @@
 
         // New function to confirm and save the order to Firestore
         window.confirmOrder = async function() {
+            // Disable the button immediately to prevent double-tapping
+            confirmOrderButton.disabled = true;
+            confirmOrderButton.textContent = 'Processing...'; // Optional: provide feedback
+
             if (!currentUserId) {
                 showProfileMessage("Please log in to confirm your order.");
+                confirmOrderButton.disabled = false; // Re-enable if not logged in
+                confirmOrderButton.textContent = 'Confirm Order';
                 return;
             }
 
@@ -2879,6 +2896,8 @@
 
             if (orderItems.length === 0) {
                 showProfileMessage("Your order is empty. Please add items before confirming.");
+                confirmOrderButton.disabled = false; // Re-enable if order is empty
+                confirmOrderButton.textContent = 'Confirm Order';
                 return;
             }
 
@@ -2932,9 +2951,12 @@
                 loadProductData(); // Reload product data to refresh quantities
                 window.scrollTo(0, 0);
                 filterProducts(); // Re-apply filter after confirming order
+                // The button will be re-enabled by closeProfileMessageModal(true)
             } catch (e) {
                 console.error("Error saving order to Firestore:", e.code, e.message, e); // Added detailed error logging
                 showProfileMessage("Error confirming order. Please try again.");
+                confirmOrderButton.disabled = false; // Re-enable button on error
+                confirmOrderButton.textContent = 'Confirm Order'; // Reset button text
             }
         }
 
@@ -3229,6 +3251,7 @@
     </script>
 </body>
 </html>
+
 
 
 
